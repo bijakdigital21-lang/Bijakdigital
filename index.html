@@ -1,1195 +1,1213 @@
 <!DOCTYPE html>
-<html lang="ms">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grammar Hub 1</title>
-    <!-- Tailwind CSS untuk Reka Bentuk Ceria & Responsif -->
+    <!-- Tailwind CSS for vibrant, modern, and playful UI -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- Font Awesome untuk Ikon Comel -->
+    <!-- FontAwesome Icons for child-friendly visual elements -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts untuk Tulisan Mesra Kanak-kanak -->
+    <!-- Google Fonts: Fredoka One / Quicksand for rounded, kid-friendly typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
     
     <style>
         body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #F0F4F8;
+            -webkit-tap-highlight-color: transparent;
+        }
+        h1, h2, h3, .font-fun {
             font-family: 'Fredoka', sans-serif;
         }
-        /* Custom Scrollbar */
+        /* Custom scrollbar for beautiful UI */
         ::-webkit-scrollbar {
             width: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #f1f1f1;
+            background: #F0F4F8;
         }
         ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
-        }
-        .dark ::-webkit-scrollbar-track {
-            background: #1e293b;
-        }
-        .dark ::-webkit-scrollbar-thumb {
-            background: #475569;
+            background: #CBD5E1;
+            border-radius: 9999px;
         }
     </style>
 </head>
-<body class="bg-blue-50 text-slate-800 transition-colors duration-300 pb-24 min-h-screen">
+<body class="pb-24 max-w-md mx-auto bg-white min-h-screen shadow-xl relative flex flex-col justify-between">
 
-    <!-- CONTAINER UTAMA -->
-    <div id="app" class="max-w-md mx-auto min-h-screen bg-white shadow-2xl relative overflow-x-hidden flex flex-col transition-colors duration-300">
-        
-        <!-- ================= HALAMAN 1: DAFTAR PROFIL ================= -->
-        <section id="page-register" class="hidden p-6 flex flex-col justify-center items-center flex-grow text-center bg-gradient-to-b from-blue-100 to-white">
-            <div class="w-24 h-24 bg-yellow-400 rounded-full flex items-center justify-center text-white text-5xl shadow-lg mb-4 animate-bounce">
-                <i class="fas fa-owl"></i>
-            </div>
-            <h1 class="text-3xl font-bold text-blue-600 mb-2">Grammar Hub 1</h1>
-            <p class="text-slate-500 mb-6 font-medium">Selamat datang! Jom bina profil comel kamu dahulu!</p>
-            
-            <!-- Pilih/Muat naik Avatar -->
-            <div class="mb-6 w-full">
-                <p class="text-sm font-semibold text-slate-600 mb-2">Pilih Avatar atau Muat Naik Gambar:</p>
-                <div class="flex justify-center gap-3 mb-4" id="avatar-selector">
-                    <!-- Dinamik avatar -->
-                </div>
-                <div class="flex justify-center">
-                    <label class="cursor-pointer bg-purple-100 text-purple-700 px-4 py-2 rounded-full text-xs font-bold hover:bg-purple-200 transition flex items-center gap-2 shadow-sm">
-                        <i class="fas fa-camera"></i> Muat Naik Gambar
-                        <input type="file" id="reg-upload-pic" accept="image/*" class="hidden">
-                    </label>
-                </div>
-                <div class="mt-3 flex justify-center">
-                    <img id="preview-avatar" src="" class="w-20 h-20 rounded-full object-cover border-4 border-yellow-400 shadow-md hidden">
-                </div>
-            </div>
-
-            <!-- Input Nama -->
-            <div class="w-full mb-6">
-                <label class="block text-left text-sm font-bold text-slate-700 mb-1">Nama Kamu:</label>
-                <input type="text" id="reg-name" placeholder="Masukkan nama di sini..." class="w-full px-4 py-3 border-3 border-blue-200 rounded-2xl focus:outline-none focus:border-blue-500 text-center font-bold text-lg text-slate-700 shadow-inner">
-            </div>
-
-            <button onclick="saveProfile()" class="w-full bg-green-500 text-white text-xl font-bold py-4 rounded-2xl shadow-lg transform active:scale-95 transition-all hover:bg-green-600">
-                Mula Kembara! <i class="fas fa-rocket ml-1"></i>
-            </button>
-        </section>
-
-        <!-- ================= HEADER UTAMA (Dipaparkan selepas daftar) ================= -->
-        <header id="main-header" class="hidden bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 rounded-b-3xl shadow-md">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <img id="header-avatar" src="" class="w-12 h-12 rounded-full border-2 border-yellow-300 object-cover bg-white">
-                    <div>
-                        <h2 class="font-bold text-lg leading-tight" id="header-name">Hi, Pelajar!</h2>
-                        <div class="flex items-center gap-2 mt-0.5">
-                            <span class="bg-yellow-400 text-yellow-900 text-xs px-2 py-0.5 rounded-full font-bold shadow-sm flex items-center gap-1">
-                                <i class="fas fa-star text-orange-500"></i> <span id="header-stars">0</span>
-                            </span>
-                            <span class="bg-blue-700 text-white text-xs px-2 py-0.5 rounded-full font-bold" id="header-progress">0% Selesai</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="text-right">
-                    <h1 class="text-xl font-extrabold tracking-wide text-yellow-300">Grammar Hub 1</h1>
-                    <span class="text-[10px] bg-white/20 px-2 py-0.5 rounded-full">Sekolah Rendah</span>
-                </div>
-            </div>
-        </header>
-
-        <!-- ================= HALAMAN 2: HOME (SENARAI TOPIK) ================= -->
-        <section id="page-home" class="hidden p-4 flex-grow overflow-y-auto">
-            <!-- Menu Pintas Cepat -->
-            <div class="grid grid-cols-2 gap-3 mb-5">
-                <button onclick="switchPage('learn-hub')" class="bg-orange-400 hover:bg-orange-500 text-white p-3 rounded-2xl shadow flex items-center gap-3 font-bold transition transform active:scale-95 text-left">
-                    <div class="bg-white/20 w-10 h-10 rounded-xl flex items-center justify-center text-xl"><i class="fas fa-book-open"></i></div>
-                    <div><div class="text-xs text-orange-100">Jom Baca</div>Mula Belajar</div>
-                </button>
-                <button onclick="switchPage('progress')" class="bg-emerald-500 hover:bg-emerald-600 text-white p-3 rounded-2xl shadow flex items-center gap-3 font-bold transition transform active:scale-95 text-left">
-                    <div class="bg-white/20 w-10 h-10 rounded-xl flex items-center justify-center text-xl"><i class="fas fa-chart-line"></i></div>
-                    <div><div class="text-xs text-emerald-100">Pencapaian</div>Rekod Prestasi</div>
-                </button>
-            </div>
-
-            <h3 class="font-bold text-lg text-slate-700 mb-3 flex items-center gap-2" id="label-topik-pilihan">
-                <i class="fas fa-th-large text-purple-500"></i> Pilih Unit Pembelajaran:
-            </h3>
-
-            <!-- Senarai Kad Topik Dinamik -->
-            <div id="topics-list" class="space-y-4">
-                <!-- Dijana oleh JavaScript -->
-            </div>
-        </section>
-
-        <!-- ================= HALAMAN 3: BELAJAR (LEARN) ================= -->
-        <section id="page-learn" class="hidden p-4 flex-grow overflow-y-auto">
-            <!-- Kandungan Belajar Dinamik akan dimasukkan di sini -->
-            <div id="learn-content"></div>
-        </section>
-
-        <!-- ================= HALAMAN 4: LATIHAN (PRACTICE) ================= -->
-        <section id="page-practice" class="hidden p-4 flex-grow overflow-y-auto bg-amber-50/50">
-            <!-- Info Soalan & Progress -->
-            <div class="flex items-center justify-between mb-2">
-                <span class="text-sm font-bold text-slate-600" id="practice-question-number">Soalan 1 daripada 10</span>
-                <span class="text-sm font-extrabold text-blue-600 bg-blue-100 px-3 py-1 rounded-full shadow-sm" id="practice-score-display">Markah: 0</span>
-            </div>
-            
-            <div class="w-full bg-slate-200 rounded-full h-3.5 mb-5 shadow-inner">
-                <div id="practice-progress-bar" class="bg-gradient-to-r from-blue-400 to-green-400 h-3.5 rounded-full transition-all duration-300" style="width: 10%"></div>
-            </div>
-
-            <!-- Kad Soalan -->
-            <div class="bg-white rounded-3xl p-5 shadow-md border-2 border-blue-100 mb-5">
-                <!-- Ilustrasi Pembantu Mini -->
-                <div class="flex items-center gap-2 mb-3 bg-blue-50 p-2 rounded-xl">
-                    <div class="text-2xl text-blue-500"><i class="fas fa-robot animate-pulse"></i></div>
-                    <p class="text-xs font-bold text-blue-700" id="practice-instruction">Pilih jawapan yang paling tepat!</p>
-                </div>
-                
-                <!-- Teks Soalan -->
-                <div id="practice-question-text" class="text-xl font-bold text-slate-800 text-center my-4 leading-relaxed bg-slate-50 p-4 rounded-2xl border border-dashed border-slate-300">
-                    Loading question...
-                </div>
-
-                <!-- Paparan Tambahan (cth: Gambar/Susun Kata) -->
-                <div id="practice-interactive-zone" class="mb-4"></div>
-
-                <!-- Pilihan Jawapan -->
-                <div id="practice-options" class="space-y-3">
-                    <!-- Butang jawapan dijana di sini -->
-                </div>
-            </div>
-
-            <!-- Kotak Maklumbalas (Betul/Salah) -->
-            <div id="practice-feedback" class="hidden rounded-2xl p-4 mb-5 text-center font-bold animate-bounce shadow-md">
-                <p id="feedback-message" class="text-lg"></p>
-                <p id="feedback-explanation" class="text-xs font-medium mt-1 opacity-90"></p>
-            </div>
-
-            <!-- Butang Seterusnya -->
-            <button id="btn-next-question" onclick="nextQuestion()" class="hidden w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3.5 rounded-2xl shadow-lg flex items-center justify-center gap-2 text-lg transform active:scale-95 transition">
-                <span>Soalan Seterusnya</span> <i class="fas fa-arrow-right"></i>
-            </button>
-        </section>
-
-        <!-- ================= HALAMAN 5: KEPUTUSAN LATIHAN ================= -->
-        <section id="page-result" class="hidden p-6 flex flex-col items-center justify-center text-center flex-grow bg-gradient-to-b from-yellow-50 to-white">
-            <div id="result-star-container" class="flex justify-center gap-2 text-5xl text-yellow-400 mb-4 drop-shadow-md">
-                <!-- Bintang diisi dinamik -->
-            </div>
-            
-            <h2 class="text-3xl font-extrabold text-slate-800 mb-1" id="result-headline">Tahniah!</h2>
-            <p class="text-base font-bold px-4 py-2 bg-purple-100 text-purple-700 rounded-full mb-6" id="result-topic-name">Topic Name</p>
-            
-            <!-- Statistik Kad -->
-            <div class="bg-white border-2 border-purple-100 rounded-3xl p-5 w-full shadow-md mb-6 grid grid-cols-2 gap-4">
-                <div class="bg-green-50 p-3 rounded-2xl">
-                    <div class="text-xs font-bold text-green-600">BETUL</div>
-                    <div class="text-2xl font-black text-green-700" id="res-correct">0</div>
-                </div>
-                <div class="bg-red-50 p-3 rounded-2xl">
-                    <div class="text-xs font-bold text-red-600">SALAH</div>
-                    <div class="text-2xl font-black text-red-700" id="res-wrong">0</div>
-                </div>
-                <div class="bg-blue-50 p-3 rounded-2xl col-span-2 flex justify-between items-center px-5">
-                    <div class="text-left">
-                        <div class="text-xs font-bold text-blue-600">PERATUS & MARKAH</div>
-                        <div class="text-lg font-black text-blue-800" id="res-percent">0% (0 Markah)</div>
-                    </div>
-                    <div class="text-3xl"><i class="fas fa-award text-blue-500"></i></div>
-                </div>
-            </div>
-
-            <!-- Mesej Motivasi -->
-            <div class="bg-yellow-100 text-yellow-800 p-4 rounded-2xl font-bold text-md mb-6 w-full border border-yellow-300 shadow-inner" id="result-motivation">
-                Mesej motivasi di sini!
-            </div>
-
-            <!-- Butang Navigasi Keputusan -->
-            <div class="w-full space-y-3">
-                <button onclick="retryPractice()" class="w-full bg-orange-400 hover:bg-orange-500 text-white font-bold py-3 rounded-xl shadow transition transform active:scale-95 flex items-center justify-center gap-2">
-                    <i class="fas fa-redo"></i> Cuba Lagi
-                </button>
-                <button onclick="switchPage('home')" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-xl shadow transition transform active:scale-95 flex items-center justify-center gap-2">
-                    <i class="fas fa-home"></i> Kembali ke Menu Utama
-                </button>
-            </div>
-        </section>
-
-        <!-- ================= HALAMAN 6: REKOD PRESTASI (PROGRESS) ================= -->
-        <section id="page-progress" class="hidden p-4 flex-grow overflow-y-auto">
-            <h3 class="font-bold text-xl text-slate-800 mb-4 flex items-center gap-2">
-                <i class="fas fa-chart-bar text-emerald-500"></i> Rekod Prestasi Anda
-            </h3>
-
-            <!-- Ringkasan Profil & Markah -->
-            <div class="bg-gradient-to-br from-emerald-500 to-teal-600 text-white rounded-3xl p-5 shadow-lg mb-6 flex items-center gap-4">
-                <img id="prog-avatar" src="" class="w-16 h-16 rounded-full border-4 border-white/30 object-cover bg-white">
-                <div>
-                    <h4 class="text-xl font-bold leading-tight shadow-sm" id="prog-name">Nama Pengguna</h4>
-                    <p class="text-xs text-emerald-100 mt-1">Sesi Pembelajaran Terakhir: <span id="prog-last-date" class="font-bold text-white">Tiada Rekod</span></p>
-                    <div class="flex gap-4 mt-2">
-                        <div>
-                            <div class="text-[10px] text-emerald-100 font-bold uppercase tracking-wider">Bintang</div>
-                            <div class="text-xl font-black text-yellow-300"><i class="fas fa-star text-sm"></i> <span id="prog-total-stars">0</span></div>
-                        </div>
-                        <div>
-                            <div class="text-[10px] text-emerald-100 font-bold uppercase tracking-wider">Total Skor</div>
-                            <div class="text-xl font-black text-white" id="prog-total-score">0</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Bahagian Lencana Pencapaian -->
-            <div class="mb-6">
-                <h4 class="font-bold text-sm text-slate-600 mb-3 uppercase tracking-wider flex items-center gap-2">
-                    <i class="fas fa-medal text-orange-400"></i> Lencana Pencapaian (<span id="badge-count">0</span>/5)
-                </h4>
-                <div class="grid grid-cols-5 gap-2 text-center" id="badges-container">
-                    <!-- Dinamik lencana -->
-                </div>
-            </div>
-
-            <!-- Analisis Unit Ringkas -->
-            <div>
-                <h4 class="font-bold text-sm text-slate-600 mb-3 uppercase tracking-wider">Senarai Markah Tertinggi</h4>
-                <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm text-xs" id="prog-topic-scores-list">
-                    <!-- Dinamik rekod markah setiap unit -->
-                </div>
-            </div>
-        </section>
-
-        <!-- ================= HALAMAN 7: TETAPAN (SETTINGS) ================= -->
-        <section id="page-settings" class="hidden p-4 flex-grow overflow-y-auto">
-            <h3 class="font-bold text-xl text-slate-800 mb-4 flex items-center gap-2">
-                <i class="fas fa-cog text-slate-500"></i> Tetapan Aplikasi
-            </h3>
-
-            <!-- Kemaskini Profil Rengkas -->
-            <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm mb-4 space-y-3">
-                <h4 class="font-bold text-sm text-slate-700 flex items-center gap-2"><i class="fas fa-user-edit text-blue-500"></i> Kemaskini Nama & Gambar</h4>
-                <input type="text" id="set-name" class="w-full px-3 py-2 border rounded-xl font-bold text-sm">
-                <button onclick="updateSettingsProfile()" class="w-full bg-blue-500 text-white font-bold py-2 rounded-xl text-xs hover:bg-blue-600 transition">Simpan Profil Baharu</button>
-            </div>
-
-            <!-- Kawalan Audio & Bahasa -->
-            <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm mb-4 space-y-4">
-                <!-- Audio Toggle -->
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <i class="fas fa-volume-up text-slate-600 w-5 text-center"></i>
-                        <span class="text-sm font-bold text-slate-700">Kesan Bunyi (Sound Effects)</span>
-                    </div>
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" id="set-sound" class="sr-only peer" checked onchange="toggleSoundSetting()">
-                        <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
-                    </label>
-                </div>
-
-                <!-- Pilihan Bahasa -->
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <i class="fas fa-language text-slate-600 w-5 text-center"></i>
-                        <span class="text-sm font-bold text-slate-700">Bahasa Utama (Language)</span>
-                    </div>
-                    <select id="set-lang" onchange="toggleLanguageSetting()" class="border rounded-xl px-2 py-1 text-xs font-bold text-slate-700 bg-slate-50 focus:outline-none">
-                        <option value="ms">Bahasa Melayu</option>
-                        <option value="en">English</option>
-                    </select>
-                </div>
-
-                <!-- Dark Mode Toggle -->
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <i class="fas fa-moon text-slate-600 w-5 text-center"></i>
-                        <span class="text-sm font-bold text-slate-700">Mod Gelap (Dark Mode)</span>
-                    </div>
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" id="set-dark" class="sr-only peer" onchange="toggleDarkModeSetting()">
-                        <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
-                    </label>
-                </div>
-            </div>
-
-            <!-- Reset dan Padam Data Semuanya -->
-            <div class="bg-red-50 rounded-2xl p-4 border border-red-200 shadow-sm space-y-2">
-                <h4 class="font-bold text-sm text-red-700"><i class="fas fa-exclamation-triangle"></i> Zon Bahaya</h4>
-                <div class="grid grid-cols-2 gap-2">
-                    <button onclick="resetProgress()" class="bg-orange-500 text-white font-bold py-2 px-3 rounded-xl text-xs hover:bg-orange-600 transition shadow-sm">Reset Kemajuan</button>
-                    <button onclick="deleteProfile()" class="bg-red-600 text-white font-bold py-2 px-3 rounded-xl text-xs hover:bg-red-700 transition shadow-sm">Padam Profil</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- ================= NAVIGATION BAR BAWAH ================= -->
-        <nav id="bottom-nav" class="hidden absolute bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-2xl h-20 grid grid-cols-5 items-center justify-center text-center px-2 z-50">
-            <button onclick="switchPage('home')" id="nav-btn-home" class="flex flex-col items-center justify-center font-bold text-xs text-blue-500 transition-all duration-200">
-                <i class="fas fa-home text-xl mb-1"></i><span>Utama</span>
-            </button>
-            <button onclick="switchPage('learn-hub')" id="nav-btn-learn-hub" class="flex flex-col items-center justify-center font-bold text-xs text-slate-400 transition-all duration-200">
-                <i class="fas fa-book-open text-xl mb-1"></i><span>Belajar</span>
-            </button>
-            <button onclick="switchPage('practice-hub')" id="nav-btn-practice-hub" class="flex flex-col items-center justify-center font-bold text-xs text-slate-400 transition-all duration-200">
-                <i class="fas fa-gamepad text-xl mb-1"></i><span>Latihan</span>
-            </button>
-            <button onclick="switchPage('progress')" id="nav-btn-progress" class="flex flex-col items-center justify-center font-bold text-xs text-slate-400 transition-all duration-200">
-                <i class="fas fa-chart-bar text-xl mb-1"></i><span>Prestasi</span>
-            </button>
-            <button onclick="switchPage('settings')" id="nav-btn-settings" class="flex flex-col items-center justify-center font-bold text-xs text-slate-400 transition-all duration-200">
-                <i class="fas fa-cog text-xl mb-1"></i><span>Tetapan</span>
-            </button>
-        </nav>
-
+    <!-- Sound Toggle Floating Button -->
+    <div class="fixed top-4 right-4 z-50 bg-white/80 backdrop-blur-md p-2 rounded-full shadow-lg border border-slate-200">
+        <button id="soundToggleBtn" onclick="toggleSound()" class="w-10 h-10 flex items-center justify-center rounded-full bg-emerald-100 text-emerald-600 font-bold transition hover:scale-105">
+            <i id="soundIcon" class="fas fa-volume-up"></i>
+        </button>
     </div>
 
-    <!-- ================= LOGIK JAVASCRIPT UTAMA ================= -->
+    <!-- MAIN APP CONTAINER FOR VIEWS -->
+    <main id="viewContainer" class="flex-1 p-5 w-full">
+        <!-- Views will be dynamically injected here via JS -->
+    </main>
+
+    <!-- BOTTOM NAVIGATION BAR (Hidden on Setup Screen) -->
+    <nav id="bottomNav" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white border-t border-slate-100 shadow-2xl py-2 px-4 flex justify-between items-center z-40 rounded-t-2xl hidden">
+        <button onclick="switchView('home')" id="nav-home" class="flex flex-col items-center gap-1 text-slate-400 font-semibold text-xs py-1 px-3 rounded-xl transition-all">
+            <i class="fas fa-house text-lg"></i>
+            <span>Home</span>
+        </button>
+        <button onclick="switchView('learn')" id="nav-learn" class="flex flex-col items-center gap-1 text-slate-400 font-semibold text-xs py-1 px-3 rounded-xl transition-all">
+            <i class="fas fa-book-open text-lg"></i>
+            <span>Learn</span>
+        </button>
+        <button onclick="switchView('practice')" id="nav-practice" class="flex flex-col items-center gap-1 text-slate-400 font-semibold text-xs py-1 px-3 rounded-xl transition-all">
+            <i class="fas fa-pencil-alt text-lg"></i>
+            <span>Practice</span>
+        </button>
+        <button onclick="switchView('progress')" id="nav-progress" class="flex flex-col items-center gap-1 text-slate-400 font-semibold text-xs py-1 px-3 rounded-xl transition-all">
+            <i class="fas fa-trophy text-lg"></i>
+            <span>Progress</span>
+        </button>
+        <button onclick="switchView('profile')" id="nav-profile" class="flex flex-col items-center gap-1 text-slate-400 font-semibold text-xs py-1 px-3 rounded-xl transition-all">
+            <i class="fas fa-user text-lg"></i>
+            <span>Profile</span>
+        </button>
+    </nav>
+
+    <!-- DIALOGS / POPUPS -->
+    <div id="resetModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-6 hidden">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-xs text-center shadow-2xl animate-bounce-short">
+            <div class="w-16 h-16 bg-rose-100 text-rose-500 text-2xl flex items-center justify-center rounded-full mx-auto mb-4">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3 class="font-fun text-xl text-slate-800 mb-2">Reset Progress?</h3>
+            <p class="text-sm text-slate-500 mb-6">Are you sure you want to reset all your learning progress?</p>
+            <div class="flex gap-3">
+                <button onclick="closeResetModal()" class="flex-1 py-3 bg-slate-100 text-slate-600 font-bold rounded-2xl text-sm active:scale-95 transition">Cancel</button>
+                <button onclick="confirmResetProgress()" class="flex-1 py-3 bg-rose-500 text-white font-bold rounded-2xl text-sm active:scale-95 transition shadow-lg shadow-rose-200">Reset Progress</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC & CONTENT -->
     <script>
-        // --- 1. DATA STRUKTUR & PANGKALAN DATA 20 TOPIK ---
-        const CARTOON_AVATARS = [
-            "https://api.dicebear.com/7.x/bottts/svg?seed=Ahmad",
-            "https://api.dicebear.com/7.x/bottts/svg?seed=Siti",
-            "https://api.dicebear.com/7.x/bottts/svg?seed=Chong",
-            "https://api.dicebear.com/7.x/bottts/svg?seed=Ramu"
+        // --- DATA ARCHITECTURE ---
+        const TOPICS = [
+            { id: 1, title: "Nouns", desc: "Naming words for people, places, animals, and things.", def: "A noun is a naming word. It names a person, place, animal, or thing.", note: "Remember: A noun is a naming word.", examples: { Person: "teacher, mother, Ali", Place: "school, park, Malaysia", Animal: "cat, elephant, bird", Thing: "book, pencil, table" }, activity: { type: "tap-nouns", instruction: "Tap all the nouns from the words below!", options: [{word: "Apple", isCorrect: true}, {word: "Run", isCorrect: false}, {word: "Doctor", isCorrect: true}, {word: "Happy", isCorrect: false}, {word: "Cat", isCorrect: true}, {word: "Sing", isCorrect: false}] } },
+            { id: 2, title: "Common & Proper Nouns", desc: "General names vs specific unique names.", def: "Common nouns are everyday general naming words. Proper nouns are special, specific names that always start with a Capital Letter.", note: "Proper nouns always begin with a Capital Letter!", examples: { "Common Nouns": "boy, school, country, car", "Proper Nouns": "Ali, SK Taman Ceria, Malaysia, Proton Saga" }, activity: { type: "choose-correct", instruction: "Which one is a Proper Noun?", options: [{word: "Kuala Lumpur", isCorrect: true}, {word: "city", isCorrect: false}] } },
+            { id: 3, title: "Singular & Plural Nouns", desc: "One item versus more than one item.", def: "Singular means only ONE. Plural means MORE THAN ONE. We usually add 's' or 'es' to plural words.", note: "Add 's' for standard plurals, and 'es' for words ending in ch, sh, x, s.", examples: { Singular: "one cat, one box, one boy", Plural: "three cats, two boxes, many boys" }, activity: { type: "choose-correct", instruction: "What is the plural of 'Bus'?", options: [{word: "Buses", isCorrect: true}, {word: "Buss", isCorrect: false}] } },
+            { id: 4, title: "Countable & Uncountable", desc: "Things you can count vs things you cannot count.", def: "Countable nouns can be counted with numbers. Uncountable nouns cannot be counted individually and need units.", note: "Liquids, powders, and tiny grains like rice are uncountable.", examples: { Countable: "apple, egg, chair, book", Uncountable: "water, milk, sand, rice, sugar" }, activity: { type: "choose-correct", instruction: "Is 'Milk' countable or uncountable?", options: [{word: "Uncountable", isCorrect: true}, {word: "Countable", isCorrect: false}] } },
+            { id: 5, title: "Pronouns", desc: "Words used to replace nouns to avoid repetition.", def: "Pronouns are small words that take the place of a noun so you don't say the same name again and again.", note: "Use 'He' for a boy, 'She' for a girl, and 'It' for animals/objects.", examples: { Sentence: "Ali is happy. He has a bicycle.", Replaced: "The cat is sleeping. It is fat." }, activity: { type: "choose-correct", instruction: "Replace 'Siti' with a pronoun:", options: [{word: "She", isCorrect: true}, {word: "He", isCorrect: false}] } },
+            { id: 6, title: "Personal Pronouns", desc: "I, You, We, They, He, She, It in action.", def: "Personal pronouns act as subjects in sentences. They tell us exactly who is doing the action.", note: "Use 'I' for yourself, 'We' when including yourself, and 'They' for a group.", examples: { Singular: "I am a pupil. He is my brother.", Plural: "We are classmates. They are playing football." }, activity: { type: "choose-correct", instruction: "____ are going to the library together. (Ali and I)", options: [{word: "We", isCorrect: true}, {word: "They", isCorrect: false}] } },
+            { id: 7, title: "Possessive Pronouns", desc: "Words that show who owns something.", def: "Possessive pronouns tell you who owns an item. Words like mine, yours, his, hers, ours, and theirs.", note: "Possessive pronouns do not need an apostrophe 's'.", examples: { "My Book": "This book is mine.", "Her Pen": "That pink pen is hers.", "Our Class": "This classroom is ours." }, activity: { type: "choose-correct", instruction: "This ball belongs to you. It is ____.", options: [{word: "yours", isCorrect: true}, {word: "your", isCorrect: false}] } },
+            { id: 8, title: "Verbs", desc: "Action words that tell what someone is doing.", def: "Verbs are action words. They show movement, activities, or states of being.", note: "If you can do it, it is a verb! Like run, hop, sleep, and read.", examples: { Actions: "run, swim, jump, read, write, smile", Sentences: "The boys run fast. My mother cooks curry." }, activity: { type: "tap-nouns", instruction: "Find all the action verbs!", options: [{word: "Jump", isCorrect: true}, {word: "Table", isCorrect: false}, {word: "Sleep", isCorrect: true}, {word: "Blue", isCorrect: false}, {word: "Eat", isCorrect: true}] } },
+            { id: 9, title: "Simple Present Tense", desc: "Habits and things that happen regularly.", def: "Simple Present Tense is used for habits, routines, or facts happening right now.", note: "Singular helper adds 's' (He walks). Plural helper stays plain (They walk).", examples: { Everyday: "I brush my teeth daily.", Routine: "She walks to school every morning.", Facts: "The sun rises in the east." }, activity: { type: "choose-correct", instruction: "The cat ____ milk every day.", options: [{word: "drinks", isCorrect: true}, {word: "drink", isCorrect: false}] } },
+            { id: 10, title: "Simple Past Tense", desc: "Actions that have already finished.", def: "Simple Past Tense describes actions that already happened yesterday, last week, or in the past.", note: "Regular verbs add '-ed' (play -> played). Irregular verbs change fully (go -> went).", examples: { Regular: "We played football yesterday.", Irregular: "Siti went to Malacca last week.", Timewords: "yesterday, last night, two days ago" }, activity: { type: "choose-correct", instruction: "He ____ an apple this morning.", options: [{word: "ate", isCorrect: true}, {word: "eat", isCorrect: false}] } },
+            { id: 11, title: "Simple Future Tense", desc: "Actions that will happen later.", def: "Simple Future Tense tells about actions that will happen later or tomorrow. We use 'will' or 'going to'.", note: "Always keep the action verb plain after the word 'will'.", examples: { Plan: "I will visit my grandmother tomorrow.", Intention: "They are going to build a sandcastle." }, activity: { type: "choose-correct", instruction: "Tomorrow, we ____ have a party.", options: [{word: "will", isCorrect: true}, {word: "did", isCorrect: false}] } },
+            { id: 12, title: "Adjectives", desc: "Describing words for nouns.", def: "Adjectives describe a noun's color, size, shape, number, or feelings.", note: "Adjectives make sentences sound interesting and colourful!", examples: { Appearance: "beautiful flower, tall tree, big elephant", Feelings: "happy boy, sad pup, angry giant" }, activity: { type: "choose-correct", instruction: "Identify the adjective: 'The little bird sang.'", options: [{word: "little", isCorrect: true}, {word: "bird", isCorrect: false}] } },
+            { id: 13, title: "Adverbs", desc: "Words that describe how actions are done.", def: "Adverbs tell us more about a verb. They explain how, when, or where something happens.", note: "Many adverbs end with '-ly' like quickly, softly, and happily.", examples: { How: "He ran quickly. She sang softly.", When: "We will play tomorrow. I am eating now." }, activity: { type: "choose-correct", instruction: "The snail moves very ____.", options: [{word: "slowly", isCorrect: true}, {word: "slow", isCorrect: false}] } },
+            { id: 14, title: "Articles: A, An & The", desc: "Special pointers before naming words.", def: "Articles specify nouns. Use 'A' for consonant sounds, 'An' for vowel sounds (a,e,i,o,u), and 'The' for specific items.", note: "Use 'An' for vowel sounds: an apple, an elephant, an hour.", examples: { "A / An": "a book, a uniform, an owl, an ice cream", "The": "The sun is hot. The headmaster spoke to us." }, activity: { type: "choose-correct", instruction: "I want to eat ____ orange.", options: [{word: "an", isCorrect: true}, {word: "a", isCorrect: false}] } },
+            { id: 15, title: "Prepositions", desc: "Position words like in, on, under, behind.", def: "Prepositions tell us where something is located in relation to another object.", note: "Look at pictures to see positions: on top, inside, underneath!", examples: { Location: "The cat is under the table.", Placement: "Put the vase on the shelf.", Movement: "He walked into the classroom." }, activity: { type: "choose-correct", instruction: "The book is ____ the desk.", options: [{word: "on", isCorrect: true}, {word: "into", isCorrect: false}] } },
+            { id: 16, title: "Conjunctions", desc: "Joining words like and, but, because, or.", def: "Conjunctions glue words or sentences together smoothly.", note: "Use 'and' to join, 'but' for opposites, and 'because' for reasons.", examples: { And: "I like apples and bananas.", But: "He is small but strong.", Because: "She cried because she fell down." }, activity: { type: "choose-correct", instruction: "I stayed home ____ it was raining.", options: [{word: "because", isCorrect: true}, {word: "but", isCorrect: false}] } },
+            { id: 17, title: "Subject and Predicate", desc: "The who and the what of a sentence.", def: "A sentence has two parts: The Subject (who/what it is about) and the Predicate (what the subject does).", note: "The predicate always contains the main verb.", examples: { "Subject | Predicate": "The big dog | barked loudly.", "Siti | loves to bake chocolate cookies." }, activity: { type: "choose-correct", instruction: "What is the subject in: 'The teacher smiles.'", options: [{word: "The teacher", isCorrect: true}, {word: "smiles", isCorrect: false}] } },
+            { id: 18, title: "Sentences", desc: "Making full statements that make complete sense.", def: "A complete sentence must make full sense on its own. It needs a subject and an action verb.", note: "A fragment is an incomplete sentence like 'running fast'.", examples: { Complete: "The pupils are studying English.", Incomplete: "under the big shady tree" }, activity: { type: "choose-correct", instruction: "Which one is a full complete sentence?", options: [{word: "Muthu goes to sleep.", isCorrect: true}, {word: "Eating an ice cream", isCorrect: false}] } },
+            { id: 19, title: "Capital Letters", desc: "When to use big letters ABC.", def: "Capital letters are used at the very beginning of every sentence, for proper nouns, and the word 'I'.", note: "Days of the week and months always get capital letters!", examples: { Start: "We live here.", Proper: "My friend is Ahmad.", Calendar: "Monday, August" }, activity: { type: "choose-correct", instruction: "Which sentence uses correct capital letters?", options: [{word: "They live in Ipoh.", isCorrect: true}, {word: "they live in ipoh.", isCorrect: false}] } },
+            { id: 20, title: "Punctuation Marks", desc: "Using full stops, commas, and question marks.", def: "Punctuation helps us read sentences clearly. Full stops end statements, question marks ask things.", note: "Don't forget an exclamation mark for excitement!", examples: { "Full Stop": "The sky is blue.", "Question Mark": "Where is my pencil?", "Exclamation": "Wow! That is awesome!" }, activity: { type: "choose-correct", instruction: "Choose the correct ending: 'How old are you___'", options: [{word: "?", isCorrect: true}, {word: ".", isCorrect: false}] } },
+            { id: 21, title: "Question Words", desc: "Who, What, Where, When, Why, How.", def: "Question words are used at the start of a sentence to request specific information.", note: "Use 'Who' for people, 'Where' for places, and 'Why' for reasons.", examples: { Who: "Who is your teacher?", Where: "Where do you stay?", What: "What are you eating?" }, activity: { type: "choose-correct", instruction: "____ is your favorite food?", options: [{word: "What", isCorrect: true}, {word: "Who", isCorrect: false}] } },
+            { id: 22, title: "Comparative Adjectives", desc: "Comparing two items using '-er' or 'more'.", def: "We use comparative adjectives to compare two people, objects, or places.", note: "Always use the word 'than' right after a comparative adjective.", examples: { Short: "An elephant is bigger than a cow.", Long: "This puzzle is more difficult than that one." }, activity: { type: "choose-correct", instruction: "A car is ____ than a bicycle.", options: [{word: "faster", isCorrect: true}, {word: "fast", isCorrect: false}] } },
+            { id: 23, title: "Superlative Adjectives", desc: "Comparing three or more to find the top best.", def: "Superlative adjectives compare three or more items to show which is the highest or lowest tier.", note: "Put the word 'the' right in front of superlative words.", examples: { Short: "Ahmad is the tallest boy in Class 1A.", Long: "This is the most beautiful painting here." }, activity: { type: "choose-correct", instruction: "Mount Kinabalu is the ____ mountain in Malaysia.", options: [{word: "highest", isCorrect: true}, {word: "higher", isCorrect: false}] } },
+            { id: 24, title: "Subject-Verb Agreement", desc: "Matching subjects and verbs correctly.", def: "Singular subjects take singular verbs (with an 's'). Plural subjects take plural verbs (plain).", note: "The pronouns 'I' and 'You' always follow plural verb rules!", examples: { Singular: "The bird flies high. He walks.", Plural: "The birds fly high. They walk." }, activity: { type: "choose-correct", instruction: "The pupils ____ their homework.", options: [{word: "do", isCorrect: true}, {word: "does", isCorrect: false}] } },
+            { id: 25, title: "Affirmative & Negative", desc: "Saying Yes versus saying No.", def: "Affirmative sentences say YES or agree. Negative sentences say NO or disagree, using 'not'.", note: "Contractions like don't, isn't, and can't are common in negative phrases.", examples: { Affirmative: "I like ice cream. She can swim.", Negative: "I do not like ice cream. She cannot swim." }, activity: { type: "choose-correct", instruction: "Change 'He is happy' to a negative sentence:", options: [{word: "He is not happy.", isCorrect: true}, {word: "He was happy.", isCorrect: false}] } }
         ];
 
-        const TOPICS_DATA = [
-            { id: 1, name: "Common Nouns", icon: "fa-cat", descMs: "Common nouns ialah kata nama umum. Ia digunakan untuk menamakan orang, tempat, haiwan atau benda secara umum.", descEn: "Common nouns are used to name general people, places, animals, or things.", ex: ["boy", "girl", "cat", "school", "book", "table"], sent: ["The boy has a book.", "The cat is sleeping.", "I go to school."], note: "Common nouns biasanya tidak menggunakan huruf besar kecuali pada awal ayat.", rightEx: "The dog barked.", wrongEx: "The Dog barked." },
-            { id: 2, name: "A, An, The", icon: "fa-font", descMs: "Articles (A, An, The) digunakan sebelum kata nama. 'A' untuk bunyi konsonan, 'An' untuk vokal (a,e,i,o,u), 'The' untuk sesuatu yang khusus.", descEn: "Articles specify nouns. Use 'a/an' for non-specific and 'the' for specific nouns.", ex: ["a book", "an apple", "the sun"], sent: ["I have a cat.", "She ate an orange.", "The sky is blue."], note: "Gunakan 'an' untuk perkataan bermula huruf 'h' yang tidak berbunyi seperti 'an hour'.", rightEx: "An elephant.", wrongEx: "A elephant." },
-            { id: 3, name: "Countable and Uncountable Nouns", icon: "fa-apple-alt", descMs: "Countable nouns boleh dikira dengan nombor. Uncountable nouns tidak boleh dikira berasingan (perlu unit cecair/serbuk).", descEn: "Countable nouns can be counted. Uncountable nouns cannot be counted.", ex: ["car, apples (countable)", "water, rice (uncountable)"], sent: ["I have three cars.", "Give me some water."], note: "Uncountable nouns sentiasa dikira sebagai bentuk tunggal (singular form).", rightEx: "Much milk.", wrongEx: "Many milk." },
-            { id: 4, name: "Singular and Plural Countable Nouns", icon: "fa-boxes", descMs: "Singular bermaksud satu objek. Plural bermaksud lebih daripada satu (biasanya ditambah 's' atau 'es').", descEn: "Singular means one. Plural means more than one.", ex: ["one book -> two books", "a box -> boxes"], sent: ["A cat is here.", "Three cats are playing."], note: "Sesetengah kata nama berubah terus ejaannya seperti child -> children.", rightEx: "Five boxes.", wrongEx: "Five boxs." },
-            { id: 5, name: "Adjectives of Colour, Shape and Size", icon: "fa-palette", descMs: "Kata sifat digunakan untuk memberi penerangan lanjut tentang warna, bentuk, atau saiz sesuatu benda.", descEn: "Adjectives describe the attributes (colour, shape, size) of a noun.", ex: ["red apple", "round ball", "big house"], sent: ["She wears a blue dress.", "He kicked a round ball."], note: "Susunan biasa: Saiz dahulu, diikuti Bentuk, kemudian Warna (cth: a big round red ball).", rightEx: "A big blue bag.", wrongEx: "A blue big bag." },
-            { id: 6, name: "Proper Nouns", icon: "fa-building", descMs: "Proper nouns ialah kata nama khas yang merujuk spesifik orang, tempat, hari, atau bulan.", descEn: "Proper nouns are specific names of people, places, days, or months.", ex: ["Ali", "Malaysia", "Monday", "January"], sent: ["We live in Malaysia.", "Encik Mutu is a doctor."], note: "Proper nouns mestilah sentiasa bermula dengan huruf besar!", rightEx: "He went to Kuala Lumpur.", wrongEx: "He went to kuala lumpur." },
-            { id: 7, name: "This, That, These, Those", icon: "fa-hand-point-right", descMs: "Kata tunjuk. This (ini-dekat) & That (itu-jauh) untuk tunggal. These (ini) & Those (itu) untuk banyak.", descEn: "Demonstrative pronouns point out objects based on distance and quantity.", ex: ["This pen", "That star", "These pens", "Those stars"], sent: ["This is my bag.", "Those are flying birds."], note: "Pastikan kata kerja sesuai (This/That IS, These/Those ARE).", rightEx: "These are my toys.", wrongEx: "These is my toys." },
-            { id: 8, name: "Possessive Nouns", icon: "fa-user-tag", descMs: "Menunjukkan hak kepunyaan menggunakan simbol apostrofi ('s) selepas pemilik.", descEn: "Possessive nouns show ownership using an apostrophe and an 's'.", ex: ["Adam's bicycle", "the cat's tail"], sent: ["This is Sarah's pencil case.", "The dog's house is big."], note: "Bagi kata ganti nama plural yang sudah berakhir dengan 's', cuma letak tanda (') di hujung sahaja (cth: the boys' room).", rightEx: "John's book.", wrongEx: "Johns book." },
-            { id: 9, name: "I, You, He, She, It, We, They", icon: "fa-users", descMs: "Kata ganti nama diri yang digunakan untuk menggantikan subjek (orang/haiwan/benda).", descEn: "Subject pronouns replace the naming part of a sentence.", ex: ["He (lelaki)", "She (perempuan)", "They (mereka)"], sent: ["I am a student.", "She loves ice cream.", "They are running."], note: "Gunakan 'It' untuk satu haiwan atau satu objek tidak bernyawa.", rightEx: "He is happy.", wrongEx: "Him is happy." },
-            { id: 10, name: "My, Your, His, Her, Its, Our, Their", icon: "fa-hand-holding-heart", descMs: "Kata ganti kepunyaan yang diletakkan sebelum kata nama untuk menunjukkan hak milik.", descEn: "Possessive adjectives show who owns something and come before a noun.", ex: ["my car", "his dog", "their school"], sent: ["This is my classroom.", "Her dress is beautiful."], note: "Jangan keliru antara 'its' (kepunyaan) dengan 'it's' (it is).", rightEx: "The dog wagged its tail.", wrongEx: "The dog wagged it's tail." },
-            { id: 11, name: "Possessive Pronouns", icon: "fa-key", descMs: "Kata ganti nama kepunyaan yang menggantikan frasa nama sepenuhnya di hujung ayat.", descEn: "Possessive pronouns replace possessive adjectives + nouns to avoid repetition.", ex: ["mine", "yours", "his", "hers", "ours", "theirs"], sent: ["This book is mine.", "That red car is theirs."], note: "Possessive pronouns tidak diikuti oleh sebarang kata nama selepasnya.", rightEx: "The prize is hers.", wrongEx: "The prize is hers book." },
-            { id: 12, name: "Wh- Questions", icon: "fa-question-circle", descMs: "Kata tanya untuk membina soalan seperti Who (Siapa), What (Apa), Where (Mana), When (Bila), Why (Kenapa).", descEn: "Wh- questions are used to ask for specific information.", ex: ["What is that?", "Where do you live?"], sent: ["Who is your teacher?", "Why are you crying?"], note: "Setiap ayat Wh- Questions wajib diakhiri dengan tanda soal (?).", rightEx: "Where is the cat?", wrongEx: "Where the cat is." },
-            { id: 13, name: "Conjunctions", icon: "fa-link", descMs: "Kata hubung seperti 'and' (dan), 'but' (tetapi), 'or' (atau) untuk menyambung dua ayat.", descEn: "Conjunctions connect words, phrases, or clauses together.", ex: ["and", "but", "or", "so"], sent: ["I like apples and grapes.", "He is small but very strong."], note: "Gunakan 'or' apabila memberi pilihan alternatif.", rightEx: "Do you want tea or milk?", wrongEx: "Do you want tea but milk?" },
-            { id: 14, name: "Prepositions", icon: "fa-map-marker-alt", descMs: "Kata arah untuk menyatakan posisi seperti in (dalam), on (atas), under (bawah), behind (belakang).", descEn: "Prepositions show the position or location of an object.", ex: ["in the box", "on the table", "under the chair"], sent: ["The cat is under the bed.", "My pen is in the bag."], note: "Lihat kedudukan gambar dengan teliti sebelum memilih preposisi.", rightEx: "The cup is on the table.", wrongEx: "The cup is inside the table roof." },
-            { id: 15, name: "Subject-Verb Agreement", icon: "fa-balance-scale", descMs: "Peraturan penyelarasan: Subjek Tunggal perlukan kata kerja ber-S. Subjek Banyak perlukan kata kerja tanpa S.", descEn: "Singular subjects take singular verbs; plural subjects take plural verbs.", ex: ["He runs", "They run", "She watches", "We watch"], sent: ["The boy plays football.", "The boys play football."], note: "Ganti nama 'I' dan 'You' dikira istimewa dan mengikut formula subjek banyak (tanpa S).", rightEx: "She walks to school.", wrongEx: "She walk to school." },
-            { id: 16, name: "Simple Present Tense", icon: "fa-clock", descMs: "Digunakan untuk menyatakan fakta umum, situasi kekal atau rutin harian yang sentiasa dilakukan.", descEn: "Simple Present Tense describes habits, factual truths, or unchanging states.", ex: ["every day", "always", "The sun rises"], sent: ["I brush my teeth every morning.", "Water boils at 100°C."], note: "Petunjuk masa lazim: every day, always, usually, sometimes.", rightEx: "He likes milk.", wrongEx: "He liking milk." },
-            { id: 17, name: "Simple Past Tense", icon: "fa-history", descMs: "Digunakan bagi perbuatan yang telah tamat pada masa lepas. Kata kerja ditambah 'ed' atau bertukar ejaan.", descEn: "Simple Past Tense expresses actions that happened and finished in the past.", ex: ["walked", "played", "went", "ate", "yesterday"], sent: ["We went to the zoo yesterday.", "He played soccer last week."], note: "Gunakan pembayang masa lampau seperti 'yesterday', 'last night', atau 'ago'.", rightEx: "She cooked dinner.", wrongEx: "She cooks dinner yesterday." },
-            { id: 18, name: "Present Continuous Tense", icon: "fa-spinner", descMs: "Perbuatan yang sedang berlaku sekarang. Gunakan (am/is/are) + Kata Kerja + ing.", descEn: "Present Continuous Tense shows an action happening right now. (am/is/are + verb-ing)", ex: ["is eating", "are dancing", "am reading"], sent: ["Look! The birds are flying.", "I am writing a story now."], note: "Kata kunci popular adalah 'now', 'at the moment', atau arahan seruan 'Listen!', 'Look!'.", rightEx: "They are sleeping.", wrongEx: "They sleeping." },
-            { id: 19, name: "Positive and Negative Statements", icon: "fa-toggle-on", descMs: "Ayat penyata positif berbanding ayat negatif yang mempunyai perkataan 'not' (tidak/bukan).", descEn: "Positive statements affirm something; negative statements use 'not' to deny.", ex: ["I like cats (pos)", "I do not like cats (neg)"], sent: ["He is a teacher.", "He is not a doctor."], note: "Singkatan biasa: is not = isn't, are not = aren't, do not = don't.", rightEx: "We do not have a car.", wrongEx: "We not have a car." },
-            { id: 20, name: "Punctuation", icon: "fa-exclamation", descMs: "Tanda baca wajib: Huruf Besar (Capital letter), Tanda Muktamad (Full stop .), Tanda Soal (?) dan Koma (,).", descEn: "Punctuation helps structure reading using capital letters, periods, and commas.", ex: ["A", ".", "?", ","], sent: ["Wow! Look at that beautiful bird.", "Where are you going?"], note: "Pastikan permulaan nama orang atau tempat sentiasa berhuruf besar.", rightEx: "She lives in Ipoh.", wrongEx: "she lives in ipoh" }
+        // Motivational quotes array
+        const QUOTES = [
+            "Great learners practise every day!",
+            "You can do it!",
+            "Learn, practise, and improve!",
+            "Every question makes you smarter!",
+            "Super job! Grammar is fun!",
+            "Keep pushing forward, superstar!"
         ];
 
-        // --- 2. SISTEM STATE PENGGUNA (GLOBAL VARIABLES) ---
-        let userState = {
-            name: "",
-            avatar: CARTOON_AVATARS[0],
-            stars: 0,
-            totalScore: 0,
-            unlockedTopics: [1], // Unit 1 dibuka lalai
-            completedTopics: {}, // id_topik: peratusan_markah
-            readStatus: {},      // id_topik: true/false (Wajib belajar sebelum latihan)
-            highestScores: {},   // id_topik: skor_tertinggi
-            lastPracticeDate: "",
-            settings: { sound: true, lang: "ms", dark: false }
-        };
-
-        let currentActiveTopic = null;
-        let quizSession = {
-            questions: [],
-            currentIndex: 0,
-            score: 0,
-            correctCount: 0,
-            wrongCount: 0
-        };
-
-        // --- 3. PEMULAAN APLIKASI (ON LOAD) ---
-        window.onload = function() {
-            loadFromLocalStorage();
-            applyLanguageUI();
-            applyDarkModeUI();
-            
-            if (!userState.name) {
-                initRegisterPage();
-                switchPage('register');
-            } else {
-                updateHeaderUI();
-                renderTopicsList();
-                switchPage('home');
-            }
-        };
-
-        function saveToLocalStorage() {
-            localStorage.setItem("grammar_hub_v1_state", JSON.stringify(userState));
-        }
-
-        function loadFromLocalStorage() {
-            const data = localStorage.getItem("grammar_hub_v1_state");
-            if (data) {
-                userState = JSON.parse(data);
-                // Ensure default values safely exists
-                if(!userState.highestScores) userState.highestScores = {};
-                if(!userState.readStatus) userState.readStatus = {};
-                if(!userState.completedTopics) userState.completedTopics = {};
-                if(!userState.settings) userState.settings = { sound: true, lang: "ms", dark: false };
-            }
-        }
-
-        // --- 4. LOGIK NAVIGASI DAN INTERFAS ---
-        function switchPage(pageId) {
-            // Sembunyikan semua section
-            document.getElementById('page-register').classList.add('hidden');
-            document.getElementById('page-home').classList.add('hidden');
-            document.getElementById('page-learn').classList.add('hidden');
-            document.getElementById('page-practice').classList.add('hidden');
-            document.getElementById('page-result').classList.add('hidden');
-            document.getElementById('page-progress').classList.add('hidden');
-            document.getElementById('page-settings').classList.add('hidden');
-
-            // Kawalan Header & Bottom Nav
-            if (pageId === 'register') {
-                document.getElementById('main-header').classList.add('hidden');
-                document.getElementById('bottom-nav').classList.add('hidden');
-                document.getElementById('page-register').classList.remove('hidden');
-                return;
-            }
-
-            document.getElementById('main-header').classList.remove('hidden');
-            document.getElementById('bottom-nav').classList.remove('hidden');
-
-            // Reset Nav Button Colors
-            const navButtons = ['home', 'learn-hub', 'practice-hub', 'progress', 'settings'];
-            navButtons.forEach(btn => {
-                const el = document.getElementById(`nav-btn-${btn}`);
-                if(el) {
-                    el.classList.remove('text-blue-500', 'text-purple-500', 'text-emerald-500', 'text-orange-500');
-                    el.classList.add('text-slate-400');
-                }
-            });
-
-            // Aktifkan Halaman Terpilih
-            if (pageId === 'home') {
-                renderTopicsList();
-                document.getElementById('page-home').classList.remove('hidden');
-                document.getElementById('nav-btn-home').classList.add('text-blue-500');
-                document.getElementById('nav-btn-home').classList.remove('text-slate-400');
-            } else if (pageId === 'learn-hub') {
-                // Pintasan terus ke senarai belajar
-                renderTopicsList();
-                document.getElementById('page-home').classList.remove('hidden');
-                document.getElementById('nav-btn-learn-hub').classList.add('text-orange-500');
-                document.getElementById('nav-btn-learn-hub').classList.remove('text-slate-400');
-                document.getElementById('label-topik-pilihan').innerHTML = `<i class="fas fa-book-open text-orange-500"></i> Mod Belajar (Sila Baca Dahulu):`;
-            } else if (pageId === 'practice-hub') {
-                renderTopicsList();
-                document.getElementById('page-home').classList.remove('hidden');
-                document.getElementById('nav-btn-practice-hub').classList.add('text-purple-500');
-                document.getElementById('nav-btn-practice-hub').classList.remove('text-slate-400');
-                document.getElementById('label-topik-pilihan').innerHTML = `<i class="fas fa-gamepad text-purple-500"></i> Mod Latihan (Wajib Belajar Dahulu):`;
-            } else if (pageId === 'progress') {
-                renderProgressPage();
-                document.getElementById('page-progress').classList.remove('hidden');
-                document.getElementById('nav-btn-progress').classList.add('text-emerald-500');
-                document.getElementById('nav-btn-progress').classList.remove('text-slate-400');
-            } else if (pageId === 'settings') {
-                renderSettingsPage();
-                document.getElementById('page-settings').classList.remove('hidden');
-                document.getElementById('nav-btn-settings').classList.add('text-slate-600');
-                document.getElementById('nav-btn-settings').classList.remove('text-slate-400');
-            } else if (pageId === 'learn') {
-                document.getElementById('page-learn').classList.remove('hidden');
-            } else if (pageId === 'practice') {
-                document.getElementById('page-practice').classList.remove('hidden');
-            } else if (pageId === 'result') {
-                document.getElementById('page-result').classList.remove('hidden');
-            }
-            
-            playAudioFeedback('click');
-        }
-
-        // --- 5. REGISTER PROFILE CONTROLS ---
-        let selectedRegAvatar = CARTOON_AVATARS[0];
-
-        function initRegisterPage() {
-            const container = document.getElementById('avatar-selector');
-            container.innerHTML = "";
-            CARTOON_AVATARS.forEach((av, idx) => {
-                const img = document.createElement('img');
-                img.src = av;
-                img.className = `w-14 h-14 rounded-full border-4 cursor-pointer bg-white ${idx===0 ? 'border-blue-500 scale-105':'border-transparent'}`;
-                img.onclick = () => {
-                    selectedRegAvatar = av;
-                    document.getElementById('preview-avatar').classList.add('hidden');
-                    Array.from(container.children).forEach(c => c.classList.remove('border-blue-500', 'scale-105'));
-                    img.classList.add('border-blue-500', 'scale-105');
-                    playAudioFeedback('click');
-                };
-                container.appendChild(img);
-            });
-
-            // File upload handle
-            document.getElementById('reg-upload-pic').onchange = function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(evt) {
-                        selectedRegAvatar = evt.target.result;
-                        const prev = document.getElementById('preview-avatar');
-                        prev.src = selectedRegAvatar;
-                        prev.classList.remove('hidden');
-                        // Deselect regular avatars
-                        Array.from(container.children).forEach(c => c.classList.remove('border-blue-500', 'scale-105'));
-                    };
-                    reader.readAsDataURL(file);
-                }
+        // --- SAMPLE GENERATOR FOR 20 EXERCISE QUESTIONS PER TOPIC ---
+        function generateQuestionsForTopic(topicId, topicTitle) {
+            let qList = [];
+            const wordsPool = {
+                nouns: ["school", "cat", "teacher", "pencil", "Malaysia", "book", "boy", "park", "doctor", "table"],
+                verbs: ["run", "eat", "sleep", "sing", "jump", "write", "read", "swim", "fly", "dance"],
+                adj: ["beautiful", "happy", "tall", "big", "little", "fast", "slow", "smart", "sad", "sweet"]
             };
+
+            for (let i = 1; i <= 20; i++) {
+                if (i % 4 === 1) {
+                    qList.push({
+                        text: `[Q${i}] Which word is a correct element related to ${topicTitle}?`,
+                        options: [wordsPool.nouns[i%10], wordsPool.verbs[i%10], wordsPool.adj[i%10], "quickly"],
+                        correct: wordsPool.nouns[i%10],
+                        explanation: `${wordsPool.nouns[i%10]} fits perfectly as an example under our grammar guidelines.`
+                    });
+                } else if (i % 4 === 2) {
+                    qList.push({
+                        text: `[Q${i}] Complete this standard sentence for ${topicTitle}: 'The primary student likes the ____.'`,
+                        options: ["beautifully", wordsPool.nouns[(i+2)%10], "run", "cry"],
+                        correct: wordsPool.nouns[(i+2)%10],
+                        explanation: `The object slot needs a proper noun structure, making '${wordsPool.nouns[(i+2)%10]}' the correct fit.`
+                    });
+                } else if (i % 4 === 3) {
+                    qList.push({
+                        text: `[Q${i}] True or False: This topic '${topicTitle}' helps us write better English sentences.`,
+                        options: ["True", "False", "Not Sure", "None of the above"],
+                        correct: "True",
+                        explanation: "Learning grammar rules always builds strong foundation for writing skills."
+                    });
+                } else {
+                    qList.push({
+                        text: `[Q${i}] Choose the correct option that belongs to ${topicTitle}:`,
+                        options: ["Jumped yesterday", wordsPool.nouns[(i+1)%10], "Slowly moving", "Under"],
+                        correct: wordsPool.nouns[(i+1)%10],
+                        explanation: `Based on standard exercises for ${topicTitle}, this option is accurate.`
+                    });
+                }
+            }
+            return qList;
         }
 
-        function saveProfile() {
-            const nameInput = document.getElementById('reg-name').value.trim();
+        // --- STATE MANAGEMENT ---
+        let userProfile = JSON.parse(localStorage.getItem('gh_profile')) || null;
+        let progressData = JSON.parse(localStorage.getItem('gh_progress')) || {
+            completedLessons: [],
+            scores: {}, // topicId: bestScore Percentage
+            totalQuizzes: 0,
+            totalAnswers: 0,
+            correctAnswers: 0,
+            stars: 0,
+            streak: 1
+        };
+        let soundEnabled = localStorage.getItem('gh_sound') !== 'false';
+        let currentView = 'home';
+        let activeQuiz = null; // tracking active question session
+
+        // --- AUDIO ENGINE ---
+        function playSound(type) {
+            if (!soundEnabled) return;
+            window.AudioContext = window.AudioContext || window.webkitAudioContext;
+            const ctx = new AudioContext();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+
+            if (type === 'click') {
+                osc.frequency.setValueAtTime(400, ctx.currentTime);
+                gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                osc.start();
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+                osc.stop(ctx.currentTime + 0.1);
+            } else if (type === 'correct') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+                osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1); // E5
+                gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                osc.start();
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                osc.stop(ctx.currentTime + 0.3);
+            } else if (type === 'wrong') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(180, ctx.currentTime);
+                osc.frequency.setValueAtTime(130, ctx.currentTime + 0.15);
+                gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                osc.start();
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                osc.stop(ctx.currentTime + 0.3);
+            } else if (type === 'success') {
+                osc.type = 'sine';
+                const notes = [261.63, 329.63, 392.00, 523.25];
+                notes.forEach((freq, idx) => {
+                    const oscN = ctx.createOscillator();
+                    const gainN = ctx.createGain();
+                    oscN.type = 'sine';
+                    oscN.frequency.setValueAtTime(freq, ctx.currentTime + idx*0.1);
+                    oscN.connect(gainN);
+                    gainN.connect(ctx.destination);
+                    gainN.gain.setValueAtTime(0.1, ctx.currentTime + idx*0.1);
+                    oscN.start(ctx.currentTime + idx*0.1);
+                    gainN.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + idx*0.1 + 0.3);
+                    oscN.stop(ctx.currentTime + idx*0.1 + 0.3);
+                });
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            localStorage.setItem('gh_sound', soundEnabled);
+            updateSoundIcon();
+            playSound('click');
+        }
+
+        function updateSoundIcon() {
+            const icon = document.getElementById('soundIcon');
+            const btn = document.getElementById('soundToggleBtn');
+            if (soundEnabled) {
+                icon.className = "fas fa-volume-up";
+                btn.className = "w-10 h-10 flex items-center justify-center rounded-full bg-emerald-100 text-emerald-600 font-bold transition hover:scale-105";
+            } else {
+                icon.className = "fas fa-volume-mute";
+                btn.className = "w-10 h-10 flex items-center justify-center rounded-full bg-slate-200 text-slate-500 font-bold transition hover:scale-105";
+            }
+        }
+
+        // --- CORE NAVIGATION & APP ENGINE ---
+        window.onload = function() {
+            updateSoundIcon();
+            if (!userProfile) {
+                switchView('setup');
+            } else {
+                switchView('home');
+            }
+        };
+
+        function saveData() {
+            localStorage.setItem('gh_profile', JSON.stringify(userProfile));
+            localStorage.setItem('gh_progress', JSON.stringify(progressData));
+        }
+
+        function switchView(viewName, params = {}) {
+            playSound('click');
+            currentView = viewName;
+            const container = document.getElementById('viewContainer');
+            const nav = document.getElementById('bottomNav');
+            
+            // Set active navigation tab state
+            if (viewName === 'setup') {
+                nav.classList.add('hidden');
+            } else {
+                nav.classList.remove('hidden');
+                document.querySelectorAll('nav button').forEach(b => {
+                    b.classList.remove('text-indigo-600', 'bg-indigo-50');
+                    b.classList.add('text-slate-400');
+                });
+                const activeNav = document.getElementById(`nav-${viewName}`);
+                if (activeNav) {
+                    activeNav.classList.remove('text-slate-400');
+                    activeNav.classList.add('text-indigo-600', 'bg-indigo-50');
+                }
+            }
+
+            // Router implementation
+            switch(viewName) {
+                case 'setup':
+                    container.innerHTML = renderSetup();
+                    break;
+                case 'home':
+                    container.innerHTML = renderHome();
+                    break;
+                case 'learn':
+                    container.innerHTML = renderLearn();
+                    break;
+                case 'lesson':
+                    container.innerHTML = renderLessonPage(params.id);
+                    break;
+                case 'practice':
+                    container.innerHTML = renderPracticeZone();
+                    break;
+                case 'quiz':
+                    container.innerHTML = renderQuizScreen(params.type, params.topicId);
+                    break;
+                case 'results':
+                    container.innerHTML = renderResultsScreen(params);
+                    break;
+                case 'progress':
+                    container.innerHTML = renderProgressPage();
+                    break;
+                case 'profile':
+                    container.innerHTML = renderProfilePage();
+                    break;
+            }
+            window.scrollTo(0,0);
+        }
+
+        // --- VIEW TEMPLATE GENERATORS ---
+
+        function renderSetup() {
+            return `
+                <div class="flex flex-col items-center justify-center pt-8 text-center animate-fade-in">
+                    <div class="w-24 h-24 bg-gradient-to-tr from-indigo-400 to-purple-500 rounded-3xl flex items-center justify-center text-white text-4xl shadow-xl shadow-indigo-100 mb-6">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h1 class="text-3xl text-slate-800 font-fun mb-2">Welcome to<br><span class="text-indigo-600">Grammar Hub 1!</span></h1>
+                    <p class="text-slate-500 text-sm max-w-xs mb-8">Create your learning profile and start improving your grammar.</p>
+                    
+                    <div class="w-full space-y-6 bg-slate-50 p-6 rounded-3xl border border-slate-100 shadow-inner">
+                        <div class="flex flex-col items-center gap-3">
+                            <div class="relative">
+                                <img id="setupAvatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=GrammarHub" class="w-24 h-24 rounded-full bg-white border-4 border-white shadow-md object-cover" alt="Avatar">
+                                <label for="avatarUpload" class="absolute bottom-0 right-0 bg-indigo-600 text-white w-8 h-8 rounded-full flex items-center justify-center cursor-pointer shadow-lg active:scale-95 transition">
+                                    <i class="fas fa-camera text-xs"></i>
+                                </label>
+                                <input type="file" id="avatarUpload" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
+                            </div>
+                            <span class="text-xs font-bold text-slate-400">Choose custom profile picture</span>
+                        </div>
+
+                        <div class="text-left">
+                            <label class="block text-sm font-bold text-slate-600 mb-2">Enter your name:</label>
+                            <input type="text" id="setupName" placeholder="Your Name" class="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-2xl font-semibold text-slate-700 placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition shadow-sm">
+                        </div>
+
+                        <button onclick="submitSetup()" class="w-full py-4 bg-indigo-600 text-white font-fun text-lg rounded-2xl shadow-lg shadow-indigo-200 hover:bg-indigo-700 active:scale-98 transition">
+                            Start Learning <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('setupAvatar').src = e.target.result;
+                    if(document.getElementById('profileAvatar')) {
+                        document.getElementById('profileAvatar').src = e.target.result;
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function submitSetup() {
+            const nameInput = document.getElementById('setupName').value.trim();
             if (!nameInput) {
-                alert(userState.settings.lang === 'ms' ? "Sila masukkan nama anda!" : "Please enter your name!");
+                alert("Please enter your name to start the journey!");
                 return;
             }
-            userState.name = nameInput;
-            userState.avatar = selectedRegAvatar;
-            saveToLocalStorage();
-            updateHeaderUI();
-            switchPage('home');
+            userProfile = {
+                name: nameInput,
+                avatar: document.getElementById('setupAvatar').src
+            };
+            saveData();
+            playSound('success');
+            switchView('home');
         }
 
-        function updateHeaderUI() {
-            document.getElementById('header-name').innerText = `Hi, ${userState.name}!`;
-            document.getElementById('header-avatar').src = userState.avatar;
-            document.getElementById('header-stars').innerText = userState.stars;
-
-            // Calculate total application progress percentage
-            const totalUnits = TOPICS_DATA.length;
-            let totalCompletedPercentage = 0;
-            Object.values(userState.completedTopics).forEach(p => totalCompletedPercentage += p);
-            const overallProgress = Math.round(totalCompletedPercentage / totalUnits);
-            
-            document.getElementById('header-progress').innerText = `${overallProgress}% ` + (userState.settings.lang === 'ms' ? "Selesai" : "Done");
-        }
-
-        // --- 6. JANA SENARAI TOPIK DI HALAMAN UTAMA ---
-        function renderTopicsList() {
-            const container = document.getElementById('topics-list');
-            container.innerHTML = "";
-
-            // Warna bertukar-tukar yang ceria untuk setiap unit
-            const colors = [
-                'from-blue-400 to-blue-500 text-white',
-                'from-amber-400 to-amber-500 text-slate-800',
-                'from-purple-400 to-purple-500 text-white',
-                'from-emerald-400 to-emerald-500 text-white',
-                'from-orange-400 to-orange-500 text-white'
-            ];
-
-            TOPICS_DATA.forEach((topic, index) => {
-                const colorClass = colors[index % colors.length];
-                const isRead = userState.readStatus[topic.id] || false;
-                const topScore = userState.highestScores[topic.id] || 0;
-                
-                let statusTextMs = "Belum Mula";
-                let statusTextEn = "Not Started";
-                let statusBg = "bg-white/30 text-current";
-
-                if (isRead && topScore === 0) {
-                    statusTextMs = "Sedang Belajar";
-                    statusTextEn = "Learning";
-                    statusBg = "bg-blue-600 text-white";
-                } else if (topScore > 0) {
-                    statusTextMs = `Selesai (${topScore}%)`;
-                    statusTextEn = `Completed (${topScore}%)`;
-                    statusBg = "bg-green-600 text-white shadow-sm";
-                }
-
-                const displayStatus = userState.settings.lang === 'ms' ? statusTextMs : statusTextEn;
-
-                const card = document.createElement('div');
-                card.className = `bg-gradient-to-r ${colorClass} rounded-2xl p-4 shadow-md border-b-4 border-black/10 flex items-center justify-between transition transform hover:scale-[1.01]`;
-                
-                card.innerHTML = `
-                    <div class="flex items-center gap-3 max-w-[70%]">
-                        <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center text-2xl shadow-inner">
-                            <i class="fas ${topic.icon}"></i>
+        function renderHome() {
+            const randQuote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+            return `
+                <div class="animate-fade-in space-y-6">
+                    <!-- HEADER USER BIO -->
+                    <div class="flex items-center justify-between bg-gradient-to-r from-indigo-500 to-purple-600 p-5 rounded-3xl shadow-xl shadow-indigo-100 text-white">
+                        <div class="space-y-1">
+                            <p class="text-indigo-100 text-xs font-bold tracking-wide uppercase">Welcome back!</p>
+                            <h2 class="text-2xl font-fun">Hello, ${userProfile.name}!</h2>
                         </div>
-                        <div>
-                            <div class="text-[11px] font-bold opacity-85 uppercase tracking-wider">Unit ${topic.id}</div>
-                            <h4 class="font-extrabold text-base leading-tight">${topic.name}</h4>
-                            <span class="inline-block mt-1.5 text-[10px] font-black px-2.5 py-0.5 rounded-full ${statusBg}">
-                                ${displayStatus}
-                            </span>
+                        <img src="${userProfile.avatar}" class="w-14 h-14 rounded-full border-2 border-white/40 shadow bg-white object-cover">
+                    </div>
+
+                    <!-- MOTIVATIONAL BUBBLE -->
+                    <div class="bg-amber-50 border border-amber-200 p-4 rounded-2xl flex items-center gap-3">
+                        <div class="text-2xl text-amber-500"><i class="fas fa-lightbulb animate-pulse"></i></div>
+                        <p class="text-sm font-semibold text-amber-800 italic">"${randQuote}"</p>
+                    </div>
+
+                    <!-- MAIN HUB CONTENT -->
+                    <div class="space-y-3">
+                        <h3 class="text-lg font-fun text-slate-800 px-1">Let's Learn Grammar!</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- CARD 1 -->
+                            <div onclick="switchView('learn')" class="bg-emerald-50 hover:bg-emerald-100/70 p-5 rounded-3xl border border-emerald-100 shadow-sm flex flex-col items-start gap-4 cursor-pointer active:scale-95 transition-all">
+                                <div class="w-12 h-12 rounded-2xl bg-emerald-500 text-white flex items-center justify-center text-xl shadow-md shadow-emerald-100">
+                                    <i class="fas fa-book"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-fun text-emerald-900 text-base">Learn Grammar</h4>
+                                    <p class="text-xs text-emerald-600 mt-0.5">Simple lessons & tips</p>
+                                </div>
+                            </div>
+                            <!-- CARD 2 -->
+                            <div onclick="switchView('practice')" class="bg-sky-50 hover:bg-sky-100/70 p-5 rounded-3xl border border-sky-100 shadow-sm flex flex-col items-start gap-4 cursor-pointer active:scale-95 transition-all">
+                                <div class="w-12 h-12 rounded-2xl bg-sky-500 text-white flex items-center justify-center text-xl shadow-md shadow-sky-100">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-fun text-sky-900 text-base">Practice Zone</h4>
+                                    <p class="text-xs text-sky-600 mt-0.5">Fun quizzes & test</p>
+                                </div>
+                            </div>
+                            <!-- CARD 3 -->
+                            <div onclick="switchView('progress')" class="bg-indigo-50 hover:bg-indigo-100/70 p-5 rounded-3xl border border-indigo-100 shadow-sm flex flex-col items-start gap-4 cursor-pointer active:scale-95 transition-all">
+                                <div class="w-12 h-12 rounded-2xl bg-indigo-500 text-white flex items-center justify-center text-xl shadow-md shadow-indigo-100">
+                                    <i class="fas fa-trophy"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-fun text-indigo-900 text-base">My Progress</h4>
+                                    <p class="text-xs text-indigo-600 mt-0.5">Track your achievements</p>
+                                </div>
+                            </div>
+                            <!-- CARD 4 -->
+                            <div onclick="switchView('profile')" class="bg-purple-50 hover:bg-purple-100/70 p-5 rounded-3xl border border-purple-100 shadow-sm flex flex-col items-start gap-4 cursor-pointer active:scale-95 transition-all">
+                                <div class="w-12 h-12 rounded-2xl bg-purple-500 text-white flex items-center justify-center text-xl shadow-md shadow-purple-100">
+                                    <i class="fas fa-user text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-fun text-purple-900 text-base">My Profile</h4>
+                                    <p class="text-xs text-purple-600 mt-0.5">Manage details & reset</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="flex flex-col gap-2">
-                        <button onclick="startLearning(${topic.id})" class="bg-white text-slate-800 text-xs font-bold py-1.5 px-3 rounded-xl shadow-sm hover:bg-slate-100 transition active:scale-95 flex items-center gap-1 justify-center">
-                            <i class="fas fa-book-open text-orange-500"></i> ${userState.settings.lang === 'ms' ? 'Belajar' : 'Learn'}
-                        </button>
-                        <button onclick="startPractice(${topic.id})" class="bg-black/20 text-white text-xs font-bold py-1.5 px-3 rounded-xl shadow-sm hover:bg-black/30 transition active:scale-95 flex items-center gap-1 justify-center">
-                            <i class="fas fa-play text-yellow-300"></i> ${userState.settings.lang === 'ms' ? 'Latihan' : 'Quiz'}
-                        </button>
+
+                    <!-- MINICARD QUICK INSIGHT -->
+                    <div class="bg-gradient-to-r from-amber-400 to-orange-500 rounded-3xl p-5 text-white flex items-center justify-between shadow-lg shadow-orange-100">
+                        <div class="space-y-1">
+                            <h4 class="font-fun text-lg">Total Star Balance</h4>
+                            <p class="text-3xl font-fun">${progressData.stars} <i class="fas fa-star text-yellow-300 drop-shadow-md"></i></p>
+                        </div>
+                        <div class="text-5xl opacity-20"><i class="fas fa-star-and-crescent"></i></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderLearn() {
+            let listHTML = '';
+            TOPICS.forEach(topic => {
+                const isCompleted = progressData.completedLessons.includes(topic.id);
+                const score = progressData.scores[topic.id] || 0;
+                
+                let statusText = "Not Started";
+                let statusClass = "bg-slate-100 text-slate-600";
+                let actionBtnText = "Learn Now";
+                let actionBtnClass = "bg-indigo-600 hover:bg-indigo-700 shadow-indigo-100";
+
+                if (isCompleted) {
+                    statusText = "Learning";
+                    statusClass = "bg-amber-100 text-amber-700";
+                    actionBtnText = "Review";
+                }
+                if (score >= 80) {
+                    statusText = "Completed";
+                    statusClass = "bg-emerald-100 text-emerald-700";
+                }
+
+                listHTML += `
+                    <div class="bg-white border border-slate-100 p-5 rounded-3xl shadow-sm space-y-3 relative overflow-hidden transition-all hover:shadow-md">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <span class="text-xs font-bold text-indigo-500 uppercase tracking-wide">Topic ${topic.id}</span>
+                                <h4 class="font-fun text-lg text-slate-800">${topic.title}</h4>
+                            </div>
+                            <span class="text-xs px-2.5 py-1 font-bold rounded-full ${statusClass}">${statusText}</span>
+                        </div>
+                        <p class="text-xs text-slate-500 leading-relaxed">${topic.desc}</p>
+                        
+                        <!-- Mini progress bar -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-[10px] font-bold text-slate-400">
+                                <span>Mastery Score</span>
+                                <span>${score}%</span>
+                            </div>
+                            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                <div class="bg-emerald-500 h-full rounded-full transition-all" style="width: ${score}%"></div>
+                            </div>
+                        </div>
+
+                        <div class="pt-1">
+                            <button onclick="switchView('lesson', {id: ${topic.id}})" class="w-full py-2.5 ${actionBtnClass} text-white font-fun text-sm rounded-xl transition active:scale-98 shadow-md">
+                                ${actionBtnText}
+                            </button>
+                        </div>
                     </div>
                 `;
-                container.appendChild(card);
             });
+
+            return `
+                <div class="animate-fade-in space-y-6">
+                    <div>
+                        <h2 class="text-2xl font-fun text-slate-800">Grammar Library</h2>
+                        <p class="text-xs text-slate-500">Pick a topic below to step up your English master skills.</p>
+                    </div>
+                    <div class="space-y-4">
+                        ${listHTML}
+                    </div>
+                </div>
+            `;
         }
 
-        // --- 7. MODUL BELAJAR (LEARN MODULE) ---
-        function startLearning(topicId) {
-            currentActiveTopic = TOPICS_DATA.find(t => t.id === topicId);
-            userState.readStatus[topicId] = true; // Tandakan sudah membuka bahan bacaan
-            saveToLocalStorage();
+        function renderLessonPage(id) {
+            const topic = TOPICS.find(t => t.id === parseInt(id));
+            
+            // Build examples cards markup
+            let examplesHTML = '';
+            for (const [key, val] of Object.entries(topic.examples)) {
+                examplesHTML += `
+                    <div class="bg-white border border-slate-100 p-3.5 rounded-2xl shadow-sm">
+                        <span class="text-xs font-bold px-2 py-0.5 rounded-md bg-purple-50 text-purple-600 block w-max mb-1.5">${key}</span>
+                        <p class="text-sm font-semibold text-slate-700">${val}</p>
+                    </div>
+                `;
+            }
 
-            const isMs = userState.settings.lang === "ms";
-            const t = currentActiveTopic;
+            // Build mini activity markup
+            let activityHTML = '';
+            if (topic.activity.type === 'tap-nouns' || topic.activity.type === 'tap-verbs') {
+                let optionsHTML = '';
+                topic.activity.options.forEach((opt, idx) => {
+                    optionsHTML += `
+                        <button onclick="checkMiniActivity(this, ${opt.isCorrect})" class="p-3 bg-white border-2 border-slate-200 text-slate-700 font-bold rounded-xl transition text-sm active:scale-95 shadow-sm">
+                            ${opt.word}
+                        </button>
+                    `;
+                });
+                activityHTML = `
+                    <div class="grid grid-cols-3 gap-2.5 mt-3">
+                        ${optionsHTML}
+                    </div>
+                `;
+            } else if (topic.activity.type === 'choose-correct') {
+                let optionsHTML = '';
+                topic.activity.options.forEach((opt, idx) => {
+                    optionsHTML += `
+                        <button onclick="checkMiniActivity(this, ${opt.isCorrect})" class="w-full p-3.5 bg-white border-2 border-slate-200 text-slate-700 font-bold rounded-2xl transition text-left text-sm active:scale-95 shadow-sm flex items-center justify-between">
+                            <span>${opt.word}</span>
+                            <i class="fas fa-chevron-right text-slate-300 text-xs"></i>
+                        </button>
+                    `;
+                });
+                activityHTML = `
+                    <div class="space-y-2 mt-3">
+                        ${optionsHTML}
+                    </div>
+                `;
+            }
 
-            const html = `
-                <div class="flex items-center justify-between mb-4">
-                    <button onclick="switchPage('home')" class="bg-slate-100 text-slate-700 font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1">
-                        <i class="fas fa-arrow-left"></i> ${isMs ? 'Kembali' : 'Back'}
-                    </button>
-                    <span class="text-xs bg-orange-100 text-orange-700 px-3 py-1 rounded-full font-bold">Unit ${t.id}: Study Room</span>
-                </div>
-
-                <div class="bg-white rounded-3xl border-2 border-orange-100 p-5 shadow-sm space-y-4">
-                    <!-- Tajuk Utama -->
-                    <div class="text-center">
-                        <div class="w-14 h-14 bg-orange-400 text-white rounded-full flex items-center justify-center text-2xl mx-auto mb-2 shadow-md">
-                            <i class="fas ${t.icon}"></i>
+            return `
+                <div class="animate-fade-in space-y-6 pb-6">
+                    <div class="flex items-center gap-3">
+                        <button onclick="switchView('learn')" class="w-10 h-10 bg-slate-100 text-slate-600 rounded-full flex items-center justify-center active:scale-90 transition shadow-sm">
+                            <i class="fas fa-arrow-left text-sm"></i>
+                        </button>
+                        <div>
+                            <span class="text-xs font-bold text-indigo-500 uppercase tracking-wide">Topic ${topic.id} Lesson</span>
+                            <h2 class="text-2xl font-fun text-slate-800">${topic.title}</h2>
                         </div>
-                        <h2 class="text-2xl font-black text-slate-800">${t.name}</h2>
                     </div>
 
-                    <!-- Penerangan Dua Bahasa -->
-                    <div class="bg-amber-50/70 p-4 rounded-2xl border border-amber-200">
-                        <p class="text-xs uppercase tracking-wider font-bold text-amber-700 mb-1">💡 Penerangan (Bahasa Melayu):</p>
-                        <p class="text-sm text-slate-700 font-medium leading-relaxed">${t.descMs}</p>
-                        <hr class="my-2 border-amber-200">
-                        <p class="text-[11px] italic font-medium text-slate-500">Definition: ${t.descEn}</p>
+                    <!-- 1. DEFINITION CARD -->
+                    <div class="bg-indigo-50 border border-indigo-100 p-5 rounded-3xl space-y-2 shadow-sm">
+                        <h4 class="font-fun text-indigo-900 text-base"><i class="fas fa-star mr-1 text-indigo-500"></i> What is it?</h4>
+                        <p class="text-sm text-indigo-950 font-medium leading-relaxed">${topic.def}</p>
                     </div>
 
-                    <!-- Contoh Perkataan Kata Kunci -->
+                    <!-- 2. EXAMPLES LAYOUT -->
+                    <div class="space-y-3">
+                        <h4 class="font-fun text-slate-800 text-base"><i class="fas fa-lightbulb mr-1 text-amber-500"></i> Learning Examples</h4>
+                        <div class="grid grid-cols-1 gap-2.5">
+                            ${examplesHTML}
+                        </div>
+                    </div>
+
+                    <!-- 3. IMPORTANT NOTES -->
+                    <div class="bg-amber-50 border border-amber-200 p-4 rounded-2xl flex items-start gap-3 shadow-sm">
+                        <div class="text-xl text-amber-500 mt-0.5"><i class="fas fa-thumbtack"></i></div>
+                        <div class="space-y-0.5">
+                            <span class="text-xs font-bold text-amber-800 uppercase tracking-wider">Quick Hint:</span>
+                            <p class="text-xs text-amber-950 font-semibold leading-relaxed">${topic.note}</p>
+                        </div>
+                    </div>
+
+                    <!-- 4. MINI ACTIVITY ZONE -->
+                    <div class="bg-gradient-to-br from-purple-500 to-indigo-600 p-5 rounded-3xl text-white space-y-2 shadow-lg shadow-indigo-100">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-white/20 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-widest">Mini Game</span>
+                            <span id="miniActivityFeedback" class="text-xs font-bold hidden"></span>
+                        </div>
+                        <h4 class="font-fun text-base">${topic.activity.instruction}</h4>
+                        ${activityHTML}
+                    </div>
+
+                    <!-- ACTION ACTION BUTTON -->
+                    <div class="pt-2">
+                        <button id="lessonPracticeBtn" onclick="completeLessonAndStartPractice(${topic.id})" class="w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-fun text-lg rounded-2xl shadow-lg shadow-emerald-100 transition active:scale-95 flex items-center justify-center gap-2 opacity-60">
+                            <i class="fas fa-play-circle"></i> Start Practice
+                        </button>
+                        <p id="lessonActionHint" class="text-[11px] text-center text-slate-400 font-bold mt-2">💡 Complete the mini game activity above to activate the Practice button!</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function checkMiniActivity(btn, isCorrect) {
+            const feedbackSpan = document.getElementById('miniActivityFeedback');
+            if (isCorrect) {
+                playSound('correct');
+                btn.classList.remove('border-slate-200', 'bg-white', 'text-slate-700');
+                btn.classList.add('bg-emerald-400', 'text-white', 'border-emerald-400');
+                feedbackSpan.innerText = "✨ Awesome! Correct!";
+                feedbackSpan.className = "text-xs font-bold text-emerald-200 bg-white/10 px-2 py-0.5 rounded-md block";
+                
+                // Activate practice mode button now
+                const mainBtn = document.getElementById('lessonPracticeBtn');
+                mainBtn.classList.remove('opacity-60');
+                mainBtn.classList.add('opacity-100');
+                const hint = document.getElementById('lessonActionHint');
+                if(hint) hint.innerText = "🎉 Practice section unlocked! Press button to proceed.";
+            } else {
+                playSound('wrong');
+                btn.classList.remove('border-slate-200', 'bg-white');
+                btn.classList.add('bg-rose-400', 'text-white', 'border-rose-400', 'animate-shake');
+                feedbackSpan.innerText = "Try another one!";
+                feedbackSpan.className = "text-xs font-bold text-rose-200 bg-white/10 px-2 py-0.5 rounded-md block";
+                setTimeout(() => btn.classList.remove('animate-shake'), 400);
+            }
+        }
+
+        function completeLessonAndStartPractice(topicId) {
+            const mainBtn = document.getElementById('lessonPracticeBtn');
+            if (mainBtn.classList.contains('opacity-60')) {
+                playSound('wrong');
+                alert("Please complete the mini activity game first to unlock practice mode!");
+                return;
+            }
+            if(!progressData.completedLessons.includes(topicId)) {
+                progressData.completedLessons.push(topicId);
+                progressData.stars += 5; // Reward for finished lesson reading
+                saveData();
+            }
+            switchView('quiz', {type: 'topic', topicId: topicId});
+        }
+
+        function renderPracticeZone() {
+            let topicCardsHTML = '';
+            TOPICS.forEach(t => {
+                const isUnlocked = progressData.completedLessons.includes(t.id);
+                topicCardsHTML += `
+                    <div onclick="${isUnlocked ? `switchView('quiz', {type: 'topic', topicId: ${t.id}})` : `alert('Please lock your focus into Lesson page first before taking the practice zone test!')`}" class="p-4 bg-white border border-slate-100 rounded-2xl shadow-sm flex items-center justify-between cursor-pointer hover:shadow-md transition ${!isUnlocked ? 'opacity-50' : ''}">
+                        <div class="space-y-0.5">
+                            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Topic ${t.id}</span>
+                            <h4 class="font-fun text-sm text-slate-800">${t.title}</h4>
+                        </div>
+                        <div>
+                            ${isUnlocked ? '<i class="fas fa-play text-emerald-500 text-sm bg-emerald-50 p-2.5 rounded-full"></i>' : '<i class="fas fa-lock text-slate-400 text-sm bg-slate-50 p-2.5 rounded-full"></i>'}
+                        </div>
+                    </div>
+                `;
+            });
+
+            return `
+                <div class="animate-fade-in space-y-6">
                     <div>
-                        <p class="text-xs font-bold text-slate-500 uppercase mb-2">📋 Contoh Kata (Examples):</p>
-                        <div class="flex flex-wrap gap-2">
-                            ${t.ex.map(word => `<span class="bg-blue-100 text-blue-700 text-xs font-black px-3 py-1.5 rounded-xl border border-blue-200">${word}</span>`).join('')}
+                        <h2 class="text-2xl font-fun text-slate-800">Practice Zone</h2>
+                        <p class="text-xs text-slate-500">Sharpen your grammar weapons through various gamified challenges.</p>
+                    </div>
+
+                    <!-- HERO MODE BLOCKS -->
+                    <div class="grid grid-cols-1 gap-3">
+                        <div onclick="switchView('quiz', {type: 'mixed'})" class="p-4 bg-gradient-to-r from-orange-400 to-amber-500 rounded-3xl text-white flex items-center justify-between cursor-pointer shadow-md shadow-orange-100 hover:scale-[1.01] transition active:scale-98">
+                            <div class="space-y-1">
+                                <h3 class="font-fun text-lg">Mixed Grammar Quiz</h3>
+                                <p class="text-xs text-orange-50/80 max-w-[220px]">Randomly picked 10 questions from combined libraries.</p>
+                            </div>
+                            <div class="text-3xl opacity-30"><i class="fas fa-random"></i></div>
+                        </div>
+
+                        <div onclick="switchView('quiz', {type: 'quick'})" class="p-4 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-3xl text-white flex items-center justify-between cursor-pointer shadow-md shadow-indigo-100 hover:scale-[1.01] transition active:scale-98">
+                            <div class="space-y-1">
+                                <h3 class="font-fun text-lg">Quick Quiz</h3>
+                                <p class="text-xs text-purple-50/80 max-w-[220px]">Fast paced 5 random blitz questions.</p>
+                            </div>
+                            <div class="text-3xl opacity-30"><i class="fas fa-bolt"></i></div>
                         </div>
                     </div>
 
-                    <!-- Contoh Ayat Campuran -->
-                    <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
-                        <p class="text-xs font-bold text-slate-600 mb-2">🗣️ Contoh Ayat Mudah (Example Sentences):</p>
-                        <ul class="space-y-1.5 text-sm font-semibold text-slate-700 list-disc list-inside">
-                            ${t.sent.map(s => `<li>${s}</li>`).join('')}
-                        </ul>
-                    </div>
-
-                    <!-- Komponen Betul vs Salah -->
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="bg-green-50 border border-green-200 p-2.5 rounded-xl text-center">
-                            <div class="text-xs font-bold text-green-700 mb-1"><i class="fas fa-check-circle"></i> BETUL (✔️)</div>
-                            <div class="text-xs font-bold text-slate-700 font-mono bg-white p-1 rounded border">${t.rightEx}</div>
+                    <!-- TOPIC BY TOPIC LIST -->
+                    <div class="space-y-3">
+                        <h3 class="font-fun text-base text-slate-700 px-1">Practice by Topic</h3>
+                        <div class="grid grid-cols-1 gap-2">
+                            ${topicCardsHTML}
                         </div>
-                        <div class="bg-red-50 border border-red-200 p-2.5 rounded-xl text-center">
-                            <div class="text-xs font-bold text-red-700 mb-1"><i class="fas fa-times-circle"></i> SALAH (❌)</div>
-                            <div class="text-xs font-bold text-slate-400 line-through font-mono bg-white p-1 rounded border">${t.wrongEx}</div>
-                        </div>
-                    </div>
-
-                    <!-- Nota Ingat Ini -->
-                    <div class="bg-purple-600 text-white p-4 rounded-2xl shadow-inner relative overflow-hidden">
-                        <div class="absolute right-2 bottom-0 text-7xl opacity-10 pointer-events-none"><i class="fas fa-lightbulb"></i></div>
-                        <h4 class="font-black text-xs uppercase text-yellow-300 tracking-wider mb-0.5"><i class="fas fa-star"></i> INGAT INI (⚠️ Note):</h4>
-                        <p class="text-xs font-medium leading-relaxed">${t.note}</p>
                     </div>
                 </div>
+            `;
+        }
 
-                <!-- Navigasi Butang Belajar -->
-                <div class="mt-5 grid grid-cols-2 gap-3">
-                    <button onclick="switchPage('home')" class="bg-slate-300 hover:bg-slate-400 text-slate-800 font-bold py-3 rounded-2xl shadow transition text-center text-sm">
-                        ${isMs ? 'Kembali Menu' : 'Back to Menu'}
-                    </button>
-                    <button onclick="startPractice(${t.id})" class="bg-green-500 hover:bg-green-600 text-white font-black py-3 rounded-2xl shadow-lg transition text-center text-sm flex items-center justify-center gap-1">
-                        ${isMs ? 'Mula Latihan' : 'Start Practice'} <i class="fas fa-rocket text-xs"></i>
+        function renderQuizScreen(type, topicId) {
+            // Setup active state data structures
+            let questions = [];
+            let quizTitle = "Grammar Quiz";
+
+            if (type === 'topic') {
+                const topic = TOPICS.find(t => t.id === parseInt(topicId));
+                quizTitle = `${topic.title} Practice`;
+                questions = generateQuestionsForTopic(topic.id, topic.title);
+            } else if (type === 'mixed') {
+                quizTitle = "Mixed Grammar Quiz";
+                // Aggregate questions
+                TOPICS.slice(0, 5).forEach(t => {
+                    questions = questions.concat(generateQuestionsForTopic(t.id, t.title).slice(0,2));
+                });
+                questions = questions.sort(() => 0.5 - Math.random()).slice(0, 10);
+            } else if (type === 'quick') {
+                quizTitle = "Quick Quiz Challenge";
+                TOPICS.slice(0, 5).forEach(t => {
+                    questions = questions.concat(generateQuestionsForTopic(t.id, t.title).slice(0,1));
+                });
+                questions = questions.sort(() => 0.5 - Math.random()).slice(0, 5);
+            }
+
+            activeQuiz = {
+                type: type,
+                topicId: topicId,
+                title: quizTitle,
+                questions: questions,
+                currentIndex: 0,
+                correctCount: 0,
+                wrongCount: 0,
+                hasAnswered: false
+            };
+
+            setTimeout(() => loadQuizQuestion(), 50);
+
+            return `
+                <div class="animate-fade-in space-y-4">
+                    <!-- QUIZ RUNNING HEADER -->
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <div>
+                            <h3 id="quizTitleElement" class="font-fun text-base text-slate-800">${quizTitle}</h3>
+                            <span id="quizProgressTracker" class="text-xs font-bold text-slate-400">Question 1 of 10</span>
+                        </div>
+                        <button onclick="if(confirm('Quit this quiz session? Your data won\\'t be saved.')) switchView('practice')" class="text-xs bg-slate-100 font-bold px-3 py-1.5 rounded-xl text-slate-500">Quit</button>
+                    </div>
+
+                    <!-- PROGRESS MASTER BAR -->
+                    <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                        <div id="quizProgressBarFill" class="bg-gradient-to-r from-amber-400 to-orange-400 h-full rounded-full transition-all" style="width: 10%"></div>
+                    </div>
+
+                    <!-- MAIN BOX CONTENT CARD -->
+                    <div class="bg-slate-50 border border-slate-100 p-5 rounded-3xl min-h-[140px] flex items-center justify-center text-center">
+                        <p id="quizQuestionText" class="font-fun text-lg text-slate-800 leading-snug">Loading question content details...</p>
+                    </div>
+
+                    <!-- ANSWER CHOICES CONTAINER -->
+                    <div id="quizOptionsGrid" class="grid grid-cols-1 gap-2.5 pt-2">
+                        <!-- Buttons injected via JS -->
+                    </div>
+
+                    <!-- INSTANT FEEDBACK FOOTER OVERLAY -->
+                    <div id="quizFeedbackBox" class="p-4 rounded-2xl hidden space-y-1.5 transition-all">
+                        <!-- feedback text -->
+                    </div>
+
+                    <!-- NEXT NAVIGATION TRIGGER -->
+                    <button id="quizNextBtn" onclick="nextQuizQuestion()" class="w-full py-4 bg-indigo-600 text-white font-fun text-base rounded-2xl shadow-lg shadow-indigo-100 transition active:scale-95 flex items-center justify-center gap-2 hidden">
+                        Next Question <i class="fas fa-arrow-right"></i>
                     </button>
                 </div>
             `;
-
-            document.getElementById('learn-content').innerHTML = html;
-            switchPage('learn');
         }
 
-        // --- 8. PENJANAAN SOALAN INTERAKTIF DINAMIK (QUIZ ENGINE) ---
-        function startPractice(topicId) {
-            currentActiveTopic = TOPICS_DATA.find(t => t.id === topicId);
+        function loadQuizQuestion() {
+            const q = activeQuiz.questions[activeQuiz.currentIndex];
+            activeQuiz.hasAnswered = false;
+
+            // Update header text components
+            document.getElementById('quizProgressTracker').innerText = `Question ${activeQuiz.currentIndex + 1} of ${activeQuiz.questions.length}`;
+            const percent = ((activeQuiz.currentIndex + 1) / activeQuiz.questions.length) * 100;
+            document.getElementById('quizProgressBarFill').style.width = `${percent}%`;
+            document.getElementById('quizQuestionText').innerText = q.text;
+
+            // Hide actions elements
+            document.getElementById('quizNextBtn').classList.add('hidden');
+            const fBox = document.getElementById('quizFeedbackBox');
+            fBox.classList.add('hidden');
+            fBox.className = "p-4 rounded-2xl hidden space-y-1.5 transition-all";
+
+            // Render choices buttons grid layout
+            const grid = document.getElementById('quizOptionsGrid');
+            grid.innerHTML = '';
             
-            // Sekatan: Wajib buka membaca bilik belajar terlebih dahulu sebelum memulakan kuiz!
-            if (!userState.readStatus[topicId]) {
-                const alertMsg = userState.settings.lang === 'ms' 
-                    ? `Sila buka bahagian "Belajar" bagi Unit ${topicId} terlebih dahulu sebelum menjawab latihan!` 
-                    : `Please open the "Learn" section for Unit ${topicId} before attempting the practice!`;
-                alert(alertMsg);
-                startLearning(topicId);
-                return;
-            }
-
-            // Membina bank 10 soalan berasingan bagi unit berkaitan
-            generateQuizQuestions(currentActiveTopic);
-            
-            quizSession.currentIndex = 0;
-            quizSession.score = 0;
-            quizSession.correctCount = 0;
-            quizSession.wrongCount = 0;
-
-            switchPage('practice');
-            showQuestion();
-        }
-
-        function generateQuizQuestions(topic) {
-            // Menjana 10 soalan simulasi berbeza berdasarkan skop tajuk unit masing-masing
-            const qBank = [];
-            const name = topic.name;
-
-            for(let i = 1; i <= 10; i++) {
-                let text = "";
-                let options = [];
-                let right = "";
-                let explanation = "";
-                let type = "abc"; // format lalai
-
-                // Logik pecahan pengisian data soalan setiap subjek
-                if (topic.id === 1) { // Common Nouns
-                    const listObj = [
-                        {q: "I love my ____. It purrs every day.", o: ["Cat", "cat", "Anuar", "Malaysia"], r: "cat", e: "cat ialah kata nama umum haiwan berhuruf kecil."},
-                        {q: "We sit on the ____ during class.", o: ["table", "Table", "Kuala Lumpur", "Ali"], r: "table", e: "table ialah benda am."},
-                        {q: "The ____ is teaching us English.", o: ["teacher", "Teacher", "Sunday", "Book"], r: "teacher", e: "teacher merujuk orang am."},
-                        {q: "This is a big ____ filled with trees.", o: ["park", "Park", "Ipoh", "He"], r: "park", e: "park ialah tempat umum."},
-                        {q: "Choose the correct common noun: 'My ___ is blue.'", o: ["Bag", "bag", "Kuala Lumpur", "Ahmad"], r: "bag", e: "bag dieja huruf kecil di tengah ayat."},
-                        {q: "The ____ is reading a book.", o: ["boy", "Boy", "Sarawak", "They"], r: "boy", e: "boy merujuk jantina lelaki am."},
-                        {q: "I bought a new ____ yesterday.", o: ["pen", "Pen", "Tuesday", "Beautiful"], r: "pen", e: "pen ialah benda am."},
-                        {q: "Birds live in a ____.", o: ["nest", "Nest", "Malaysia", "In"], r: "nest", e: "nest kata nama tempat am haiwan."},
-                        {q: "The ____ has lots of interesting toys.", o: ["shop", "Shop", "Ali", "Big"], r: "shop", e: "shop kata nama umum."},
-                        {q: "We read a story ____ last night.", o: ["book", "Book", "Read", "They"], r: "book", e: "book ialah barangan umum."}
-                    ];
-                    let item = listObj[i-1];
-                    text = item.q; options = item.o; right = item.r; explanation = item.e;
-                } 
-                else if(topic.id === 2) { // A, An, The
-                    const items = [
-                        {q: "She eats ___ apple every morning.", o: ["a", "an", "the", "some"], r: "an", e: "Gunakan 'an' kerana apple bermula bunyi huruf vokal 'a'."},
-                        {q: "He drives ___ big blue car.", o: ["a", "an", "the", "any"], r: "a", e: "Gunakan 'a' kerana kata dasar 'big' bermula bunyi konsonan."},
-                        {q: "Look at ___ sky! It is starting to rain.", o: ["a", "an", "the", "one"], r: "the", e: "Gunakan 'the' untuk perkara unik di dunia seperti 'sky'."},
-                        {q: "I waited for ___ hour at the bus stop.", o: ["a", "an", "the", "many"], r: "an", e: "Perkataan 'hour' berbunyi vokal 'aur' (h senyap)."},
-                        {q: "My sister wants ___ doll for her birthday.", o: ["a", "an", "the", "any"], r: "a", e: "Gunakan 'a' kerana doll bermula huruf konsonan."},
-                        {q: "___ sun shines brightly in the afternoon.", o: ["A", "An", "The", "Some"], r: "The", e: "Sun cuma ada satu di dunia, wajib letak 'The'."},
-                        {q: "Would you like ___ orange juice?", o: ["a", "an", "the", "no article"], r: "an", e: "Orange bermula bunyian vokal."},
-                        {q: "He is ___ honest boy.", o: ["a", "an", "the", "many"], r: "an", e: "Honest bermula bunyi vokal 'onest'."},
-                        {q: "We live in ___ old wooden house.", o: ["a", "an", "the", "some"], r: "an", e: "Old mempunyai awalan huruf vokal 'o'."},
-                        {q: "Pass me ___ book on that desk, please.", o: ["a", "an", "the", "two"], r: "the", e: "Buku yang khusus berada di atas meja itu."}
-                    ];
-                    let item = items[i-1];
-                    text = item.q; options = item.o; right = item.r; explanation = item.e;
-                }
-                else {
-                    // Penjana automatik generik pantas bagi baki unit lain (3 hingga 20) supaya stabil 10 soalan berbeza
-                    text = `[Unit ${topic.id}] Fill in the blank for question ${i} about ${name}: "The child ____ learning English now."`;
-                    options = ["is", "are", "am", "was"];
-                    right = "is";
-                    explanation = `Jawapan tepat mengikut peraturan topik ${name}.`;
-                    
-                    if(i % 2 === 0) {
-                        text = `Is this correct for ${name}? "They is happy."`;
-                        options = ["True (Betul)", "False (Salah)"];
-                        right = "False (Salah)";
-                        explanation = "Subjek 'They' banyak, pasangan yang betul adalah 'are'.";
-                    }
-                }
-
-                qBank.push({
-                    id: i,
-                    questionText: text,
-                    options: shuffleArray(options),
-                    correctAnswer: right,
-                    explanation: explanation,
-                    type: type
-                });
-            }
-            quizSession.questions = qBank;
-        }
-
-        // Pembantu pengacau kedudukan jawapan
-        function shuffleArray(array) {
-            let arr = [...array];
-            for (let i = arr.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [arr[i], arr[j]] = [arr[j], arr[i]];
-            }
-            return arr;
-        }
-
-        // --- 9. TAMPILKAN SOALAN KUIZ ---
-        function showQuestion() {
-            // Sembunyikan maklumbalas terdahulu
-            document.getElementById('practice-feedback').classList.add('hidden');
-            document.getElementById('btn-next-question').classList.add('hidden');
-
-            const currentQ = quizSession.questions[quizSession.currentIndex];
-            const totalQ = quizSession.questions.length;
-
-            // Kemaskini teks UI
-            const isMs = userState.settings.lang === 'ms';
-            document.getElementById('practice-question-number').innerText = isMs 
-                ? `Soalan ${quizSession.currentIndex + 1} daripada ${totalQ}` 
-                : `Question ${quizSession.currentIndex + 1} of ${totalQ}`;
-            
-            document.getElementById('practice-score-display').innerText = (isMs ? 'Markah: ' : 'Score: ') + (quizSession.score);
-            
-            // Kemaskini Progress Bar
-            const percentProgress = ((quizSession.currentIndex + 1) / totalQ) * 100;
-            document.getElementById('practice-progress-bar').style.width = `${percentProgress}%`;
-
-            // Cetak Teks Soalan Utama
-            document.getElementById('practice-question-text').innerText = currentQ.questionText;
-
-            // Cetak Pilihan Butang Jawapan
-            const optionsZone = document.getElementById('practice-options');
-            optionsZone.innerHTML = "";
-
-            currentQ.options.forEach((opt) => {
+            // Build choices layout with letter mapping indicators
+            const labels = ['A', 'B', 'C', 'D'];
+            q.options.forEach((opt, idx) => {
                 const btn = document.createElement('button');
-                btn.className = "w-full text-left bg-white border-2 border-slate-200 hover:border-blue-400 p-3.5 rounded-2xl font-bold text-slate-700 transition transform active:scale-[0.98] shadow-sm flex items-center justify-between";
-                btn.innerHTML = `<span>${opt}</span> <i class="far fa-circle text-slate-300"></i>`;
-                
-                btn.onclick = function() {
-                    checkUserAnswer(opt, btn);
-                };
-                optionsZone.appendChild(btn);
+                btn.className = "w-full p-4 bg-white border-2 border-slate-200 text-slate-700 font-bold rounded-2xl transition text-left text-sm active:scale-98 shadow-sm flex items-center gap-3";
+                btn.onclick = () => submitQuizAnswer(btn, opt);
+                btn.innerHTML = `
+                    <span class="w-7 h-7 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center text-xs font-black shrink-0">${labels[idx] || ''}</span>
+                    <span class="leading-tight">${opt}</span>
+                `;
+                grid.appendChild(btn);
             });
         }
 
-        // --- 10. SEMAK JAWAPAN ---
-        function checkUserAnswer(selectedOpt, selectedBtn) {
-            const currentQ = quizSession.questions[quizSession.currentIndex];
-            const optionsZone = document.getElementById('practice-options');
+        function submitQuizAnswer(selectedBtn, chosenText) {
+            if (activeQuiz.hasAnswered) return;
+            activeQuiz.hasAnswered = true;
+
+            const q = activeQuiz.questions[activeQuiz.currentIndex];
+            const fBox = document.getElementById('quizFeedbackBox');
+            const nextBtn = document.getElementById('quizNextBtn');
             
-            // Sekat klik butang lain selepas jawapan dihantar
-            Array.from(optionsZone.children).forEach(btn => btn.disabled = true);
+            progressData.totalAnswers += 1;
 
-            const feedbackBox = document.getElementById('practice-feedback');
-            const feedbackMsg = document.getElementById('feedback-message');
-            const feedbackExp = document.getElementById('feedback-explanation');
-
-            feedbackBox.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'border-green-300', 'bg-red-100', 'text-red-800', 'border-red-300');
-
-            if (selectedOpt === currentQ.correctAnswer) {
-                // JAWAPAN BETUL
-                quizSession.score += 10;
-                quizSession.correctCount++;
+            if (chosenText === q.correct) {
+                activeQuiz.correctCount += 1;
+                progressData.correctAnswers += 1;
+                playSound('correct');
                 
-                selectedBtn.classList.remove('border-slate-200');
-                selectedBtn.classList.add('bg-green-100', 'border-green-500', 'text-green-800');
-                selectedBtn.querySelector('i').className = "fas fa-check-circle text-green-600";
-
-                feedbackBox.classList.add('bg-green-100', 'text-green-800', 'border', 'border-green-300');
-                feedbackMsg.innerText = userState.settings.lang === 'ms' ? "🎉 Bijak! Jawapan Betul!" : "🎉 Excellent! Correct Answer!";
-                feedbackExp.innerText = currentQ.explanation;
-
-                playAudioFeedback('correct');
+                selectedBtn.classList.remove('border-slate-200', 'bg-white');
+                selectedBtn.classList.add('bg-emerald-500', 'text-white', 'border-emerald-500');
+                
+                fBox.innerHTML = `
+                    <p class="font-fun text-emerald-800 text-sm"><i class="fas fa-check-circle mr-1 text-emerald-600"></i> Correct! Well done!</p>
+                    <p class="text-xs text-emerald-700 font-medium">${q.explanation}</p>
+                `;
+                fBox.className = "p-4 bg-emerald-50 border border-emerald-200 rounded-2xl space-y-1";
             } else {
-                // JAWAPAN SALAH
-                quizSession.wrongCount++;
+                activeQuiz.wrongCount += 1;
+                playSound('wrong');
                 
-                selectedBtn.classList.remove('border-slate-200');
-                selectedBtn.classList.add('bg-red-100', 'border-red-500', 'text-red-800');
-                selectedBtn.querySelector('i').className = "fas fa-times-circle text-red-600";
-
-                // Cari dan tandakan warna hijau pada jawapan yang sepatutnya betul
-                Array.from(optionsZone.children).forEach(btn => {
-                    if (btn.innerText.trim() === currentQ.correctAnswer) {
-                        btn.classList.add('bg-green-50', 'border-green-400');
+                selectedBtn.classList.remove('border-slate-200', 'bg-white');
+                selectedBtn.classList.add('bg-rose-100', 'text-rose-700', 'border-rose-300', 'animate-shake');
+                
+                // Highlight correct button target visually
+                document.querySelectorAll('#quizOptionsGrid button').forEach(b => {
+                    if (b.innerText.includes(q.correct)) {
+                        b.classList.remove('border-slate-200', 'bg-white');
+                        b.classList.add('bg-emerald-500', 'text-white', 'border-emerald-500');
                     }
                 });
 
-                feedbackBox.classList.add('bg-red-100', 'text-red-800', 'border', 'border-red-300');
-                feedbackMsg.innerText = userState.settings.lang === 'ms' ? "💥 Alahai, Cuba Lagi!" : "💥 Oops, Try Again!";
-                feedbackExp.innerText = currentQ.explanation;
-
-                playAudioFeedback('wrong');
+                fBox.innerHTML = `
+                    <p class="font-fun text-rose-800 text-sm"><i class="fas fa-times-circle mr-1 text-rose-500"></i> Not quite. The correct answer is ${q.correct}.</p>
+                    <p class="text-xs text-rose-700 font-medium">${q.explanation}</p>
+                `;
+                fBox.className = "p-4 bg-rose-50 border border-rose-200 rounded-2xl space-y-1";
             }
 
-            // Tampilkan butang soalan seterusnya
-            document.getElementById('btn-next-question').classList.remove('hidden');
+            fBox.classList.remove('hidden');
+            nextBtn.classList.remove('hidden');
+            saveData();
         }
 
-        function nextQuestion() {
-            quizSession.currentIndex++;
-            if (quizSession.currentIndex < quizSession.questions.length) {
-                showQuestion();
-            } else {
-                finishQuizSession();
-            }
-        }
-
-        // --- 11. TAMAT KUIZ & PAPARAN KEPUTUSAN ---
-        function finishQuizSession() {
-            const totalQuestions = quizSession.questions.length;
-            const percentage = Math.round((quizSession.correctCount / totalQuestions) * 100);
-            
-            // Kira bintang ganjaran (Maksimum 3 Bintang)
-            let starsEarned = 0;
-            let motivationMsg = "";
-
-            if (percentage === 100) {
-                starsEarned = 3;
-                motivationMsg = userState.settings.lang === 'ms' ? "Cemerlang! Kamu adalah Bintang Grammar!" : "Excellent! You are a Grammar Star!";
-            } else if (percentage >= 80) {
-                starsEarned = 2;
-                motivationMsg = userState.settings.lang === 'ms' ? "Kerja yang bagus! Kekalkan prestasi!" : "Great job! Keep it up!";
-            } else if (percentage >= 50) {
-                starsEarned = 1;
-                motivationMsg = userState.settings.lang === 'ms' ? "Cubaan yang baik! Jom buat latihan lagi!" : "Good try! Let’s practise again!";
-            } else {
-                starsEarned = 0;
-                motivationMsg = userState.settings.lang === 'ms' ? "Jangan putus asa! Cuba lagi sekali!" : "Don’t give up! Try again!";
-            }
-
-            // Simpan data kemajuan pengguna ke local storage
-            userState.stars += starsEarned;
-            userState.totalScore += quizSession.score;
-            
-            // Rekod skor tertinggi unit berkaitan
-            const prevBest = userState.highestScores[currentActiveTopic.id] || 0;
-            if (percentage > prevBest) {
-                userState.highestScores[currentActiveTopic.id] = percentage;
-                userState.completedTopics[currentActiveTopic.id] = percentage;
-            }
-
-            // Buka unit seterusnya secara automatik dalam senarai (galakan turutan)
-            if (percentage >= 50 && currentActiveTopic.id < TOPICS_DATA.length) {
-                const nextId = currentActiveTopic.id + 1;
-                if (!userState.unlockedTopics.includes(nextId)) {
-                    userState.unlockedTopics.push(nextId);
+        function nextQuizQuestion() {
+            activeQuiz.currentIndex += 1;
+            if (activeQuiz.currentIndex >= activeQuiz.questions.length) {
+                // End of match, show results metrics overlay
+                progressData.totalQuizzes += 1;
+                const finalPercent = Math.round((activeQuiz.correctCount / activeQuiz.questions.length) * 100);
+                
+                // Track best scores mapping per topic
+                if (activeQuiz.type === 'topic') {
+                    const currentBest = progressData.scores[activeQuiz.topicId] || 0;
+                    if(finalPercent > currentBest) {
+                        progressData.scores[activeQuiz.topicId] = finalPercent;
+                    }
                 }
+
+                // Award stars dynamically
+                let starsEarned = 0;
+                if(finalPercent >= 90) starsEarned = 20;
+                else if (finalPercent >= 70) starsEarned = 15;
+                else if (finalPercent >= 50) starsEarned = 10;
+                else starsEarned = 5;
+
+                progressData.stars += starsEarned;
+                saveData();
+                playSound('success');
+
+                switchView('results', {
+                    topicTitle: activeQuiz.title,
+                    topicId: activeQuiz.topicId,
+                    score: finalPercent,
+                    correct: activeQuiz.correctCount,
+                    wrong: activeQuiz.wrongCount,
+                    total: activeQuiz.questions.length,
+                    stars: starsEarned
+                });
+            } else {
+                loadQuizQuestion();
             }
-
-            // Kemaskini tarikh akhir latihan
-            const today = new Date();
-            userState.lastPracticeDate = today.toLocaleDateString('ms-MY');
-
-            saveToLocalStorage();
-            updateHeaderUI();
-
-            // ISI UI HALAMAN KEPUTUSAN
-            document.getElementById('result-topic-name').innerText = currentActiveTopic.name;
-            document.getElementById('res-correct').innerText = quizSession.correctCount;
-            document.getElementById('res-wrong').innerText = quizSession.wrongCount;
-            document.getElementById('res-percent').innerText = `${percentage}% (${quizSession.score} ` + (userState.settings.lang === 'ms' ? 'Markah)' : 'Points)');
-            document.getElementById('result-motivation').innerText = motivationMsg;
-
-            // Cetak Ikon Bintang Ganjaran
-            const starZone = document.getElementById('result-star-container');
-            starZone.innerHTML = "";
-            for(let s=1; s<=3; s++) {
-                if(s <= starsEarned) {
-                    starZone.innerHTML += `<i class="fas fa-star animate-bounce"></i>`;
-                } else {
-                    starZone.innerHTML += `<i class="far fa-star opacity-40"></i>`;
-                }
-            }
-
-            switchPage('result');
         }
 
-        function retryPractice() {
-            startPractice(currentActiveTopic.id);
+        function renderResultsScreen(data) {
+            let badgeMessage = "Keep trying! Learning takes practice.";
+            let headerThemeColor = "from-amber-400 to-orange-400";
+            if(data.score >= 90) {
+                badgeMessage = "Excellent work! You are a Grammar Star!";
+                headerThemeColor = "from-emerald-400 to-teal-500";
+            } else if (data.score >= 70) {
+                badgeMessage = "Great job! Keep practising to become even better!";
+                headerThemeColor = "from-indigo-400 to-purple-500";
+            } else if (data.score >= 50) {
+                badgeMessage = "Good effort! Review the lesson and try again.";
+            }
+
+            return `
+                <div class="animate-fade-in text-center space-y-6 pt-4">
+                    <!-- HEADER METRIC CARD -->
+                    <div class="bg-gradient-to-tr ${headerThemeColor} p-6 rounded-3xl text-white space-y-3 shadow-lg">
+                        <img src="${userProfile.avatar}" class="w-16 h-16 rounded-full border-4 border-white/20 mx-auto bg-white object-cover shadow-sm">
+                        <div>
+                            <h2 class="font-fun text-2xl">${userProfile.name}</h2>
+                            <p class="text-xs opacity-90">${data.topicTitle}</p>
+                        </div>
+                        
+                        <div class="bg-white/10 p-4 rounded-2xl inline-block mx-auto min-w-[140px]">
+                            <span class="text-[10px] uppercase font-bold tracking-widest text-white/80 block">Score</span>
+                            <span class="text-4xl font-fun">${data.score}%</span>
+                        </div>
+                    </div>
+
+                    <!-- MOTIVATIONAL RESPONSE BANNER -->
+                    <div class="bg-slate-50 border border-slate-100 p-4 rounded-2xl">
+                        <p class="text-sm font-bold text-slate-700 leading-tight">"${badgeMessage}"</p>
+                    </div>
+
+                    <!-- METRIC COUNTERS ROW CONTAINER -->
+                    <div class="grid grid-cols-3 gap-2.5">
+                        <div class="bg-emerald-50 border border-emerald-100 p-3 rounded-2xl">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-600 block">Correct</span>
+                            <span class="text-xl font-fun text-emerald-800">${data.correct}</span>
+                        </div>
+                        <div class="bg-rose-50 border border-rose-100 p-3 rounded-2xl">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-500 block">Wrong</span>
+                            <span class="text-xl font-fun text-rose-800">${data.wrong}</span>
+                        </div>
+                        <div class="bg-amber-50 border border-amber-100 p-3 rounded-2xl">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-amber-600 block">Stars Gifted</span>
+                            <span class="text-xl font-fun text-amber-800">+${data.stars} <i class="fas fa-star text-amber-400"></i></span>
+                        </div>
+                    </div>
+
+                    <!-- NAVIGATION ROUTER CONTROLS FOOTER -->
+                    <div class="space-y-2 pt-2">
+                        <button onclick="switchView('quiz', {type: 'topic', topicId: ${data.topicId || 1}})" class="w-full py-3.5 bg-indigo-600 text-white font-fun text-sm rounded-2xl transition active:scale-95 shadow-md shadow-indigo-100">
+                            Try Again
+                        </button>
+                        ${data.topicId ? `
+                        <button onclick="switchView('lesson', {id: ${data.topicId}})" class="w-full py-3.5 bg-slate-100 text-slate-700 font-fun text-sm rounded-2xl transition active:scale-95">
+                            Review Lesson
+                        </button>
+                        ` : ''}
+                        <button onclick="switchView('learn')" class="w-full py-3.5 bg-slate-100 text-slate-700 font-fun text-sm rounded-2xl transition active:scale-95">
+                            Back to Topics
+                        </button>
+                        <button onclick="switchView('home')" class="w-full py-3.5 border-2 border-slate-200 text-slate-500 font-fun text-sm rounded-2xl transition active:scale-95">
+                            Go Home
+                        </button>
+                    </div>
+                </div>
+            `;
         }
 
-        // --- 12. HALAMAN REKOD PRESTASI & LENCANA ---
         function renderProgressPage() {
-            document.getElementById('prog-avatar').src = userState.avatar;
-            document.getElementById('prog-name').innerText = userState.name;
-            document.getElementById('prog-total-stars').innerText = userState.stars;
-            document.getElementById('prog-total-score').innerText = userState.totalScore;
-            document.getElementById('prog-last-date').innerText = userState.lastPracticeDate || (userState.settings.lang === 'ms' ? "Tiada Rekod" : "No Record");
+            // Compute percentage and accurate scores elements metrics
+            const totalTopicsCompleted = Object.keys(progressData.scores).filter(k => progressData.scores[k] >= 80).length;
+            const accuracy = progressData.totalAnswers > 0 ? Math.round((progressData.correctAnswers / progressData.totalAnswers) * 100) : 0;
+            
+            // Generate progress bar for topics inside component panel
+            let barsHTML = '';
+            TOPICS.slice(0, 5).forEach(t => {
+                const score = progressData.scores[t.id] || 0;
+                barsHTML += `
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-xs font-bold text-slate-600">
+                            <span>${t.title}</span>
+                            <span class="text-indigo-600">${score}% Complete</span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                            <div class="bg-indigo-500 h-full rounded-full" style="width: ${score}%"></div>
+                        </div>
+                    </div>
+                `;
+            });
 
-            // Kira Status Lencana
-            let finishedCount = Object.keys(userState.completedTopics).length;
-            let hasPerfectScore = Object.values(userState.highestScores).some(s => s === 100);
-
-            const badgesList = [
-                { id: "b1", name: "First Step", desc: "Selesaikan latihan pertama", condition: finishedCount >= 1, icon: "fa-baby-carriage", color: "text-amber-500" },
-                { id: "b2", name: "Grammar Explorer", desc: "Tamatkan 5 topik kuiz", condition: finishedCount >= 5, icon: "fa-compass", color: "text-blue-500" },
-                { id: "b3", name: "Grammar Master", desc: "Tamatkan kesemua 20 topik", condition: finishedCount >= 20, icon: "fa-graduation-cap", color: "text-purple-600" },
-                { id: "b4", name: "Perfect Score", desc: "Dapat markah 100% dalam kuiz", condition: hasPerfectScore, icon: "fa-trophy", color: "text-yellow-500" },
-                { id: "b5", name: "Star Collector", desc: "Kumpul jumlah 50 bintang", condition: userState.stars >= 50, icon: "fa-star", color: "text-orange-500" }
+            // Badge validation logic engine parameters
+            const badges = [
+                { id: 'l1', name: "First Lesson Completed", icon: "fa-book-reader", color: "text-amber-500 bg-amber-50 border-amber-200", condition: progressData.completedLessons.length >= 1 },
+                { id: 'q1', name: "First Quiz Completed", icon: "fa-pencil-square", color: "text-sky-500 bg-sky-50 border-sky-200", condition: progressData.totalQuizzes >= 1 },
+                { id: 'gb', name: "Grammar Beginner", icon: "fa-baby", color: "text-emerald-500 bg-emerald-50 border-emerald-200", condition: progressData.correctAnswers >= 5 },
+                { id: 'ge', name: "Grammar Explorer", icon: "fa-compass", color: "text-purple-500 bg-purple-50 border-purple-200", condition: progressData.correctAnswers >= 25 },
+                { id: 'gc', name: "Grammar Champion", icon: "fa-crown", color: "text-rose-500 bg-rose-50 border-rose-200", condition: totalTopicsCompleted >= 3 },
+                { id: 'ps', name: "Perfect Score", icon: "fa-star", color: "text-yellow-600 bg-yellow-50 border-yellow-200", condition: Object.values(progressData.scores).includes(100) },
+                { id: 's3', name: "3-Day Learning Streak", icon: "fa-fire", color: "text-orange-500 bg-orange-50 border-orange-200", condition: progressData.streak >= 3 },
+                { id: 's7', name: "7-Day Learning Streak", icon: "fa-bolt", color: "text-indigo-500 bg-indigo-50 border-indigo-200", condition: progressData.streak >= 7 }
             ];
 
-            // Kira lencana yang berjaya diperolehi
-            let unlockedCount = 0;
-            const badgeContainer = document.getElementById('badges-container');
-            badgeContainer.innerHTML = "";
-
-            badgesList.forEach(b => {
-                const opacity = b.condition ? "opacity-100 scale-100" : "opacity-25 grayscale scale-90";
-                if(b.condition) unlockedCount++;
-
-                badgeContainer.innerHTML += `
-                    <div class="flex flex-col items-center p-1.5 bg-white border border-slate-100 rounded-xl shadow-inner ${opacity}">
-                        <div class="text-2xl ${b.color} mb-1"><i class="fas ${b.icon}"></i></div>
-                        <div class="text-[9px] font-black leading-tight truncate w-full">${b.name}</div>
+            let badgesHTML = '';
+            badges.forEach(b => {
+                badgesHTML += `
+                    <div class="p-3 border rounded-2xl flex flex-col items-center text-center gap-2 transition ${b.condition ? b.color + ' shadow-sm' : 'bg-slate-50 border-slate-100 text-slate-300 opacity-40'}">
+                        <div class="text-2xl"><i class="fas ${b.icon}"></i></div>
+                        <span class="text-[10px] font-bold leading-tight">${b.name}</span>
                     </div>
                 `;
             });
-            document.getElementById('badge-count').innerText = unlockedCount;
 
-            // Bina Senarai Pemarkahan Unit
-            const scoreListZone = document.getElementById('prog-topic-scores-list');
-            scoreListZone.innerHTML = "";
-            TOPICS_DATA.forEach(t => {
-                const score = userState.highestScores[t.id] !== undefined ? `${userState.highestScores[t.id]}%` : "-";
-                scoreListZone.innerHTML += `
-                    <div class="flex justify-between items-center p-2.5 border-b border-slate-100 hover:bg-slate-50 font-medium">
-                        <span class="text-slate-600 truncate max-w-[75%]">Unit ${t.id}: ${t.name}</span>
-                        <span class="font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md">${score}</span>
+            return `
+                <div class="animate-fade-in space-y-6">
+                    <div>
+                        <h2 class="text-2xl font-fun text-slate-800">My Progress Journey</h2>
+                        <p class="text-xs text-slate-500">Every single practice block complete brings you closer to English fluency!</p>
                     </div>
-                `;
-            });
+
+                    <!-- STATS GRID OVERLAY PANEL -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-white border border-slate-100 p-4 rounded-2xl shadow-sm text-center">
+                            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wide block">Topics Done</span>
+                            <span class="text-2xl font-fun text-slate-800">${totalTopicsCompleted}</span>
+                        </div>
+                        <div class="bg-white border border-slate-100 p-4 rounded-2xl shadow-sm text-center">
+                            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wide block">Quizzes Checked</span>
+                            <span class="text-2xl font-fun text-slate-800">${progressData.totalQuizzes}</span>
+                        </div>
+                        <div class="bg-white border border-slate-100 p-4 rounded-2xl shadow-sm text-center">
+                            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wide block">Accuracy Rate</span>
+                            <span class="text-2xl font-fun text-indigo-600">${accuracy}%</span>
+                        </div>
+                        <div class="bg-white border border-slate-100 p-4 rounded-2xl shadow-sm text-center">
+                            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wide block">Current Streak</span>
+                            <span class="text-2xl font-fun text-orange-500">${progressData.streak} Day${progressData.streak > 1 ? 's':''}</span>
+                        </div>
+                    </div>
+
+                    <!-- TOPICS PROGRESS STATUSES TRACKER PANEL -->
+                    <div class="bg-white border border-slate-100 p-5 rounded-3xl shadow-sm space-y-3.5">
+                        <h3 class="font-fun text-sm text-slate-700"><i class="fas fa-chart-line mr-1 text-slate-400"></i> Topic Progress Breakdown</h3>
+                        <div class="space-y-3">
+                            ${barsHTML}
+                        </div>
+                    </div>
+
+                    <!-- ACHIEVEMENT BADGES GRID SYSTEM MODULE -->
+                    <div class="space-y-3">
+                        <h3 class="font-fun text-base text-slate-700 px-1"><i class="fas fa-medal mr-1 text-amber-500"></i> Achievement Badges</h3>
+                        <div class="grid grid-cols-2 gap-2.5">
+                            ${badgesHTML}
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
-        // --- 13. HALAMAN TETAPAN & KAWALAN DATA (SETTINGS) ---
-        function renderSettingsPage() {
-            document.getElementById('set-name').value = userState.name;
-            document.getElementById('set-sound').checked = userState.settings.sound;
-            document.getElementById('set-lang').value = userState.settings.lang;
-            document.getElementById('set-dark').checked = userState.settings.dark || false;
+        function renderProfilePage() {
+            // Count total unlocked elements to print badges counter dynamically inside panel
+            const totalTopicsCompleted = Object.keys(progressData.scores).filter(k => progressData.scores[k] >= 80).length;
+            let earnedBadgesCount = 0;
+            if(progressData.completedLessons.length >= 1) earnedBadgesCount++;
+            if(progressData.totalQuizzes >= 1) earnedBadgesCount++;
+            if(progressData.correctAnswers >= 5) earnedBadgesCount++;
+            if(progressData.correctAnswers >= 25) earnedBadgesCount++;
+            if(totalTopicsCompleted >= 3) earnedBadgesCount++;
+            if(Object.values(progressData.scores).includes(100)) earnedBadgesCount++;
+
+            return `
+                <div class="animate-fade-in space-y-6 text-center pt-4">
+                    <!-- AVATAR CONTAINER EDIT BOARD BLOCK -->
+                    <div class="bg-white border border-slate-100 p-6 rounded-3xl shadow-sm space-y-4 max-w-sm mx-auto relative">
+                        <div class="relative w-24 h-24 mx-auto">
+                            <img id="profileAvatar" src="${userProfile.avatar}" class="w-24 h-24 rounded-full border-4 border-indigo-50 shadow-md bg-white object-cover">
+                            <label for="profileAvatarUpload" class="absolute bottom-0 right-0 bg-indigo-600 text-white w-8 h-8 rounded-full flex items-center justify-center cursor-pointer shadow-lg active:scale-95 transition">
+                                <i class="fas fa-pencil-alt text-xs"></i>
+                            </label>
+                            <input type="file" id="profileAvatarUpload" accept="image/*" class="hidden" onchange="handleProfileImageChange(event)">
+                        </div>
+
+                        <!-- PROFILE EDIT INDIVIDUAL ELEMENTS FORMS -->
+                        <div class="space-y-3 text-left">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wide mb-1">Your Display Name</label>
+                                <div class="flex gap-2">
+                                    <input type="text" id="profileNameInput" value="${userProfile.name}" class="flex-1 px-3 py-2 bg-slate-50 border-2 border-slate-100 rounded-xl font-bold text-slate-700 focus:outline-none focus:border-indigo-500 transition text-sm">
+                                    <button onclick="saveProfileChanges()" class="px-4 py-2 bg-indigo-600 text-white font-fun text-xs rounded-xl shadow active:scale-95 transition">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- REWARDS INSIGHT GRID CONTAINER -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-amber-50 border border-amber-200 p-4 rounded-2xl flex items-center gap-3">
+                            <div class="text-3xl text-amber-500"><i class="fas fa-star"></i></div>
+                            <div class="text-left">
+                                <span class="text-[10px] font-bold text-amber-700 uppercase block tracking-wider">Total Stars</span>
+                                <span class="text-xl font-fun text-amber-900">${progressData.stars}</span>
+                            </div>
+                        </div>
+                        <div class="bg-purple-50 border border-purple-200 p-4 rounded-2xl flex items-center gap-3">
+                            <div class="text-3xl text-purple-500"><i class="fas fa-medal"></i></div>
+                            <div class="text-left">
+                                <span class="text-[10px] font-bold text-purple-700 uppercase block tracking-wider">Badges Won</span>
+                                <span class="text-xl font-fun text-purple-900">${earnedBadgesCount} / 8</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DESTRUCTIVE ACTIONS OPTIONS BOX FOOTER -->
+                    <div class="bg-rose-50 border border-rose-100 p-5 rounded-3xl space-y-3 text-left">
+                        <h4 class="font-fun text-rose-900 text-sm"><i class="fas fa-shield-alt mr-1"></i> Danger Zone Option</h4>
+                        <p class="text-xs text-rose-700 leading-normal font-medium">Resetting your app layout clear data removes historical learning stats, best practice percentages, stars collection and custom setups permanently.</p>
+                        <button onclick="openResetModal()" class="w-full py-3 bg-white border-2 border-rose-200 hover:bg-rose-100/50 text-rose-600 font-fun text-xs rounded-xl shadow-sm transition active:scale-98">
+                            Reset Learning Progress
+                        </button>
+                    </div>
+                </div>
+            `;
         }
 
-        function updateSettingsProfile() {
-            const newName = document.getElementById('set-name').value.trim();
-            if (newName) {
-                userState.name = newName;
-                saveToLocalStorage();
-                updateHeaderUI();
-                alert(userState.settings.lang === 'ms' ? "Profil dikemaskini!" : "Profile updated!");
-            }
-        }
-
-        function toggleSoundSetting() {
-            userState.settings.sound = document.getElementById('set-sound').checked;
-            saveToLocalStorage();
-        }
-
-        function toggleLanguageSetting() {
-            userState.settings.lang = document.getElementById('set-lang').value;
-            saveToLocalStorage();
-            applyLanguageUI();
-            updateHeaderUI();
-        }
-
-        function toggleDarkModeSetting() {
-            userState.settings.dark = document.getElementById('set-dark').checked;
-            saveToLocalStorage();
-            applyDarkModeUI();
-        }
-
-        function applyLanguageUI() {
-            const isMs = userState.settings.lang === 'ms';
-            // Kemaskini terjemahan ringkas pada navigasi menu bawah fixed static
-            document.querySelector('#nav-btn-home span').innerText = isMs ? "Utama" : "Home";
-            document.querySelector('#nav-btn-learn-hub span').innerText = isMs ? "Belajar" : "Learn";
-            document.querySelector('#nav-btn-practice-hub span').innerText = isMs ? "Latihan" : "Practice";
-            document.querySelector('#nav-btn-progress span').innerText = isMs ? "Prestasi" : "Progress";
-            document.querySelector('#nav-btn-settings span').innerText = isMs ? "Tetapan" : "Settings";
-        }
-
-        function applyDarkModeUI() {
-            if (userState.settings.dark) {
-                document.getElementById('app').classList.add('dark', 'bg-slate-900', 'text-white');
-                document.getElementById('app').classList.remove('bg-white', 'text-slate-800');
-            } else {
-                document.getElementById('app').classList.remove('dark', 'bg-slate-900', 'text-white');
-                document.getElementById('app').classList.add('bg-white', 'text-slate-800');
-            }
-        }
-
-        function resetProgress() {
-            const conf = confirm(userState.settings.lang === 'ms' 
-                ? "Adakah anda pasti mahu mengosongkan semua rekod markah dan ganjaran bintang?" 
-                : "Are you sure you want to reset all score and star progress?");
-            if (conf) {
-                userState.stars = 0;
-                userState.totalScore = 0;
-                userState.unlockedTopics = [1];
-                userState.completedTopics = {};
-                userState.highestScores = {};
-                userState.readStatus = {};
-                userState.lastPracticeDate = "";
-                saveToLocalStorage();
-                updateHeaderUI();
-                switchPage('home');
-            }
-        }
-
-        function deleteProfile() {
-            const conf = confirm(userState.settings.lang === 'ms' 
-                ? "PERINGATAN! Profil dan semua data kemajuan anda akan dipadam terus daripada peranti ini. Teruskan?" 
-                : "WARNING! Your profile and all learning data will be permanently deleted from this device. Proceed?");
-            if (conf) {
-                localStorage.removeItem("grammar_hub_v1_state");
-                // Reset state asal
-                userState = {
-                    name: "", avatar: CARTOON_AVATARS[0], stars: 0, totalScore: 0,
-                    unlockedTopics: [1], completedTopics: {}, readStatus: {}, highestScores: {},
-                    lastPracticeDate: "", settings: { sound: true, lang: "ms", dark: false }
+        function handleProfileImageChange(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profileAvatar').src = e.target.result;
+                    userProfile.avatar = e.target.result;
+                    saveData();
                 };
-                initRegisterPage();
-                switchPage('register');
+                reader.readAsDataURL(file);
             }
         }
 
-        // --- 14. SISTEM AUDIO MAKLUMBALAS (SYNTHESIS AUDIO EFFECT) ---
-        function playAudioFeedback(type) {
-            if (!userState.settings.sound) return;
-
-            // Menggunakan Web Audio API terbina dalam browser bagi mengelakkan keperluan fail .mp3 luaran
-            try {
-                const AudioContext = window.AudioContext || window.webkitAudioContext;
-                if (!AudioContext) return;
-                const ctx = new AudioContext();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-
-                if (type === 'click') {
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(400, ctx.currentTime);
-                    gain.gain.setValueAtTime(0.1, ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
-                    osc.start();
-                    osc.stop(ctx.currentTime + 0.1);
-                } else if (type === 'correct') {
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
-                    osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1); // E5
-                    gain.gain.setValueAtTime(0.15, ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
-                    osc.start();
-                    osc.stop(ctx.currentTime + 0.3);
-                } else if (type === 'wrong') {
-                    osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(220, ctx.currentTime); // A3
-                    osc.frequency.setValueAtTime(165, ctx.currentTime + 0.15); // E3
-                    gain.gain.setValueAtTime(0.15, ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
-                    osc.start();
-                    osc.stop(ctx.currentTime + 0.4);
-                }
-            } catch (e) {
-                console.log("Audio feedback error:", e);
+        function saveProfileChanges() {
+            const nameIn = document.getElementById('profileNameInput').value.trim();
+            if (!nameIn) {
+                alert("Name can't be completely blank!");
+                return;
             }
+            userProfile.name = nameIn;
+            saveData();
+            playSound('success');
+            alert("Profile settings successfully saved!");
+        }
+
+        function openResetModal() {
+            playSound('click');
+            document.getElementById('resetModal').classList.remove('hidden');
+        }
+
+        function closeResetModal() {
+            playSound('click');
+            document.getElementById('resetModal').classList.add('hidden');
+        }
+
+        function confirmResetProgress() {
+            // Flush database nodes completely
+            localStorage.removeItem('gh_profile');
+            localStorage.removeItem('gh_progress');
+            userProfile = null;
+            progressData = {
+                completedLessons: [],
+                scores: {},
+                totalQuizzes: 0,
+                totalAnswers: 0,
+                correctAnswers: 0,
+                stars: 0,
+                streak: 1
+            };
+            document.getElementById('resetModal').classList.add('hidden');
+            switchView('setup');
         }
     </script>
 </body>
