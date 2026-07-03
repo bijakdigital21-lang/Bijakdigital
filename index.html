@@ -4,618 +4,1626 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grammar Hub 1</title>
-    <!-- Tailwind CSS v3 Play CDN - Jauh lebih stabil untuk fail HTML tunggal -->
+    <!-- Tailwind CSS for vibrant, modern, child-friendly styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons for child-friendly visual elements -->
+    <!-- FontAwesome for friendly icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Fredoka / Quicksand for rounded, kid-friendly typography -->
+    <!-- Google Fonts: Fredoka One / Quicksand for a friendly rounded child layout -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
-    
-    <script>
-        // Konfigurasi font tersuai untuk Tailwind
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        fun: ['Fredoka', 'sans-serif'],
-                        sans: ['Quicksand', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
     <style>
         body {
+            font-family: 'Quicksand', sans-serif;
             background-color: #F0F4F8;
             -webkit-tap-highlight-color: transparent;
         }
-        /* Custom animation for wrong answers */
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-6px); }
-            75% { transform: translateX(6px); }
+        .bouncy {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        .animate-shake {
-            animation: shake 0.3s ease-in-out;
+        .bouncy:active {
+            transform: scale(0.95);
         }
     </style>
 </head>
-<body class="bg-slate-100 min-h-screen flex flex-col justify-between">
+<body class="text-slate-800 pb-24 antialiased">
 
-    <!-- MAIN APP CONTAINER (Centered Mobile Frame) -->
-    <div class="w-full max-w-md mx-auto bg-white min-h-screen shadow-2xl relative flex flex-col justify-between pb-24">
+    <!-- APP CONTAINER -->
+    <div id="app" class="max-w-md mx-auto min-h-screen bg-slate-50 shadow-xl relative overflow-x-hidden flex flex-col pb-6">
         
-        <!-- Sound Toggle Floating Button -->
-        <div class="absolute top-4 right-4 z-50 bg-white/80 backdrop-blur-md p-1 rounded-full shadow-md border border-slate-200">
-            <button id="soundToggleBtn" onclick="toggleSound()" class="w-10 h-10 flex items-center justify-center rounded-full bg-emerald-100 text-emerald-600 font-bold transition hover:scale-105">
-                <i id="soundIcon" class="fas fa-volume-up"></i>
+        <!-- AUDIO SOUNDS MANAGER (WEB AUDIO API OVERRIDE) -->
+        <div class="fixed top-4 right-4 z-50 bg-white/90 backdrop-blur shadow-md px-3 py-1.5 rounded-full flex items-center space-x-2 border border-slate-200">
+            <span class="text-xs font-bold text-slate-500">Sound Effects:</span>
+            <button id="soundToggleBtn" onclick="toggleSound()" class="text-blue-500 hover:text-blue-600 focus:outline-none text-sm font-bold">
+                <i class="fas fa-volume-up"></i> ON
             </button>
         </div>
 
-        <!-- VIEWS CONTENT INJECTION POINT -->
-        <main id="viewContainer" class="flex-1 p-5 w-full">
-            <!-- Dynamic pages will load here via JavaScript -->
-        </main>
-
-        <!-- BOTTOM NAVIGATION BAR -->
-        <nav id="bottomNav" class="absolute bottom-0 left-0 w-full bg-white border-t border-slate-100 shadow-2xl py-2 px-4 flex justify-between items-center z-40 rounded-t-2xl hidden">
-            <button onclick="switchView('home')" id="nav-home" class="flex flex-col items-center gap-1 text-slate-400 font-semibold text-xs py-1 px-3 rounded-xl transition-all">
-                <i class="fas fa-house text-lg"></i>
-                <span>Home</span>
-            </button>
-            <button onclick="switchView('learn')" id="nav-learn" class="flex flex-col items-center gap-1 text-slate-400 font-semibold text-xs py-1 px-3 rounded-xl transition-all">
-                <i class="fas fa-book-open text-lg"></i>
-                <span>Learn</span>
-            </button>
-            <button onclick="switchView('practice')" id="nav-practice" class="flex flex-col items-center gap-1 text-slate-400 font-semibold text-xs py-1 px-3 rounded-xl transition-all">
-                <i class="fas fa-pencil-alt text-lg"></i>
-                <span>Practice</span>
-            </button>
-            <button onclick="switchView('progress')" id="nav-progress" class="flex flex-col items-center gap-1 text-slate-400 font-semibold text-xs py-1 px-3 rounded-xl transition-all">
-                <i class="fas fa-trophy text-lg"></i>
-                <span>Progress</span>
-            </button>
-            <button onclick="switchView('profile')" id="nav-profile" class="flex flex-col items-center gap-1 text-slate-400 font-semibold text-xs py-1 px-3 rounded-xl transition-all">
-                <i class="fas fa-user text-lg"></i>
-                <span>Profile</span>
-            </button>
-        </nav>
-    </div>
-
-    <!-- RESET CONFIRMATION MODAL -->
-    <div id="resetModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-6 hidden">
-        <div class="bg-white rounded-3xl p-6 w-full max-w-xs text-center shadow-2xl">
-            <div class="w-16 h-16 bg-rose-100 text-rose-500 text-2xl flex items-center justify-center rounded-full mx-auto mb-4">
-                <i class="fas fa-exclamation-triangle"></i>
+        <!-- ==================== 1. PROFILE SETUP SCREEN ==================== -->
+        <div id="screen-profile-setup" class="hidden flex-1 flex flex-col justify-center items-center p-6 text-center">
+            <div class="w-24 h-24 bg-gradient-to-tr from-blue-400 to-indigo-500 rounded-3xl flex items-center justify-center shadow-lg mb-6 transform rotate-6">
+                <i class="fas fa-graduation-cap text-white text-5xl"></i>
             </div>
-            <h3 class="font-fun text-xl text-slate-800 mb-2">Reset Progress?</h3>
-            <p class="text-sm text-slate-500 mb-6">Are you sure you want to reset all your learning progress?</p>
-            <div class="flex gap-3">
-                <button onclick="closeResetModal()" class="flex-1 py-3 bg-slate-100 text-slate-600 font-bold rounded-2xl text-sm active:scale-95 transition">Cancel</button>
-                <button onclick="confirmResetProgress()" class="flex-1 py-3 bg-rose-500 text-white font-bold rounded-2xl text-sm active:scale-95 transition shadow-lg shadow-rose-200">Reset Progress</button>
+            <h1 class="text-3xl font-bold text-indigo-600 mb-2">Welcome to Grammar Hub 1!</h1>
+            <p class="text-slate-500 text-sm mb-8 px-4">Create your learning profile and start improving your grammar.</p>
+            
+            <div class="w-full bg-white p-6 rounded-3xl shadow-sm border border-slate-100 space-y-6">
+                <div>
+                    <label class="block text-left text-sm font-bold text-slate-600 mb-2">Choose Avatar:</label>
+                    <div class="flex justify-center space-x-4 mb-4">
+                        <div onclick="selectAvatar('avatar1')" id="avatar1" class="avatar-opt w-16 h-16 rounded-full bg-amber-100 border-4 border-indigo-500 cursor-pointer flex items-center justify-center text-3xl transition-all">🐱</div>
+                        <div onclick="selectAvatar('avatar2')" id="avatar2" class="avatar-opt w-16 h-16 rounded-full bg-teal-100 border-4 border-transparent cursor-pointer flex items-center justify-center text-3xl transition-all">🦁</div>
+                        <div onclick="selectAvatar('avatar3')" id="avatar3" class="avatar-opt w-16 h-16 rounded-full bg-rose-100 border-4 border-transparent cursor-pointer flex items-center justify-center text-3xl transition-all">🐼</div>
+                        <div onclick="selectAvatar('avatar4')" id="avatar4" class="avatar-opt w-16 h-16 rounded-full bg-purple-100 border-4 border-transparent cursor-pointer flex items-center justify-center text-3xl transition-all">🤖</div>
+                    </div>
+                    <div class="text-xs text-slate-400 mb-2">Or upload your own picture:</div>
+                    <input type="file" id="customAvatarInput" accept="image/*" class="hidden" onchange="handleCustomAvatar(event)">
+                    <button onclick="document.getElementById('customAvatarInput').click()" class="text-xs font-bold text-indigo-500 bg-indigo-50 px-3 py-1.5 rounded-full hover:bg-indigo-100 transition">
+                        <i class="fas fa-upload mr-1"></i> Upload Profile Picture
+                    </button>
+                </div>
+
+                <div>
+                    <label class="block text-left text-sm font-bold text-slate-600 mb-2">Enter your name:</label>
+                    <input type="text" id="setupNameInput" placeholder="Your Name" class="w-full px-4 py-3 border-2 border-slate-200 rounded-2xl focus:outline-none focus:border-indigo-400 text-center font-bold text-slate-700 text-lg">
+                </div>
+
+                <button onclick="saveInitialProfile()" class="bouncy w-full bg-gradient-to-r from-emerald-400 to-green-500 text-white font-bold py-4 rounded-2xl shadow-md text-lg tracking-wide">
+                    Start Learning <i class="fas fa-arrow-right ml-1"></i>
+                </button>
             </div>
         </div>
+
+        <!-- ==================== MAIN NAVIGABLE SCREENS WRAPPER ==================== -->
+        <div id="main-content-wrapper" class="hidden flex-1 flex flex-col">
+            
+            <!-- HEADER -->
+            <header class="bg-white p-5 border-b border-slate-100 flex items-center justify-between sticky top-0 z-40 shadow-xs">
+                <div>
+                    <span class="text-xs font-bold text-slate-400 block uppercase tracking-wider">Welcome back</span>
+                    <h2 id="headerStudentName" class="text-xl font-bold text-slate-800">Hello, Student!</h2>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <div class="bg-amber-50 text-amber-600 px-3 py-1 rounded-full flex items-center space-x-1 border border-amber-200">
+                        <i class="fas fa-star text-sm"></i>
+                        <span id="globalStarsCount" class="font-bold text-sm">0</span>
+                    </div>
+                    <div id="headerAvatar" class="w-11 h-11 rounded-full bg-indigo-100 border-2 border-indigo-400 flex items-center justify-center text-2xl overflow-hidden object-cover">🐱</div>
+                </div>
+            </header>
+
+            <!-- MOTIVATIONAL BANNER -->
+            <div id="motivationalBanner" class="mx-4 mt-4 bg-gradient-to-r from-blue-500 to-purple-600 p-4 rounded-3xl text-white shadow-sm flex items-center justify-between">
+                <div class="pr-2">
+                    <h4 class="font-bold text-sm text-blue-100">Daily Energy Boost!</h4>
+                    <p id="motivationalQuote" class="text-base font-bold leading-tight mt-0.5">Great learners practise every day!</p>
+                </div>
+                <div class="text-3xl opacity-80"><i class="fas fa-rocket"></i></div>
+            </div>
+
+            <!-- TAB 1: HOME SCREEN -->
+            <div id="screen-home" class="tab-screen p-4 space-y-4">
+                <h3 class="text-lg font-bold text-slate-700 px-1">Let's Learn Grammar!</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div onclick="switchTab('learn')" class="bouncy bg-gradient-to-br from-blue-400 to-blue-500 p-5 rounded-3xl text-white shadow-sm cursor-pointer relative overflow-hidden group">
+                        <div class="absolute -right-4 -bottom-4 text-6xl text-blue-300/30 group-hover:scale-110 transition"><i class="fas fa-book"></i></div>
+                        <i class="fas fa-book text-2xl mb-2 block bg-white/20 w-10 h-10 rounded-xl flex items-center justify-center"></i>
+                        <span class="font-bold text-lg block">Learn Grammar</span>
+                        <span class="text-xs text-blue-100">Study lessons first</span>
+                    </div>
+                    <div onclick="switchTab('practice')" class="bouncy bg-gradient-to-br from-purple-400 to-purple-500 p-5 rounded-3xl text-white shadow-sm cursor-pointer relative overflow-hidden group">
+                        <div class="absolute -right-4 -bottom-4 text-6xl text-purple-300/30 group-hover:scale-110 transition"><i class="fas fa-pencil-alt"></i></div>
+                        <i class="fas fa-pencil-alt text-2xl mb-2 block bg-white/20 w-10 h-10 rounded-xl flex items-center justify-center"></i>
+                        <span class="font-bold text-lg block">Practice Zone</span>
+                        <span class="text-xs text-purple-100">Take fun interactive quizzes</span>
+                    </div>
+                    <div onclick="switchTab('progress')" class="bouncy bg-gradient-to-br from-amber-400 to-amber-500 p-5 rounded-3xl text-white shadow-sm cursor-pointer relative overflow-hidden group">
+                        <div class="absolute -right-4 -bottom-4 text-6xl text-amber-300/30 group-hover:scale-110 transition"><i class="fas fa-trophy"></i></div>
+                        <i class="fas fa-trophy text-2xl mb-2 block bg-white/20 w-10 h-10 rounded-xl flex items-center justify-center"></i>
+                        <span class="font-bold text-lg block">My Progress</span>
+                        <span class="text-xs text-amber-100">View badges & records</span>
+                    </div>
+                    <div onclick="switchTab('profile')" class="bouncy bg-gradient-to-br from-rose-400 to-rose-500 p-5 rounded-3xl text-white shadow-sm cursor-pointer relative overflow-hidden group">
+                        <div class="absolute -right-4 -bottom-4 text-6xl text-rose-300/30 group-hover:scale-110 transition"><i class="fas fa-user"></i></div>
+                        <i class="fas fa-user text-2xl mb-2 block bg-white/20 w-10 h-10 rounded-xl flex items-center justify-center"></i>
+                        <span class="font-bold text-lg block">My Profile</span>
+                        <span class="text-xs text-rose-100">Change your settings</span>
+                    </div>
+                </div>
+
+                <!-- OVERALL QUICK STATS STRIP -->
+                <div class="bg-white p-4 rounded-3xl border border-slate-100 flex justify-around text-center mt-2">
+                    <div>
+                        <span class="text-xs font-bold text-slate-400 block uppercase">Streak</span>
+                        <span id="homeStreakVal" class="text-lg font-bold text-orange-500"><i class="fas fa-fire mr-0.5"></i> 1 Day</span>
+                    </div>
+                    <div class="border-r border-slate-100"></div>
+                    <div>
+                        <span class="text-xs font-bold text-slate-400 block uppercase">Answered</span>
+                        <span id="homeAnsweredVal" class="text-lg font-bold text-blue-500">0 Qs</span>
+                    </div>
+                    <div class="border-r border-slate-100"></div>
+                    <div>
+                        <span class="text-xs font-bold text-slate-400 block uppercase">Badges</span>
+                        <span id="homeBadgesVal" class="text-lg font-bold text-purple-500">0 / 8</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: LEARN TOPICS SCREEN -->
+            <div id="screen-learn" class="tab-screen p-4 space-y-4 hidden">
+                <div class="flex items-center justify-between mb-1">
+                    <h3 class="text-lg font-bold text-slate-700">Grammar Lessons</h3>
+                    <span class="text-xs font-bold bg-indigo-50 text-indigo-600 px-2.5 py-1 rounded-full">Study to unlock Practice</span>
+                </div>
+                <div id="topicsContainer" class="space-y-4">
+                    <!-- Dynamic rendering via Javascript -->
+                </div>
+            </div>
+
+            <!-- TAB 3: PRACTICE ZONE CHOOSE MENU -->
+            <div id="screen-practice" class="tab-screen p-4 space-y-4 hidden">
+                <h3 class="text-lg font-bold text-slate-700">Practice Zone</h3>
+                
+                <div class="bg-white p-5 rounded-3xl border border-slate-100 space-y-3">
+                    <h4 class="font-bold text-slate-700 text-sm flex items-center"><i class="fas fa-list text-indigo-500 mr-2"></i> Practice by Topic</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">Choose a specific grammar topic you have studied to target individual practice sets. Requires topic study completion first.</p>
+                    <div id="practiceTopicButtonsContainer" class="grid grid-cols-1 gap-2 pt-1">
+                        <!-- Dynamic Buttons rendered based on locking logic -->
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-indigo-50 to-purple-50 p-5 rounded-3xl border border-indigo-100/60 space-y-3">
+                    <h4 class="font-bold text-indigo-800 text-sm flex items-center"><i class="fas fa-random text-indigo-500 mr-2"></i> General Quizzes &amp; Challenges</h4>
+                    <p class="text-xs text-indigo-900/60 leading-relaxed">Test your general vocabulary and grammar knowledge with these global quiz configurations anytime.</p>
+                    <div class="grid grid-cols-1 gap-3 pt-1">
+                        <button onclick="launchMixedQuiz('mixed', 'Mixed Grammar Quiz')" class="bouncy w-full bg-white border-2 border-indigo-200 text-indigo-700 hover:bg-indigo-100 text-left p-3.5 rounded-2xl flex items-center justify-between">
+                            <div>
+                                <span class="font-bold text-sm block">Mixed Grammar Quiz</span>
+                                <span class="text-xs text-slate-400">10 randomized questions from all topics</span>
+                            </div>
+                            <i class="fas fa-play-circle text-xl text-indigo-500"></i>
+                        </button>
+                        <button onclick="launchMixedQuiz('quick', 'Quick Quiz')" class="bouncy w-full bg-white border-2 border-purple-200 text-purple-700 hover:bg-purple-100 text-left p-3.5 rounded-2xl flex items-center justify-between">
+                            <div>
+                                <span class="font-bold text-sm block">Quick Quiz</span>
+                                <span class="text-xs text-slate-400">5 fast-paced questions</span>
+                            </div>
+                            <i class="fas fa-bolt text-xl text-purple-500"></i>
+                        </button>
+                        <button onclick="launchMixedQuiz('challenge', 'Challenge Mode')" class="bouncy w-full bg-gradient-to-r from-orange-400 to-amber-500 text-white text-left p-3.5 rounded-2xl flex items-center justify-between shadow-xs">
+                            <div>
+                                <span class="font-bold text-sm block">Challenge Mode</span>
+                                <span class="text-xs text-orange-500 font-bold bg-white/90 px-1.5 py-0.5 rounded-md mt-0.5 inline-block">20 Intense Questions!</span>
+                            </div>
+                            <i class="fas fa-fire text-xl text-white"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: MY PROGRESS SCREEN -->
+            <div id="screen-progress" class="tab-screen p-4 space-y-5 hidden">
+                <h3 class="text-lg font-bold text-slate-700">My Learning Journey</h3>
+                
+                <!-- PROGRESS OVERVIEW STATS GRID -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white p-3 rounded-2xl border border-slate-100 flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500"><i class="fas fa-check-circle"></i></div>
+                        <div>
+                            <span class="text-[10px] font-bold text-slate-400 block uppercase">Topics Done</span>
+                            <span id="progStatTopics" class="text-base font-bold text-slate-700">0 / 5</span>
+                        </div>
+                    </div>
+                    <div class="bg-white p-3 rounded-2xl border border-slate-100 flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-purple-500"><i class="fas fa-star text-amber-500"></i></div>
+                        <div>
+                            <span class="text-[10px] font-bold text-slate-400 block uppercase">Total Stars</span>
+                            <span id="progStatStars" class="text-base font-bold text-slate-700">0</span>
+                        </div>
+                    </div>
+                    <div class="bg-white p-3 rounded-2xl border border-slate-100 flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-500"><i class="fas fa-tasks"></i></div>
+                        <div>
+                            <span class="text-[10px] font-bold text-slate-400 block uppercase">Answered</span>
+                            <span id="progStatQs" class="text-base font-bold text-slate-700">0</span>
+                        </div>
+                    </div>
+                    <div class="bg-white p-3 rounded-2xl border border-slate-100 flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-orange-500"><i class="fas fa-percentage"></i></div>
+                        <div>
+                            <span class="text-[10px] font-bold text-slate-400 block uppercase">Best Accuracy</span>
+                            <span id="progStatAccuracy" class="text-base font-bold text-slate-700">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DETAILED TOPICS PROGRESS BARS -->
+                <div class="bg-white p-4 rounded-3xl border border-slate-100 space-y-3">
+                    <h4 class="font-bold text-sm text-slate-600 uppercase tracking-wide">Topic Completion Bars</h4>
+                    <div id="progressBarsList" class="space-y-3">
+                        <!-- Filled Programmatically -->
+                    </div>
+                </div>
+
+                <!-- BADGES SECTION -->
+                <div class="bg-white p-4 rounded-3xl border border-slate-100 space-y-3">
+                    <h4 class="font-bold text-sm text-slate-600 uppercase tracking-wide">Earned Achievement Badges</h4>
+                    <div id="badgesGrid" class="grid grid-cols-4 gap-2 text-center">
+                        <!-- Rendered by key dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 5: MY PROFILE SCREEN -->
+            <div id="screen-profile" class="tab-screen p-4 space-y-4 hidden">
+                <h3 class="text-lg font-bold text-slate-700">My Profile Settings</h3>
+                
+                <div class="bg-white p-5 rounded-3xl border border-slate-100 text-center space-y-4">
+                    <div class="relative w-24 h-24 mx-auto">
+                        <div id="profileViewAvatar" class="w-24 h-24 rounded-full bg-slate-100 border-4 border-indigo-400 flex items-center justify-center text-5xl overflow-hidden object-cover">🐱</div>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-slate-400 text-left uppercase">Update Student Name</label>
+                        <input type="text" id="profileEditNameInput" class="w-full px-4 py-2.5 border-2 border-slate-200 rounded-xl font-bold text-slate-700 text-center">
+                    </div>
+
+                    <div class="space-y-2 pt-1">
+                        <label class="block text-xs font-bold text-slate-400 text-left uppercase">Change Icon Avatar</label>
+                        <div class="flex justify-center space-x-2">
+                            <button onclick="updateProfileAvatar('avatar1', '🐱')" class="px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xl">🐱</button>
+                            <button onclick="updateProfileAvatar('avatar2', '🦁')" class="px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xl">🦁</button>
+                            <button onclick="updateProfileAvatar('avatar3', '🐼')" class="px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xl">🐼</button>
+                            <button onclick="updateProfileAvatar('avatar4', '🤖')" class="px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xl">🤖</button>
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <button onclick="saveProfileEdits()" class="bouncy w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2.5 rounded-xl text-sm transition shadow-xs">
+                            <i class="fas fa-save mr-1"></i> Save Changes
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PROGRESS RESET ACTION CARD -->
+                <div class="bg-rose-50 border border-rose-100 p-4 rounded-3xl space-y-2">
+                    <h4 class="font-bold text-rose-700 text-sm"><i class="fas fa-exclamation-triangle mr-1"></i> Reset Everything</h4>
+                    <p class="text-xs text-rose-600/80 leading-relaxed">This will delete your name, scores, stars, and unlock states. This action cannot be undone.</p>
+                    <button onclick="openResetModal()" class="bouncy bg-white text-rose-600 border border-rose-200 font-bold px-4 py-2 rounded-xl text-xs hover:bg-rose-100 transition mt-1">
+                        Reset Learning Progress
+                    </button>
+                </div>
+            </div>
+
+            <!-- FOOTER BOTTOM TAB BAR NAVIGATION -->
+            <nav class="bg-white border-t border-slate-200 fixed bottom-0 left-0 right-0 max-w-md mx-auto h-20 flex items-center justify-around px-2 z-40 shadow-xl">
+                <button onclick="switchTab('home')" id="nav-home" class="nav-item flex flex-col items-center justify-center text-indigo-500 font-bold transition flex-1 py-2">
+                    <i class="fas fa-home text-xl mb-0.5"></i>
+                    <span class="text-[11px]">Home</span>
+                </button>
+                <button onclick="switchTab('learn')" id="nav-learn" class="nav-item flex flex-col items-center justify-center text-slate-400 font-bold transition flex-1 py-2">
+                    <i class="fas fa-book-open text-xl mb-0.5"></i>
+                    <span class="text-[11px]">Learn</span>
+                </button>
+                <button onclick="switchTab('practice')" id="nav-practice" class="nav-item flex flex-col items-center justify-center text-slate-400 font-bold transition flex-1 py-2">
+                    <i class="fas fa-pencil-alt text-xl mb-0.5"></i>
+                    <span class="text-[11px]">Practice</span>
+                </button>
+                <button onclick="switchTab('progress')" id="nav-progress" class="nav-item flex flex-col items-center justify-center text-slate-400 font-bold transition flex-1 py-2">
+                    <i class="fas fa-award text-xl mb-0.5"></i>
+                    <span class="text-[11px]">Progress</span>
+                </button>
+                <button onclick="switchTab('profile')" id="nav-profile" class="nav-item flex flex-col items-center justify-center text-slate-400 font-bold transition flex-1 py-2">
+                    <i class="fas fa-user-circle text-xl mb-0.5"></i>
+                    <span class="text-[11px]">Profile</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- ==================== DYNAMIC SUB-VIEW: LESSON STUDY SCREEN ==================== -->
+        <div id="subview-lesson-study" class="hidden flex-1 flex flex-col bg-white p-5 space-y-5">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <button onclick="exitLessonView()" class="text-slate-400 hover:text-slate-600 font-bold text-sm flex items-center">
+                    <i class="fas fa-chevron-left mr-1"></i> Back to Lessons
+                </button>
+                <span id="lessonViewHeaderNum" class="text-xs font-bold uppercase tracking-wider text-indigo-500 bg-indigo-50 px-2.5 py-1 rounded-full">Topic 1</span>
+            </div>
+
+            <h2 id="lessonViewTitle" class="text-2xl font-bold text-slate-800">Topic Title</h2>
+            
+            <div class="bg-blue-50/70 border border-blue-100 p-4 rounded-2xl">
+                <span class="text-[10px] font-bold uppercase tracking-wide text-blue-500 block mb-1">Definition</span>
+                <p id="lessonViewDefinition" class="text-slate-700 text-sm font-medium leading-relaxed">Simple Definition</p>
+            </div>
+
+            <div class="space-y-2">
+                <span class="text-[10px] font-bold uppercase tracking-wide text-purple-500 block">Learning Examples</span>
+                <div id="lessonViewExamplesContainer" class="grid grid-cols-1 gap-2">
+                    <!-- Cards injection -->
+                </div>
+            </div>
+
+            <div class="bg-amber-50 border border-amber-200 p-3.5 rounded-2xl flex items-start space-x-2.5">
+                <i class="fas fa-star text-amber-500 mt-0.5"></i>
+                <div>
+                    <span class="text-xs font-bold text-amber-800 block">Important Note</span>
+                    <p id="lessonViewNote" class="text-xs text-amber-900/80 mt-0.5 font-medium leading-relaxed">Important note summary text.</p>
+                </div>
+            </div>
+
+            <!-- MINI ACTIVITY CARD BOX -->
+            <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-indigo-600 bg-white border border-indigo-100 px-2 py-0.5 rounded-md">⚡ Mini Activity</span>
+                    <span id="miniActivityStatusBadge" class="text-[11px] font-bold text-orange-500"><i class="fas fa-lock"></i> Pending Activity</span>
+                </div>
+                <p id="miniActivityQuestionText" class="text-xs font-bold text-slate-600 leading-snug">Tap all the nouns from the choices below:</p>
+                
+                <div id="miniActivityChoicesWrap" class="flex flex-wrap gap-2">
+                    <!-- Injection -->
+                </div>
+                
+                <div id="miniActivityFeedbackBox" class="hidden text-xs font-bold p-2.5 rounded-xl text-center"></div>
+            </div>
+
+            <div class="pt-4 mt-auto">
+                <button id="lessonStartPracticeBtn" disabled class="w-full bg-slate-300 text-slate-500 font-bold py-4 rounded-2xl text-center text-base cursor-not-allowed shadow-inner transition-all">
+                    Complete Mini Activity to Start Practice
+                </button>
+            </div>
+        </div>
+
+        <!-- ==================== DYNAMIC SUB-VIEW: QUIZ/PRACTICE WORKFLOW SCREEN ==================== -->
+        <div id="subview-quiz-workflow" class="hidden flex-1 flex flex-col bg-slate-50 p-4 relative">
+            
+            <!-- TOP STATS BAR -->
+            <div class="flex items-center justify-between bg-white p-3 rounded-2xl shadow-xs border border-slate-100 mb-4">
+                <div>
+                    <span id="quizCurrentCategoryLabel" class="text-xs font-bold text-slate-400 block uppercase tracking-wide">Topic Practice</span>
+                    <h4 id="quizCurrentTopicTitle" class="text-sm font-bold text-slate-700 truncate max-w-[180px]">Nouns</h4>
+                </div>
+                <div class="text-right">
+                    <span id="quizQuestionCounterText" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full">Question 1 of 20</span>
+                </div>
+            </div>
+
+            <!-- PROGRESS BAR UPPER -->
+            <div class="w-full bg-slate-200 h-2.5 rounded-full mb-4 overflow-hidden">
+                <div id="quizGlobalProgressBarInner" class="bg-gradient-to-r from-blue-400 to-indigo-500 h-full w-0 transition-all duration-300"></div>
+            </div>
+
+            <!-- QUESTION CARD -->
+            <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-xs space-y-4 flex-1 flex flex-col justify-center min-h-[160px]">
+                <span class="text-xs font-bold text-indigo-400 block uppercase tracking-wider">Question:</span>
+                <p id="quizQuestionBodyText" class="text-lg font-bold text-slate-800 leading-snug">Which word is a noun?</p>
+            </div>
+
+            <!-- MULTIPLE CHOICE BUTTONS CONTAINER -->
+            <div id="quizOptionsGrid" class="grid grid-cols-1 gap-2.5 mt-4">
+                <!-- Option buttons dynamically generated -->
+            </div>
+
+            <!-- INSTANT ANSWER FEEDBACK POPUP WRAP -->
+            <div id="quizInstantFeedbackWrap" class="hidden mt-4 bg-white border p-4 rounded-2xl shadow-md space-y-2 transform transition-all scale-95 duration-150">
+                <div class="flex items-center space-x-2">
+                    <span id="quizFeedbackIconIndicator" class="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold">✓</span>
+                    <h4 id="quizFeedbackHeading" class="font-bold text-base">Correct! Well done!</h4>
+                </div>
+                <p id="quizFeedbackExplanation" class="text-xs text-slate-500 font-medium leading-relaxed">School is a noun because it represents a place name configuration.</p>
+                <button onclick="progressToNextQuestion()" class="bouncy w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 rounded-xl text-xs tracking-wide">
+                    Next Question <i class="fas fa-chevron-right ml-1"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- ==================== DYNAMIC SUB-VIEW: QUIZ RESULTS SCREEN ==================== -->
+        <div id="subview-quiz-results" class="hidden flex-1 flex flex-col justify-center items-center p-5 text-center bg-white">
+            
+            <div id="resultsStarDecorationWrap" class="flex justify-center space-x-1 text-3xl text-amber-400 mb-2 anim-pulse">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star text-4xl transform -translate-y-2"></i>
+                <i class="fas fa-star"></i>
+            </div>
+
+            <h2 class="text-2xl font-bold text-slate-800">Quiz Completed!</h2>
+            <p id="resultsTopicSubhead" class="text-xs font-bold text-slate-400 uppercase mt-0.5">Topic: Nouns Practice</p>
+            
+            <!-- STUDENT PREVIEW CARD -->
+            <div class="my-4 flex items-center space-x-3 bg-slate-50 border border-slate-200 rounded-2xl p-3 w-full max-w-xs justify-center">
+                <div id="resultsAvatarThumb" class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-xl overflow-hidden object-cover">🐱</div>
+                <div class="text-left">
+                    <span id="resultsStudentName" class="font-bold text-sm block text-slate-700">Ali bin Ahmad</span>
+                    <span class="text-[10px] text-slate-400 block">Primary School Student</span>
+                </div>
+            </div>
+
+            <!-- SCORE BIG EMBLEM -->
+            <div class="w-32 h-32 bg-slate-50 rounded-full border-4 border-indigo-400 flex flex-col items-center justify-center shadow-inner my-2">
+                <span id="resultsPercentageValue" class="text-3xl font-bold text-indigo-600">100%</span>
+                <span id="resultsRawScoreText" class="text-xs font-bold text-slate-400 mt-0.5">20 / 20 Correct</span>
+            </div>
+
+            <p id="resultsMotivationalMessage" class="text-sm font-bold text-slate-600 px-4 max-w-sm mt-3 leading-snug">Excellent work! You are a Grammar Star!</p>
+
+            <!-- STATS COUNTER BLOCKS -->
+            <div class="grid grid-cols-2 gap-2 w-full max-w-xs my-4 text-center">
+                <div class="bg-green-50 border border-green-100 p-2 rounded-xl">
+                    <span class="text-[10px] font-bold text-green-500 uppercase block">Correct</span>
+                    <span id="resultsCountCorrect" class="text-sm font-bold text-green-700">20</span>
+                </div>
+                <div class="bg-rose-50 border border-rose-100 p-2 rounded-xl">
+                    <span class="text-[10px] font-bold text-rose-400 uppercase block">Incorrect</span>
+                    <span id="resultsCountWrong" class="text-sm font-bold text-rose-700">0</span>
+                </div>
+            </div>
+
+            <!-- ACTIONS GRID -->
+            <div class="w-full max-w-xs space-y-2 mt-2">
+                <button onclick="retryCurrentQuiz()" class="bouncy w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 rounded-xl text-sm shadow-xs">
+                    <i class="fas fa-redo mr-1"></i> Try Again
+                </button>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="resultsReviewLessonRedirect()" class="bouncy bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs border border-slate-200">
+                        Review Lesson
+                    </button>
+                    <button onclick="switchTab('learn')" class="bouncy bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs border border-slate-200">
+                        Back to Topics
+                    </button>
+                </div>
+                <button onclick="switchTab('home')" class="bouncy w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 rounded-xl text-xs">
+                    Go Home
+                </button>
+            </div>
+        </div>
+
+        <!-- ==================== CONFIRMATION POPUP RESET MODAL ==================== -->
+        <div id="globalConfirmationModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 max-w-md mx-auto">
+            <div class="bg-white rounded-3xl p-6 text-center space-y-4 max-w-xs w-full shadow-2xl border border-slate-100 transform scale-100 transition-all">
+                <div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center text-xl mx-auto"><i class="fas fa-trash-alt"></i></div>
+                <h3 class="font-bold text-lg text-slate-800">Are you sure?</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">Are you sure you want to reset all your learning progress? This includes your name, stars, badges and states.</p>
+                <div class="grid grid-cols-2 gap-2 pt-2">
+                    <button onclick="closeResetModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-2 rounded-xl text-xs">Cancel</button>
+                    <button onclick="triggerAbsoluteReset()" class="bg-rose-500 hover:bg-rose-600 text-white font-bold py-2 rounded-xl text-xs shadow-xs">Reset Progress</button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <!-- JAVASCRIPT LOGIC & CONTENT -->
+    <!-- ========================================== APPLICATION JAVASCRIPT CODE CORE ========================================== -->
     <script>
-        // --- GRAMMAR DATABASE ---
-        const TOPICS = [
-            { id: 1, title: "Nouns", desc: "Naming words for people, places, animals, and things.", def: "A noun is a naming word. It names a person, place, animal, or thing.", note: "Remember: A noun is a naming word.", examples: { Person: "teacher, mother, Ali", Place: "school, park, Malaysia", Animal: "cat, elephant, bird", Thing: "book, pencil, table" }, activity: { type: "tap-nouns", instruction: "Tap all the nouns from the words below!", options: [{word: "Apple", isCorrect: true}, {word: "Run", isCorrect: false}, {word: "Doctor", isCorrect: true}, {word: "Happy", isCorrect: false}, {word: "Cat", isCorrect: true}, {word: "Sing", isCorrect: false}] } },
-            { id: 2, title: "Common & Proper Nouns", desc: "General names vs specific unique names.", def: "Common nouns are everyday general naming words. Proper nouns are special, specific names that always start with a Capital Letter.", note: "Proper nouns always begin with a Capital Letter!", examples: { "Common Nouns": "boy, school, country, car", "Proper Nouns": "Ali, SK Taman Ceria, Malaysia, Proton Saga" }, activity: { type: "choose-correct", instruction: "Which one is a Proper Noun?", options: [{word: "Kuala Lumpur", isCorrect: true}, {word: "city", isCorrect: false}] } },
-            { id: 3, title: "Singular & Plural Nouns", desc: "One item versus more than one item.", def: "Singular means only ONE. Plural means MORE THAN ONE. We usually add 's' or 'es' to plural words.", note: "Add 's' for standard plurals, and 'es' for words ending in ch, sh, x, s.", examples: { Singular: "one cat, one box, one boy", Plural: "three cats, two boxes, many boys" }, activity: { type: "choose-correct", instruction: "What is the plural of 'Bus'?", options: [{word: "Buses", isCorrect: true}, {word: "Buss", isCorrect: false}] } },
-            { id: 4, title: "Countable & Uncountable", desc: "Things you can count vs things you cannot count.", def: "Countable nouns can be counted with numbers. Uncountable nouns cannot be counted individually and need units.", note: "Liquids, powders, and tiny grains like rice are uncountable.", examples: { Countable: "apple, egg, chair, book", Uncountable: "water, milk, sand, rice, sugar" }, activity: { type: "choose-correct", instruction: "Is 'Milk' countable or uncountable?", options: [{word: "Uncountable", isCorrect: true}, {word: "Countable", isCorrect: false}] } },
-            { id: 5, title: "Pronouns", desc: "Words used to replace nouns to avoid repetition.", def: "Pronouns are small words that take the place of a noun so you don't say the same name again and again.", note: "Use 'He' for a boy, 'She' for a girl, and 'It' for animals/objects.", examples: { Sentence: "Ali is happy. He has a bicycle.", Replaced: "The cat is sleeping. It is fat." }, activity: { type: "choose-correct", instruction: "Replace 'Siti' with a pronoun:", options: [{word: "She", isCorrect: true}, {word: "He", isCorrect: false}] } },
-            { id: 6, title: "Personal Pronouns", desc: "I, You, We, They, He, She, It in action.", def: "Personal pronouns act as subjects in sentences. They tell us exactly who is doing the action.", note: "Use 'I' for yourself, 'We' when including yourself, and 'They' for a group.", examples: { Singular: "I am a pupil. He is my brother.", Plural: "We are classmates. They are playing football." }, activity: { type: "choose-correct", instruction: "____ are going to the library together. (Ali and I)", options: [{word: "We", isCorrect: true}, {word: "They", isCorrect: false}] } },
-            { id: 7, title: "Possessive Pronouns", desc: "Words that show who owns something.", def: "Possessive pronouns tell you who owns an item. Words like mine, yours, his, hers, ours, and theirs.", note: "Possessive pronouns do not need an apostrophe 's'.", examples: { "My Book": "This book is mine.", "Her Pen": "That pink pen is hers.", "Our Class": "This classroom is ours." }, activity: { type: "choose-correct", instruction: "This ball belongs to you. It is ____.", options: [{word: "yours", isCorrect: true}, {word: "your", isCorrect: false}] } },
-            { id: 8, title: "Verbs", desc: "Action words that tell what someone is doing.", def: "Verbs are action words. They show movement, activities, or states of being.", note: "If you can do it, it is a verb! Like run, hop, sleep, and read.", examples: { Actions: "run, swim, jump, read, write, smile", Sentences: "The boys run fast. My mother cooks curry." }, activity: { type: "tap-nouns", instruction: "Find all the action verbs!", options: [{word: "Jump", isCorrect: true}, {word: "Table", isCorrect: false}, {word: "Sleep", isCorrect: true}, {word: "Blue", isCorrect: false}, {word: "Eat", isCorrect: true}] } },
-            { id: 9, title: "Simple Present Tense", desc: "Habits and things that happen regularly.", def: "Simple Present Tense is used for habits, routines, or facts happening right now.", note: "Singular helper adds 's' (He walks). Plural helper stays plain (They walk).", examples: { Everyday: "I brush my teeth daily.", Routine: "She walks to school every morning.", Facts: "The sun rises in the east." }, activity: { type: "choose-correct", instruction: "The cat ____ milk every day.", options: [{word: "drinks", isCorrect: true}, {word: "drink", isCorrect: false}] } },
-            { id: 10, title: "Simple Past Tense", desc: "Actions that have already finished.", def: "Simple Past Tense describes actions that already happened yesterday, last week, or in the past.", note: "Regular verbs add '-ed' (play -> played). Irregular verbs change fully (go -> went).", examples: { Regular: "We played football yesterday.", Irregular: "Siti went to Malacca last week.", Timewords: "yesterday, last night, two days ago" }, activity: { type: "choose-correct", instruction: "He ____ an apple this morning.", options: [{word: "ate", isCorrect: true}, {word: "eat", isCorrect: false}] } },
-            { id: 11, title: "Simple Future Tense", desc: "Actions that will happen later.", def: "Simple Future Tense tells about actions that will happen later or tomorrow. We use 'will' or 'going to'.", note: "Always keep the action verb plain after the word 'will'.", examples: { Plan: "I will visit my grandmother tomorrow.", Intention: "They are going to build a sandcastle." }, activity: { type: "choose-correct", instruction: "Tomorrow, we ____ have a party.", options: [{word: "will", isCorrect: true}, {word: "did", isCorrect: false}] } },
-            { id: 12, title: "Adjectives", desc: "Describing words for nouns.", def: "Adjectives describe a noun's color, size, shape, number, or feelings.", note: "Adjectives make sentences sound interesting and colourful!", examples: { Appearance: "beautiful flower, tall tree, big elephant", Feelings: "happy boy, sad pup, angry giant" }, activity: { type: "choose-correct", instruction: "Identify the adjective: 'The little bird sang.'", options: [{word: "little", isCorrect: true}, {word: "bird", isCorrect: false}] } },
-            { id: 13, title: "Adverbs", desc: "Words that describe how actions are done.", def: "Adverbs tell us more about a verb. They explain how, when, or where something happens.", note: "Many adverbs end with '-ly' like quickly, softly, and happily.", examples: { How: "He ran quickly. She sang softly.", When: "We will play tomorrow. I am eating now." }, activity: { type: "choose-correct", instruction: "The snail moves very ____.", options: [{word: "slowly", isCorrect: true}, {word: "slow", isCorrect: false}] } },
-            { id: 14, title: "Articles: A, An & The", desc: "Special pointers before naming words.", def: "Articles specify nouns. Use 'A' for consonant sounds, 'An' for vowel sounds (a,e,i,o,u), and 'The' for specific items.", note: "Use 'An' for vowel sounds: an apple, an elephant, an hour.", examples: { "A / An": "a book, a uniform, an owl, an ice cream", "The": "The sun is hot. The headmaster spoke to us." }, activity: { type: "choose-correct", instruction: "I want to eat ____ orange.", options: [{word: "an", isCorrect: true}, {word: "a", isCorrect: false}] } },
-            { id: 15, title: "Prepositions", desc: "Position words like in, on, under, behind.", def: "Prepositions tell us where something is located in relation to another object.", note: "Look at pictures to see positions: on top, inside, underneath!", examples: { Location: "The cat is under the table.", Placement: "Put the vase on the shelf.", Movement: "He walked into the classroom." }, activity: { type: "choose-correct", instruction: "The book is ____ the desk.", options: [{word: "on", isCorrect: true}, {word: "into", isCorrect: false}] } },
-            { id: 16, title: "Conjunctions", desc: "Joining words like and, but, because, or.", def: "Conjunctions glue words or sentences together smoothly.", note: "Use 'and' to join, 'but' for opposites, and 'because' for reasons.", examples: { And: "I like apples and bananas.", But: "He is small but strong.", Because: "She cried because she fell down." }, activity: { type: "choose-correct", instruction: "I stayed home ____ it was raining.", options: [{word: "because", isCorrect: true}, {word: "but", isCorrect: false}] } },
-            { id: 17, title: "Subject and Predicate", desc: "The who and the what of a sentence.", def: "A sentence has two parts: The Subject (who/what it is about) and the Predicate (what the subject does).", note: "The predicate always contains the main verb.", examples: { "Subject | Predicate": "The big dog | barked loudly.", "Siti | loves to bake chocolate cookies." }, activity: { type: "choose-correct", instruction: "What is the subject in: 'The teacher smiles.'", options: [{word: "The teacher", isCorrect: true}, {word: "smiles", isCorrect: false}] } },
-            { id: 18, title: "Sentences", desc: "Making full statements that make complete sense.", def: "A complete sentence must make full sense on its own. It needs a subject and an action verb.", note: "A fragment is an incomplete sentence like 'running fast'.", examples: { Complete: "The pupils are studying English.", Incomplete: "under the big shady tree" }, activity: { type: "choose-correct", instruction: "Which one is a full complete sentence?", options: [{word: "Muthu goes to sleep.", isCorrect: true}, {word: "Eating an ice cream", isCorrect: false}] } },
-            { id: 19, title: "Capital Letters", desc: "When to use big letters ABC.", def: "Capital letters are used at the very beginning of every sentence, for proper nouns, and the word 'I'.", note: "Days of the week and months always get capital letters!", examples: { Start: "We live here.", Proper: "My friend is Ahmad.", Calendar: "Monday, August" }, activity: { type: "choose-correct", instruction: "Which sentence uses correct capital letters?", options: [{word: "They live in Ipoh.", isCorrect: true}, {word: "they live in ipoh.", isCorrect: false}] } },
-            { id: 20, title: "Punctuation Marks", desc: "Using full stops, commas, and question marks.", def: "Punctuation helps us read sentences clearly. Full stops end statements, question marks ask things.", note: "Don't forget an exclamation mark for excitement!", examples: { "Full Stop": "The sky is blue.", "Question Mark": "Where is my pencil?", "Exclamation": "Wow! That is awesome!" }, activity: { type: "choose-correct", instruction: "Choose the correct ending: 'How old are you___'", options: [{word: "?", isCorrect: true}, {word: ".", isCorrect: false}] } },
-            { id: 21, title: "Question Words", desc: "Who, What, Where, When, Why, How.", def: "Question words are used at the start of a sentence to request specific information.", note: "Use 'Who' for people, 'Where' for places, and 'Why' for reasons.", examples: { Who: "Who is your teacher?", Where: "Where do you stay?", What: "What are you eating?" }, activity: { type: "choose-correct", instruction: "____ is your favorite food?", options: [{word: "What", isCorrect: true}, {word: "Who", isCorrect: false}] } },
-            { id: 22, title: "Comparative Adjectives", desc: "Comparing two items using '-er' or 'more'.", def: "We use comparative adjectives to compare two people, objects, or places.", note: "Always use the word 'than' right after a comparative adjective.", examples: { Short: "An elephant is bigger than a cow.", Long: "This puzzle is more difficult than that one." }, activity: { type: "choose-correct", instruction: "A car is ____ than a bicycle.", options: [{word: "faster", isCorrect: true}, {word: "fast", isCorrect: false}] } },
-            { id: 23, title: "Superlative Adjectives", desc: "Comparing three or more to find the top best.", def: "Superlative adjectives compare three or more items to show which is the highest or lowest tier.", note: "Put the word 'the' right in front of superlative words.", examples: { Short: "Ahmad is the tallest boy in Class 1A.", Long: "This is the most beautiful painting here." }, activity: { type: "choose-correct", instruction: "Mount Kinabalu is the ____ mountain in Malaysia.", options: [{word: "highest", isCorrect: true}, {word: "higher", isCorrect: false}] } },
-            { id: 24, title: "Subject-Verb Agreement", desc: "Matching subjects and verbs correctly.", def: "Singular subjects take singular verbs (with an 's'). Plural subjects take plural verbs (plain).", note: "The pronouns 'I' and 'You' always follow plural verb rules!", examples: { Singular: "The bird flies high. He walks.", Plural: "The birds fly high. They walk." }, activity: { type: "choose-correct", instruction: "The pupils ____ their homework.", options: [{word: "do", isCorrect: true}, {word: "does", isCorrect: false}] } },
-            { id: 25, title: "Affirmative & Negative", desc: "Saying Yes versus saying No.", def: "Affirmative sentences say YES or agree. Negative sentences say NO or disagree, using 'not'.", note: "Contractions like don't, isn't, and can't are common in negative phrases.", examples: { Affirmative: "I like ice cream. She can swim.", Negative: "I do not like ice cream. She cannot swim." }, activity: { type: "choose-correct", instruction: "Change 'He is happy' to a negative sentence:", options: [{word: "He is not happy.", isCorrect: true}, {word: "He was happy.", isCorrect: false}] } }
+        // -------------------------------------------------------------
+        // GRAMMAR APP DATA ARCHITECTURE OBJECTS (LESSONS + 20 QUESTIONS PER TOPIC)
+        // -------------------------------------------------------------
+        const TOPICS_METADATA = [
+            {
+                id: 1,
+                title: "Nouns",
+                desc: "Learn about the names of people, places, animals, or things.",
+                definition: "A noun is a naming word. It names a person, place, animal, or thing.",
+                note: "Remember: A noun is a naming word.",
+                examples: [
+                    { category: "Person", items: "teacher, mother, Ali" },
+                    { category: "Place", items: "school, park, Malaysia" },
+                    { category: "Animal", items: "cat, elephant, bird" },
+                    { category: "Thing", items: "book, pencil, table" }
+                ],
+                miniActivity: {
+                    instruction: "Tap ALL the naming words (nouns) below:",
+                    options: [
+                        { text: "Teacher", isCorrect: true },
+                        { text: "Run", isCorrect: false },
+                        { text: "School", isCorrect: true },
+                        { text: "Beautiful", isCorrect: false },
+                        { text: "Pencil", isCorrect: true }
+                    ],
+                    targetCount: 3
+                }
+            },
+            {
+                id: 2,
+                title: "Common Nouns & Proper Nouns",
+                desc: "Discover special names and general naming words.",
+                definition: "Common nouns are ordinary names for things. Proper nouns are special, exact names and ALWAYS start with a Capital Letter.",
+                note: "Remember: Proper nouns always start with a capital letter like 'Kuala Lumpur'.",
+                examples: [
+                    { category: "Common Nouns", items: "boy, state, school, car" },
+                    { category: "Proper Nouns", items: "Ahmad, Kedah, SK Utama, Proton" }
+                ],
+                miniActivity: {
+                    instruction: "Tap the word that must start with a Capital Letter (Proper Noun):",
+                    options: [
+                        { text: "cat", isCorrect: false },
+                        { text: "malaysia", isCorrect: true },
+                        { text: "chair", isCorrect: false },
+                        { text: "happy", isCorrect: false }
+                    ],
+                    targetCount: 1
+                }
+            },
+            {
+                id: 3,
+                title: "Singular & Plural Nouns",
+                desc: "Understand the difference between one and many things.",
+                definition: "Singular means only ONE. Plural means MORE THAN ONE. We usually add '-s' or '-es' to make a word plural.",
+                note: "Remember: Singular = 1, Plural = 2 or more!",
+                examples: [
+                    { category: "Singular (One)", items: "one cat, a book, an apple" },
+                    { category: "Plural (Many)", items: "three cats, many books, apples" }
+                ],
+                miniActivity: {
+                    instruction: "Which word means more than one thing (Plural)? Tap it:",
+                    options: [
+                        { text: "Box", isCorrect: false },
+                        { text: "Dogs", isCorrect: true },
+                        { text: "Pen", isCorrect: false }
+                    ],
+                    targetCount: 1
+                }
+            },
+            {
+                id: 4,
+                title: "Countable & Uncountable Nouns",
+                desc: "Learn what items you can easily count with numbers.",
+                definition: "Countable nouns are objects we can count with numbers (e.g., 1 egg, 2 eggs). Uncountable nouns cannot be counted separately (e.g., water, sand).",
+                note: "Remember: Liquids, gases, and very tiny powders like sugar are Uncountable!",
+                examples: [
+                    { category: "Countable", items: "burger, banana, coin, cup" },
+                    { category: "Uncountable", items: "milk, rice, water, money" }
+                ],
+                miniActivity: {
+                    instruction: "Tap the UNCOUNTABLE item that you cannot count with numbers:",
+                    options: [
+                        { text: "Apple", isCorrect: false },
+                        { text: "Water", isCorrect: true },
+                        { text: "Chair", isCorrect: false }
+                    ],
+                    targetCount: 1
+                }
+            },
+            {
+                id: 5,
+                title: "Pronouns",
+                desc: "Master shortcut words that replace nouns easily.",
+                definition: "Pronouns are words used to take the place of nouns so we don't have to repeat names over and over again.",
+                note: "Remember: Use 'He' for a boy, 'She' for a girl, and 'It' for things/animals.",
+                examples: [
+                    { category: "Singular", items: "I, You, He, She, It" },
+                    { category: "Plural", items: "We, They, You" }
+                ],
+                miniActivity: {
+                    instruction: "Replace 'Siti' with the correct shortcut pronoun. Tap it:",
+                    options: [
+                        { text: "He", isCorrect: false },
+                        { text: "She", isCorrect: true },
+                        { text: "It", isCorrect: false }
+                    ],
+                    targetCount: 1
+                }
+            }
         ];
 
-        const QUOTES = [
+        // 20 Questions Data array for each topic ID
+        const QUIZ_QUESTIONS_BANK = {
+            1: [
+                { q: "Which word is a noun?", a: "Run", b: "Beautiful", c: "School", d: "Quickly", ans: "C", exp: "School is a noun because it is the name of a place." },
+                { q: "Identify the noun representing a person:", a: "Doctor", b: "Table", c: "Cat", d: "Yellow", ans: "A", exp: "Doctor is a noun that represents a person's profession." },
+                { q: "Which of these is the name of an animal?", a: "Pencil", b: "Elephant", c: "Kuala Lumpur", d: "Sing", ans: "B", exp: "Elephant is a large living land mammal." },
+                { q: "Find the thing/object noun from the choices:", a: "Happy", b: "Father", c: "Ruler", d: "Fly", ans: "C", exp: "A ruler is a solid physical object used for measuring." },
+                { q: "The _____ is barking loudly. (Fill in with an animal noun)", a: "Dog", b: "Car", c: "Teacher", d: "House", ans: "A", exp: "Dogs bark loudly to communicate." },
+                { q: "My _____ bakes delicious cakes.", a: "Kitchen", b: "Mother", c: "Spoon", d: "Sweet", ans: "B", exp: "'Mother' is the person who is doing the baking activity here." },
+                { q: "Which word is NOT a naming word?", a: "Kitten", b: "Library", c: "Beautiful", d: "Desk", ans: "C", exp: "Beautiful describes something; it does not name an object." },
+                { q: "The kids are playing in the _____. (Name a place)", a: "Park", b: "Ball", c: "Jump", d: "Green", ans: "A", exp: "A park is a physical location or place where children play." },
+                { q: "Which item below can you put in your pencil case?", a: "Eraser", b: "Tiger", c: "Ocean", d: "Sleep", ans: "A", exp: "An eraser is a small stationary thing fitting inside a case." },
+                { q: "Choose the noun in this sentence: 'The red car stopped.'", a: "Red", b: "Car", c: "Stopped", d: "The", ans: "B", exp: "Car is the noun object in this clause." },
+                { q: "Which noun represents an administrative landmark country?", a: "Malaysia", b: "Big", c: "Run", d: "Under", ans: "A", exp: "Malaysia is the name of a country sovereign place." },
+                { q: "Pick the noun: 'He loves to read a thick book.'", a: "Thick", b: "Read", c: "Loves", d: "Book", ans: "D", exp: "Book is the tangible object thing." },
+                { q: "Which word is an animal?", a: "Monkey", b: "Banana", c: "Climb", d: "Forest", ans: "A", exp: "Monkey is the animal noun." },
+                { q: "Select the person noun:", a: "Police officer", b: "Station", c: "Arrest", d: "Safe", ans: "A", exp: "Police officer represents a human occupation." },
+                { q: "Complete with a place: 'We buy fresh vegetables at the _____.'", a: "Market", b: "Wallet", c: "Eat", d: "Fresh", ans: "A", exp: "A market is a designated place to buy foodstuffs." },
+                { q: "What category of noun is 'Ahmad'?", a: "Person", b: "Place", c: "Animal", d: "Thing", ans: "A", exp: "Ahmad is a name given to a person." },
+                { q: "What category of noun is 'Hospital'?", a: "Person", b: "Place", c: "Animal", d: "Thing", ans: "B", exp: "Hospital is a physical medical institution place." },
+                { q: "What category of noun is 'Computer'?", a: "Person", b: "Place", c: "Animal", d: "Thing", ans: "D", exp: "A computer is an electronic object item thing." },
+                { q: "Find the noun: 'The little bird sang sweetly.'", a: "Little", b: "Bird", c: "Sang", d: "Sweetly", ans: "B", exp: "Bird is the animal entity." },
+                { q: "Choose the noun: 'Our teacher is very kind.'", a: "Teacher", b: "Very", c: "Kind", d: "Our", ans: "A", exp: "Teacher is the person noun." }
+            ],
+            2: [
+                { q: "Which word is a Proper Noun?", a: "boy", b: "Ahmad", c: "state", d: "school", ans: "B", exp: "Ahmad is a special exact name of a person and starts with a capital letter." },
+                { q: "Which word is a Common Noun?", a: "Proton", b: "Kedah", c: "car", d: "Sunday", ans: "C", exp: "Car is an ordinary general name for any vehicle." },
+                { q: "Proper nouns must ALWAYS start with a _____.", a: "Full stop", b: "Small letter", c: "Capital letter", d: "Question mark", ans: "C", exp: "Capital letters signify the special distinct identity of proper nouns." },
+                { q: "Choose the correct proper noun for a country:", a: "england", b: "England", c: "country", d: "village", ans: "B", exp: "England with a capital 'E' is the correct spelling rule." },
+                { q: "Which of the following is a common noun?", a: "Teacher", b: "Mr. Tan", c: "SK Utama", d: "Kuala Lumpur", ans: "A", exp: "'Teacher' is a generic title for any educator." },
+                { q: "Find the Proper Noun: 'We visited the National Zoo on Tuesday.'", a: "visited", b: "National Zoo", c: "zoo", d: "animals", ans: "B", exp: "National Zoo is the official specialized name of the destination." },
+                { q: "Identify the common noun: 'Siti loves to play with her cat.'", a: "Siti", b: "loves", c: "cat", d: "her", ans: "C", exp: "Cat is a general name for the animal type." },
+                { q: "Which month is written as a proper noun correctly?", a: "january", b: "jan", c: "January", d: "MONTH", ans: "C", exp: "Months of the year are proper nouns requiring capitalization." },
+                { q: "Pick the generic common noun for a laptop brand:", a: "computer", b: "Apple", c: "Dell", d: "Asus", ans: "A", exp: "Computer is the general product category description." },
+                { q: "Which day is a proper noun?", a: "Tomorrow", b: "Friday", c: "day", d: "weekend", ans: "B", exp: "Friday is a specific named calendar day." },
+                { q: "Identify the proper noun: 'My dog, Max, likes biscuits.'", a: "dog", b: "Max", c: "biscuits", d: "likes", ans: "B", exp: "Max is the specific given name of the pet animal." },
+                { q: "Which item is a common noun?", a: "Samsung", b: "phone", c: "Malaysia", d: "Zaman", ans: "B", exp: "Phone is a general noun." },
+                { q: "True or False: 'school' is a proper noun.", a: "True", b: "False", c: "None", d: "Both", ans: "B", exp: "False, 'school' is general. 'SK Utama' would be proper." },
+                { q: "Find the Proper Noun: 'They crossed the Penang Bridge.'", a: "crossed", b: "They", c: "Penang Bridge", d: "bridge", ans: "C", exp: "Penang Bridge is capitalized and points to a specific monument." },
+                { q: "Which is a common noun for a restaurant?", a: "McDonald's", b: "KFC", c: "shop", d: "Pizza Hut", ans: "C", exp: "Shop is general; others are trademark company names." },
+                { q: "Identify the proper noun: 'We live near Mount Kinabalu.'", a: "near", b: "live", c: "Mount Kinabalu", d: "mountain", ans: "C", exp: "Mount Kinabalu is the specific name of the geographic summit." },
+                { q: "Is 'boy' common or proper?", a: "Common Noun", b: "Proper Noun", c: "Verb", d: "Adjective", ans: "A", exp: "It names any boy generally without specifying who." },
+                { q: "Choose the proper noun spelling:", a: "ali", b: "Ali", c: "aLi", d: "alI", ans: "B", exp: "Names of specific individuals must have the first letter uppercase." },
+                { q: "Which sentence contains a Proper Noun?", a: "The girl is reading.", b: "We like cookies.", c: "I love Toyota cars.", d: "Look at that tree.", ans: "C", exp: "Toyota is a capitalized automobile brand proper noun." },
+                { q: "Identify the common noun: 'Langawi is a beautiful island.'", a: "Langkawi", b: "island", c: "beautiful", d: "is", ans: "B", exp: "Island is the general geographic land type." }
+            ],
+            3: [
+                { q: "What is the plural form of 'Cat'?", a: "Cats", b: "Cates", c: "Catss", d: "Cat", ans: "A", exp: "We simply add '-s' to make cat plural." },
+                { q: "What is the singular form of 'Boxes'?", a: "Boxe", b: "Box", c: "Boxs", d: "Boxy", ans: "B", exp: "Removing the '-es' suffix returns us to the singular word 'Box'." },
+                { q: "Which word means only ONE thing?", a: "Apples", b: "Book", c: "Chairs", d: "Pens", ans: "B", exp: "Book has no plural '-s' suffix, meaning there is exactly one." },
+                { q: "Which word means MORE THAN ONE?", a: "Baby", b: "Toy", c: "Dogs", d: "Tree", ans: "C", exp: "Dogs has an '-s' at the end, meaning multiple canine pets." },
+                { q: "What is the plural form of 'Bus'?", a: "Buss", b: "Buses", a: "Busi", d: "Bussies", ans: "B", exp: "Words ending in 's' require '-es' to turn plural." },
+                { q: "Find the irregular plural of 'Child':", a: "Childs", b: "Children", c: "Childrens", d: "Childes", ans: "B", exp: "Child changes form completely to 'children' in plural format." },
+                { q: "What is the plural of 'Man'?", a: "Mans", b: "Manes", c: "Men", d: "Mens", ans: "C", exp: "'Man' is irregular and changes its vowel internally to 'Men'." },
+                { q: "Choose the correct plural form for 'Baby':", a: "Babys", b: "Babies", c: "Babyes", d: "Babi", ans: "B", exp: "Change the ending 'y' into 'i' and add '-es'." },
+                { q: "How do you make 'Glass' plural?", a: "Glasses", b: "Glasss", c: "Glass", d: "Glassies", ans: "A", exp: "Words ending in 'ss' take '-es' for easier pronunciation." },
+                { q: "Which noun is singular?", a: "Mice", b: "Tooth", c: "Feet", d: "Geese", ans: "B", exp: "Tooth is singular. The plural is teeth." },
+                { q: "What is the plural of 'Knife'?", a: "Knifes", b: "Knifess", c: "Knives", d: "Knive", ans: "C", exp: "Words ending in 'fe' often change to 'v' plus '-es'." },
+                { q: "Identify the plural noun: 'The monkeys stole our bananas.'", a: "stole", b: "our", c: "monkeys", d: "tree", ans: "C", exp: "Monkeys represents multiple animals." },
+                { q: "True or False: 'Feet' means only one foot.", a: "True", b: "False", c: "Both", d: "None", ans: "B", exp: "False. 'Foot' is one; 'Feet' means two or more." },
+                { q: "What is the singular form of 'Leaves'?", a: "Leaf", b: "Leave", c: "Leafs", d: "Leafes", ans: "A", exp: "'Leaf' changes to 'leaves' in plural form." },
+                { q: "Pick the correct plural: 'Brush' -> _____", a: "Brushs", b: "Brushes", c: "Brushies", d: "Brush", ans: "B", exp: "Words ending in 'sh' take '-es'." },
+                { q: "Select the plural word:", a: "Table", b: "Window", c: "Birds", d: "Flower", ans: "C", exp: "Birds means multiple flying feathered creatures." },
+                { q: "What is the plural of 'Mouse'?", a: "Mouses", b: "Mice", c: "Mices", d: "Mouse", ans: "B", exp: "'Mouse' changes completely to the irregular plural 'Mice'." },
+                { q: "How many items are in 'a dozen markers'?", a: "One", b: "More than one", c: "Zero", d: "None", ans: "B", exp: "A dozen is twelve, which is plural." },
+                { q: "Identify the singular form of 'Flies':", a: "Fly", b: "Flie", a: "Flys", d: "Flyes", ans: "A", exp: "'Fly' ends in a consonant + y, which changes to '-ies' in plural." },
+                { q: "Choose the correct sentence:", a: "Three boy are playing.", b: "Three boys are playing.", c: "One boys is playing.", d: "Many boy are here.", ans: "B", exp: "The plural number 'Three' requires the plural noun 'boys'." }
+            ],
+            4: [
+                { q: "Which item can you count with numbers?", a: "Milk", b: "Rice", c: "Banana", d: "Water", ans: "C", exp: "You can easily count 1 banana, 2 bananas, etc." },
+                { q: "Which item is Uncountable?", a: "Water", b: "Coin", c: "Burger", d: "Book", ans: "A", exp: "Water is a liquid substance and cannot be counted individually without containers." },
+                { q: "Can we say 'three waters' directly?", a: "Yes", b: "No", c: "Sometimes", d: "Always", ans: "B", exp: "No, because water is uncountable. We say 'three glasses of water'." },
+                { q: "Choose the countable noun from the list:", a: "Salt", b: "Sugar", c: "Car", d: "Sand", ans: "C", exp: "Cars are large separate objects that can be counted." },
+                { q: "Which word below is uncountable?", a: "Rice", b: "Apple", c: "Pencil", d: "Friend", ans: "A", exp: "Rice consists of thousands of tiny grains treated as a collective mass." },
+                { q: "We use 'a' or 'an' only for _____ singular nouns.", a: "Countable", b: "Uncountable", c: "Plural", d: "Action", ans: "A", exp: "Articles specify a singular countable item unit." },
+                { q: "Which phrase is correct?", a: "An uncountable milk", b: "A bottle of milk", c: "Three milks", d: "Many milk", ans: "B", exp: "Using a container measure like 'bottle' makes it countable." },
+                { q: "Pick the uncountable noun:", a: "Money", b: "Dollar", c: "Coin", d: "Note", ans: "A", exp: "The general concept of 'Money' is grammatically uncountable; currency units like dollars are countable." },
+                { q: "Which food item is countable?", a: "Soup", b: "Butter", c: "Egg", d: "Flour", ans: "C", exp: "Eggs can be counted individually." },
+                { q: "Is 'Sand' countable or uncountable?", a: "Countable", b: "Uncountable", c: "Both", d: "Neither", ans: "B", exp: "Sand grains are too tiny and numerous to count practically." },
+                { q: "Which item can you use 'many' with?", a: "Books", b: "Oil", c: "Juice", d: "Rain", ans: "A", exp: "'Many' is strictly reserved for plural countable nouns." },
+                { q: "Which item can you use 'much' with?", a: "Dogs", a: "Sugar", c: "Pens", d: "Cats", ans: "B", exp: "'Much' is used with uncountable nouns." },
+                { q: "Find the countable noun: 'The soup needs more salt and two onions.'", a: "soup", b: "salt", c: "onions", d: "needs", ans: "C", exp: "Onions are separate counted bulbs." },
+                { q: "Select the uncountable substance:", a: "Tea", b: "Cup", c: "Spoon", d: "Leaf", ans: "A", exp: "Tea is a brewed liquid beverage resource." },
+                { q: "True or False: 'Information' is countable.", a: "True", b: "False", c: "Both", d: "None", ans: "B", exp: "False. 'Information' is an abstract uncountable noun." },
+                { q: "Which item is countable?", a: "Chair", b: "Furniture", c: "Wood", d: "Dust", ans: "A", exp: "You can count chairs; furniture is a collective uncountable noun." },
+                { q: "Complete the sentence: 'There is too much _____ in the pool.'", a: "water", b: "children", c: "toys", d: "frogs", ans: "A", exp: "'Much' goes with uncountable 'water'." },
+                { q: "Complete: 'I ate three slice of _____.'", a: "pizza", b: "pizzas", c: "breads", d: "milks", ans: "A", exp: "Pizza is partitioned into countable slices." },
+                { q: "Which of the following is countable?", a: "Orange", b: "Air", c: "Smoke", d: "Music", ans: "A", exp: "Oranges are single round citrus fruits you can count." },
+                { q: "Identify the uncountable noun here: 'He drank a glass of juice.'", a: "glass", b: "juice", c: "drank", d: "he", ans: "B", exp: "Juice is the fluid liquid substance." }
+            ],
+            5: [
+                { q: "Which pronoun replaces a boy name like 'Ahmad'?", a: "She", b: "He", c: "It", d: "They", ans: "B", exp: "We use 'He' for masculine singular persons." },
+                { q: "Which pronoun replaces a girl name like 'Siti'?", a: "He", b: "She", c: "It", d: "We", ans: "B", exp: "We use 'She' for feminine singular persons." },
+                { q: "What pronoun replaces 'The book'?", a: "I", b: "He", c: "It", d: "They", ans: "C", exp: "'It' replaces singular inanimate objects or animals." },
+                { q: "What pronoun replaces 'Ali and I'?", a: "They", b: "We", c: "You", d: "He", ans: "B", exp: "When talking about another person including yourself, use 'We'." },
+                { q: "What pronoun replaces 'The boys'?", a: "He", b: "We", c: "They", d: "It", ans: "C", exp: "'They' refers to multiple plural people external to yourself." },
+                { q: "_____ am a hardworking primary student.", a: "Is", b: "I", c: "You", d: "He", ans: "B", exp: "The verb 'am' always pairs with the pronoun 'I'." },
+                { q: "This is my cat. _____ has a fluffy tail.", a: "He", b: "She", c: "It", d: "We", ans: "C", exp: "'It' is used for a single animal entity." },
+                { q: "Are _____ coming to the park with us?", a: "you", b: "it", c: "he", d: "she", ans: "A", exp: "'You' fits the plural question address form safely." },
+                { q: "Siti and Aminah are friends. _____ study together.", a: "We", b: "They", c: "He", d: "She", ans: "B", exp: "They refers to plural girls being spoken about." },
+                { q: "_____ are singing a beautiful song right now. (Plural action group)", a: "He", b: "She", c: "It", d: "We", ans: "D", exp: "'Are' requires a plural pronoun like 'We'." },
+                { q: "Choose the pronoun: 'The teacher praised him.'", a: "teacher", b: "praised", c: "him", d: "The", ans: "C", exp: "'Him' is an object pronoun replacing a boy." },
+                { q: "Replace the noun: 'The school is big.' -> _____ is big.", a: "He", b: "She", c: "It", d: "They", ans: "C", exp: "School is an organization place object replaced by 'It'." },
+                { q: "Find the pronoun: 'They went to the cinema.'", a: "They", b: "went", c: "cinema", d: "to", ans: "A", exp: "They is the subject pronoun." },
+                { q: "Which pronoun goes with 'are'?", a: "He", b: "She", c: "It", d: "You", ans: "D", exp: "'You' always takes the plural verb agreement 'are'." },
+                { q: "Which pronoun goes with 'is'?", a: "We", b: "They", c: "He", d: "I", ans: "C", exp: "'He' takes the singular verb agreement 'is'." },
+                { q: "True or False: 'We' includes the person speaking.", a: "True", b: "False", c: "Both", d: "None", ans: "A", exp: "True, 'We' means you and somebody else together." },
+                { q: "Pick the pronoun: 'Give the pencil to me.'", a: "Give", b: "pencil", c: "me", d: "to", ans: "C", exp: "'Me' is a first-person singular object pronoun." },
+                { q: "What pronoun can replace 'Father'?", a: "He", b: "She", c: "It", d: "They", ans: "A", exp: "Father is male, so replace with 'He'." },
+                { q: "What pronoun can replace 'Mother'?", a: "He", b: "She", c: "It", d: "We", ans: "B", exp: "Mother is female, so replace with 'She'." },
+                { q: "Choose the pronoun: 'We love grammar classes!'", a: "We", b: "love", c: "grammar", d: "classes", ans: "A", exp: "We is the plural first person subject pronoun." }
+            ]
+        };
+
+        // -------------------------------------------------------------
+        // STATE STORAGE MANAGERS
+        // -------------------------------------------------------------
+        let userProfile = {
+            name: "",
+            avatar: "🐱",
+            stars: 0,
+            streak: 1,
+            answeredCount: 0,
+            bestAccuracy: 0,
+            badges: {}, // key: true/false
+            topicProgress: {
+                1: { studied: false, quizScore: null, status: "Not Started", percent: 0 },
+                2: { studied: false, quizScore: null, status: "Not Started", percent: 0 },
+                3: { studied: false, quizScore: null, status: "Not Started", percent: 0 },
+                4: { studied: false, quizScore: null, status: "Not Started", percent: 0 },
+                5: { studied: false, quizScore: null, status: "Not Started", percent: 0 }
+            }
+        };
+
+        // Current volatile screen parameters
+        let activeTab = "home";
+        let activeLessonTopicId = null;
+        let miniActivityAnswersCollected = [];
+        
+        // Quiz state tracker
+        let activeQuizContext = {
+            type: "topic", // topic, mixed, quick, challenge
+            topicId: null,
+            title: "",
+            questions: [],
+            currentIndex: 0,
+            correctCount: 0,
+            wrongCount: 0
+        };
+
+        // Audio state indicator
+        let soundEffectsEnabled = true;
+
+        // -------------------------------------------------------------
+        // MOTIVATIONAL TEXT ROTATOR
+        // -------------------------------------------------------------
+        const MOTIVATIONAL_MESSAGES = [
             "Great learners practise every day!",
             "You can do it!",
             "Learn, practise, and improve!",
-            "Every question makes you smarter!"
+            "Every question makes you smarter!",
+            "Keep pushing forward, superstar!",
+            "Grammar power is your superpower!"
         ];
 
-        // --- QUESTION POOL FOR PRACTICE ---
-        function generateQuestionsForTopic(topicId, topicTitle) {
-            let qList = [];
-            const mockWords = ["school", "cat", "teacher", "pencil", "Malaysia", "book", "boy", "park", "doctor", "table"];
-            for (let i = 1; i <= 20; i++) {
-                qList.push({
-                    text: `Which option is a correct example or rule under the topic: "${topicTitle}"? (Question ${i})`,
-                    options: [mockWords[i % 10], "runs fast", "beautifully", "happily"],
-                    correct: mockWords[i % 10],
-                    explanation: `${mockWords[i % 10]} is an essential example related to ${topicTitle}.`
-                });
-            }
-            return qList;
-        }
-
-        // --- STATE MANAGEMENT ---
-        let userProfile = JSON.parse(localStorage.getItem('gh_profile')) || null;
-        let progressData = JSON.parse(localStorage.getItem('gh_progress')) || {
-            completedLessons: [],
-            scores: {},
-            totalQuizzes: 0,
-            totalAnswers: 0,
-            correctAnswers: 0,
-            stars: 0,
-            streak: 3
-        };
-        let soundEnabled = localStorage.getItem('gh_sound') !== 'false';
-        let activeQuiz = null;
-
-        // --- AUDIO ENGINE ---
-        function playSound(type) {
-            if (!soundEnabled) return;
+        // -------------------------------------------------------------
+        // PROCEDURAL AUDIO ENGINE USING WEB AUDIO OSCILLATORS
+        // -------------------------------------------------------------
+        function playSoundTone(type) {
+            if (!soundEffectsEnabled) return;
             try {
-                window.AudioContext = window.AudioContext || window.webkitAudioContext;
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
                 const ctx = new AudioContext();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-
+                
                 if (type === 'click') {
+                    let osc = ctx.createOscillator();
+                    let gain = ctx.createGain();
+                    osc.type = 'sine';
                     osc.frequency.setValueAtTime(400, ctx.currentTime);
                     gain.gain.setValueAtTime(0.1, ctx.currentTime);
-                    osc.start();
                     gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
-                    osc.stop(ctx.currentTime + 0.1);
-                } else if (type === 'correct') {
-                    osc.frequency.setValueAtTime(523.25, ctx.currentTime);
-                    osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1);
-                    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
                     osc.start();
-                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
-                    osc.stop(ctx.currentTime + 0.25);
-                } else if (type === 'wrong') {
+                    osc.stop(ctx.currentTime + 0.1);
+                } 
+                else if (type === 'correct') {
+                    // Two pleasant upward tones
+                    let osc1 = ctx.createOscillator();
+                    let gain1 = ctx.createGain();
+                    osc1.type = 'triangle';
+                    osc1.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+                    osc1.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1); // E5
+                    gain1.gain.setValueAtTime(0.15, ctx.currentTime);
+                    gain1.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                    osc1.connect(gain1);
+                    gain1.connect(ctx.destination);
+                    osc1.start();
+                    osc1.stop(ctx.currentTime + 0.3);
+                } 
+                else if (type === 'wrong') {
+                    // Low warning flat buzz
+                    let osc = ctx.createOscillator();
+                    let gain = ctx.createGain();
                     osc.type = 'sawtooth';
                     osc.frequency.setValueAtTime(150, ctx.currentTime);
-                    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
                     osc.start();
-                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
-                    osc.stop(ctx.currentTime + 0.2);
+                    osc.stop(ctx.currentTime + 0.4);
                 }
-            } catch(e) { console.log("Audio not supported yet."); }
+                else if (type === 'victory') {
+                    // Arpeggio chime sequence
+                    [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+                        let o = ctx.createOscillator();
+                        let g = ctx.createGain();
+                        o.type = 'sine';
+                        o.frequency.setValueAtTime(freq, ctx.currentTime + (i * 0.08));
+                        g.gain.setValueAtTime(0.1, ctx.currentTime + (i * 0.08));
+                        g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + (i * 0.08) + 0.2);
+                        o.connect(g);
+                        g.connect(ctx.destination);
+                        o.start(ctx.currentTime + (i * 0.08));
+                        o.stop(ctx.currentTime + (i * 0.08) + 0.2);
+                    });
+                }
+            } catch (e) {
+                console.log("Audio play failed or context blocked.", e);
+            }
         }
 
         function toggleSound() {
-            soundEnabled = !soundEnabled;
-            localStorage.setItem('gh_sound', soundEnabled);
-            updateSoundIcon();
-            playSound('click');
-        }
-
-        function updateSoundIcon() {
-            const icon = document.getElementById('soundIcon');
-            if (soundEnabled) {
-                icon.className = "fas fa-volume-up";
+            soundEffectsEnabled = !soundEffectsEnabled;
+            const btn = document.getElementById("soundToggleBtn");
+            if (soundEffectsEnabled) {
+                btn.innerHTML = `<i class="fas fa-volume-up"></i> ON`;
+                btn.className = "text-blue-500 hover:text-blue-600 focus:outline-none text-sm font-bold";
+                playSoundTone('click');
             } else {
-                icon.className = "fas fa-volume-mute text-slate-400";
+                btn.innerHTML = `<i class="fas fa-volume-mute"></i> OFF`;
+                btn.className = "text-slate-400 hover:text-slate-500 focus:outline-none text-sm font-bold";
             }
         }
 
-        // --- APP WORKFLOW CONTROLLER ---
-        window.onload = function() {
-            updateSoundIcon();
-            if (!userProfile) {
-                switchView('setup');
-            } else {
-                switchView('home');
-            }
-        };
+        // -------------------------------------------------------------
+        // APP LIFECYCLE INITIATOR
+        // -------------------------------------------------------------
+        window.addEventListener("DOMContentLoaded", () => {
+            loadProgressFromStorage();
+            initAppDisplayState();
+        });
 
-        function saveData() {
-            localStorage.setItem('gh_profile', JSON.stringify(userProfile));
-            localStorage.setItem('gh_progress', JSON.stringify(progressData));
+        function loadProgressFromStorage() {
+            const cached = localStorage.getItem("grammar_hub_1_profile_v2");
+            if (cached) {
+                try {
+                    const parsed = JSON.parse(cached);
+                    if (parsed && parsed.name) {
+                        userProfile = parsed;
+                    }
+                } catch(e) {
+                    console.error("Corrupted profile cache resetting data stack", e);
+                }
+            }
         }
 
-        function switchView(viewName, params = {}) {
-            playSound('click');
-            const container = document.getElementById('viewContainer');
-            const nav = document.getElementById('bottomNav');
+        function saveProgressToStorage() {
+            localStorage.setItem("grammar_hub_1_profile_v2", JSON.stringify(userProfile));
+            updateGlobalHeaderCounters();
+        }
+
+        function initAppDisplayState() {
+            // Select random message
+            const idx = Math.floor(Math.random() * MOTIVATIONAL_MESSAGES.length);
+            document.getElementById("motivationalQuote").innerText = MOTIVATIONAL_MESSAGES[idx];
+
+            if (!userProfile.name) {
+                // Show profile creation screen
+                document.getElementById("screen-profile-setup").classList.remove("hidden");
+                document.getElementById("main-content-wrapper").classList.add("hidden");
+            } else {
+                // Show core layout
+                document.getElementById("screen-profile-setup").classList.add("hidden");
+                document.getElementById("main-content-wrapper").classList.remove("hidden");
+                updateGlobalHeaderCounters();
+                switchTab("home");
+            }
+        }
+
+        function updateGlobalHeaderCounters() {
+            document.getElementById("headerStudentName").innerText = `Hello, ${userProfile.name}!`;
+            document.getElementById("headerAvatar").innerText = userProfile.avatar || "🐱";
+            document.getElementById("globalStarsCount").innerText = userProfile.stars || 0;
             
-            if (viewName === 'setup') {
-                nav.classList.add('hidden');
-            } else {
-                nav.classList.remove('hidden');
-                document.querySelectorAll('nav button').forEach(b => {
-                    b.classList.remove('text-indigo-600', 'bg-indigo-50');
-                    b.classList.add('text-slate-400');
-                });
-                const activeNav = document.getElementById(`nav-${viewName}`);
-                if (activeNav) {
-                    activeNav.classList.add('text-indigo-600', 'bg-indigo-50');
-                }
-            }
-
-            switch(viewName) {
-                case 'setup': container.innerHTML = renderSetup(); break;
-                case 'home': container.innerHTML = renderHome(); break;
-                case 'learn': container.innerHTML = renderLearn(); break;
-                case 'lesson': container.innerHTML = renderLessonPage(params.id); break;
-                case 'practice': container.innerHTML = renderPracticeZone(); break;
-                case 'quiz': container.innerHTML = renderQuizScreen(params.type, params.topicId); break;
-                case 'results': container.innerHTML = renderResultsScreen(params); break;
-                case 'progress': container.innerHTML = renderProgressPage(); break;
-                case 'profile': container.innerHTML = renderProfilePage(); break;
-            }
-            window.scrollTo(0,0);
+            // Home statistics layout mirrors
+            document.getElementById("homeStreakVal").innerHTML = `<i class="fas fa-fire mr-0.5"></i> ${userProfile.streak || 1} Day`;
+            document.getElementById("homeAnsweredVal").innerText = `${userProfile.answeredCount || 0} Qs`;
+            
+            let badgesEarnedCount = Object.values(userProfile.badges || {}).filter(Boolean).length;
+            document.getElementById("homeBadgesVal").innerText = `${badgesEarnedCount} / 8`;
         }
 
-        // --- UI RENDER TEMPLATES ---
-        function renderSetup() {
-            return `
-                <div class="flex flex-col items-center justify-center pt-12 text-center">
-                    <div class="w-20 h-20 bg-gradient-to-tr from-indigo-500 to-purple-500 rounded-3xl flex items-center justify-center text-white text-3xl shadow-lg mb-6">
-                        <i class="fas fa-graduation-cap"></i>
-                    </div>
-                    <h1 class="text-3xl text-slate-800 font-fun font-bold mb-2">Welcome to<br><span class="text-indigo-600">Grammar Hub 1!</span></h1>
-                    <p class="text-slate-500 text-sm max-w-xs mb-8">Create your learning profile and start improving your grammar.</p>
-                    
-                    <div class="w-full space-y-6 bg-slate-50 p-6 rounded-3xl border border-slate-200 shadow-sm">
-                        <div class="flex flex-col items-center gap-3">
-                            <div class="relative">
-                                <img id="setupAvatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=GrammarHub" class="w-24 h-24 rounded-full bg-white border-4 border-white shadow-md" alt="Avatar">
-                                <label for="avatarUpload" class="absolute bottom-0 right-0 bg-indigo-600 text-white w-8 h-8 rounded-full flex items-center justify-center cursor-pointer shadow-md">
-                                    <i class="fas fa-camera text-xs"></i>
-                                </label>
-                                <input type="file" id="avatarUpload" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
-                            </div>
-                        </div>
+        // -------------------------------------------------------------
+        // PROFILE SETUP ENGINE VIEW CONTROLLER
+        // -------------------------------------------------------------
+        let transientSelectedAvatar = "🐱";
 
-                        <div class="text-left">
-                            <label class="block text-sm font-bold text-slate-600 mb-2">Enter your name:</label>
-                            <input type="text" id="setupName" placeholder="Your Name" class="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-2xl font-semibold text-slate-700 placeholder-slate-400 focus:outline-none focus:border-indigo-500">
-                        </div>
-
-                        <button onclick="submitSetup()" class="w-full py-4 bg-indigo-600 text-white font-fun font-bold text-lg rounded-2xl shadow-lg">
-                            Start Learning <i class="fas fa-arrow-right ml-2"></i>
-                        </button>
-                    </div>
-                </div>
-            `;
+        function selectAvatar(id) {
+            playSoundTone('click');
+            document.querySelectorAll(".avatar-opt").forEach(el => el.classList.remove("border-indigo-500"));
+            document.querySelectorAll(".avatar-opt").forEach(el => el.classList.add("border-transparent"));
+            
+            const target = document.getElementById(id);
+            target.classList.remove("border-transparent");
+            target.classList.add("border-indigo-500");
+            transientSelectedAvatar = target.innerText;
         }
 
-        function handleImageUpload(event) {
+        function handleCustomAvatar(event) {
             const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('setupAvatar').src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function submitSetup() {
-            const nameInput = document.getElementById('setupName').value.trim();
-            if (!nameInput) {
-                alert("Please enter your name!");
-                return;
-            }
-            userProfile = {
-                name: nameInput,
-                avatar: document.getElementById('setupAvatar').src
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Simulated thumb avatar injection via image base64
+                transientSelectedAvatar = `<img src="${e.target.result}" class="w-full h-full object-cover rounded-full" />`;
+                // Create custom mock preview bubble
+                alert("Custom profile photo processed successfully!");
             };
-            saveData();
-            switchView('home');
+            reader.readAsDataURL(file);
         }
 
-        function renderHome() {
-            const randQuote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
-            return `
-                <div class="space-y-6">
-                    <div class="flex items-center justify-between bg-gradient-to-r from-indigo-500 to-purple-600 p-5 rounded-3xl shadow-xl text-white">
-                        <div>
-                            <p class="text-indigo-100 text-xs font-bold uppercase tracking-wide">Hello, 👋</p>
-                            <h2 class="text-2xl font-fun font-bold">${userProfile.name}!</h2>
-                        </div>
-                        <img src="${userProfile.avatar}" class="w-14 h-14 rounded-full border-2 border-white/50 bg-white object-cover">
-                    </div>
-
-                    <div class="bg-amber-50 border border-amber-200 p-4 rounded-2xl flex items-center gap-3">
-                        <p class="text-sm font-semibold text-amber-800 italic">"${randQuote}"</p>
-                    </div>
-
-                    <div class="space-y-3">
-                        <h3 class="text-lg font-fun font-bold text-slate-800">Let's Learn Grammar!</h3>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div onclick="switchView('learn')" class="bg-emerald-50 p-4 rounded-3xl border border-emerald-100 flex flex-col items-start gap-3 cursor-pointer">
-                                <div class="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center text-lg"><i class="fas fa-book"></i></div>
-                                <h4 class="font-fun font-bold text-emerald-900 text-sm">Learn Grammar</h4>
-                            </div>
-                            <div onclick="switchView('practice')" class="bg-sky-50 p-4 rounded-3xl border border-sky-100 flex flex-col items-start gap-3 cursor-pointer">
-                                <div class="w-10 h-10 rounded-xl bg-sky-500 text-white flex items-center justify-center text-lg"><i class="fas fa-pencil-alt"></i></div>
-                                <h4 class="font-fun font-bold text-sky-900 text-sm">Practice Zone</h4>
-                            </div>
-                            <div onclick="switchView('progress')" class="bg-indigo-50 p-4 rounded-3xl border border-indigo-100 flex flex-col items-start gap-3 cursor-pointer">
-                                <div class="w-10 h-10 rounded-xl bg-indigo-500 text-white flex items-center justify-center text-lg"><i class="fas fa-trophy"></i></div>
-                                <h4 class="font-fun font-bold text-indigo-900 text-sm">My Progress</h4>
-                            </div>
-                            <div onclick="switchView('profile')" class="bg-purple-50 p-4 rounded-3xl border border-purple-100 flex flex-col items-start gap-3 cursor-pointer">
-                                <div class="w-10 h-10 rounded-xl bg-purple-500 text-white flex items-center justify-center text-lg"><i class="fas fa-user"></i></div>
-                                <h4 class="font-fun font-bold text-purple-900 text-sm">My Profile</h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderLearn() {
-            let listHTML = '';
-            TOPICS.forEach(topic => {
-                const isCompleted = progressData.completedLessons.includes(topic.id);
-                const score = progressData.scores[topic.id] || 0;
-                let statusText = isCompleted ? "Learning" : "Not Started";
-                let statusClass = isCompleted ? "bg-amber-100 text-amber-700" : "bg-slate-100 text-slate-600";
-                
-                if (score >= 80) {
-                    statusText = "Completed";
-                    statusClass = "bg-emerald-100 text-emerald-700";
-                }
-
-                listHTML += `
-                    <div class="bg-white border border-slate-200 p-4 rounded-2xl space-y-3">
-                        <div class="flex items-start justify-between">
-                            <div>
-                                <span class="text-xs font-bold text-indigo-500">Topic ${topic.id}</span>
-                                <h4 class="font-fun font-bold text-base text-slate-800">${topic.title}</h4>
-                            </div>
-                            <span class="text-[11px] px-2.5 py-1 font-bold rounded-full ${statusClass}">${statusText}</span>
-                        </div>
-                        <p class="text-xs text-slate-500">${topic.desc}</p>
-                        <button onclick="switchView('lesson', {id: ${topic.id}})" class="w-full py-2 bg-indigo-600 text-white font-fun text-xs font-bold rounded-xl shadow-sm">
-                            ${isCompleted ? 'Review' : 'Learn Now'}
-                        </button>
-                    </div>
-                `;
-            });
-            return `<div class="space-y-4"><div><h2 class="text-2xl font-fun font-bold text-slate-800">Grammar Library</h2></div><div class="space-y-3">${listHTML}</div></div>`;
-        }
-
-        function renderLessonPage(id) {
-            const topic = TOPICS.find(t => t.id === parseInt(id));
-            let examplesHTML = '';
-            for (const [key, val] of Object.entries(topic.examples)) {
-                examplesHTML += `<div class="bg-white p-3 rounded-xl border border-slate-200"><span class="text-xs font-bold text-purple-600 block mb-1">${key}</span><p class="text-sm font-semibold text-slate-700">${val}</p></div>`;
-            }
-
-            let optionsHTML = '';
-            topic.activity.options.forEach(opt => {
-                optionsHTML += `<button onclick="checkMiniActivity(this, ${opt.isCorrect})" class="p-3 bg-white border-2 border-slate-200 text-slate-700 font-bold rounded-xl text-xs">${opt.word}</button>`;
-            });
-
-            return `
-                <div class="space-y-5">
-                    <div class="flex items-center gap-3">
-                        <button onclick="switchView('learn')" class="w-9 h-9 bg-slate-100 rounded-full flex items-center justify-center"><i class="fas fa-arrow-left text-sm"></i></button>
-                        <h2 class="text-xl font-fun font-bold text-slate-800">Topic ${topic.id}: ${topic.title}</h2>
-                    </div>
-                    <div class="bg-indigo-50 p-4 rounded-2xl"><h4 class="font-fun font-bold text-indigo-900 mb-1">Definition</h4><p class="text-sm text-indigo-950 font-medium">${topic.def}</p></div>
-                    <div class="space-y-2"><h4 class="font-fun font-bold text-slate-800">Examples</h4>${examplesHTML}</div>
-                    <div class="bg-amber-50 p-4 rounded-2xl text-xs font-semibold text-amber-900">⚠️ ${topic.note}</div>
-                    
-                    <div class="bg-indigo-900 p-4 rounded-2xl text-white space-y-3">
-                        <div class="flex justify-between items-center"><span class="text-[10px] font-bold bg-white/20 px-2 py-0.5 rounded-full uppercase">Mini Activity</span><span id="miniActivityFeedback" class="text-xs font-bold text-emerald-300"></span></div>
-                        <h4 class="font-fun text-sm">${topic.activity.instruction}</h4>
-                        <div class="grid grid-cols-3 gap-2">${optionsHTML}</div>
-                    </div>
-
-                    <button id="lessonPracticeBtn" onclick="completeLessonAndStartPractice(${topic.id})" class="w-full py-4 bg-emerald-500 text-white font-fun font-bold text-lg rounded-2xl opacity-50 shadow-md">Start Practice</button>
-                </div>
-            `;
-        }
-
-        function checkMiniActivity(btn, isCorrect) {
-            const feedbackSpan = document.getElementById('miniActivityFeedback');
-            if (isCorrect) {
-                playSound('correct');
-                btn.className = "p-3 bg-emerald-500 text-white font-bold rounded-xl text-xs";
-                feedbackSpan.innerText = "Correct! 🎉";
-                document.getElementById('lessonPracticeBtn').classList.remove('opacity-50');
-            } else {
-                playSound('wrong');
-                btn.classList.add('animate-shake', 'bg-rose-500', 'text-white');
-                feedbackSpan.innerText = "Try again!";
-                setTimeout(() => btn.classList.remove('animate-shake'), 300);
-            }
-        }
-
-        function completeLessonAndStartPractice(topicId) {
-            if (document.getElementById('lessonPracticeBtn').classList.contains('opacity-50')) {
-                alert("Please complete the mini activity game first!");
+        function saveInitialProfile() {
+            const inputVal = document.getElementById("setupNameInput").value.trim();
+            if (!inputVal) {
+                playSoundTone('wrong');
+                alert("Please enter your name to begin learning!");
                 return;
             }
-            if(!progressData.completedLessons.includes(topicId)) {
-                progressData.completedLessons.push(topicId);
-                progressData.stars += 5;
-                saveData();
-            }
-            switchView('quiz', {type: 'topic', topicId: topicId});
+            playSoundTone('victory');
+            userProfile.name = inputVal;
+            userProfile.avatar = transientSelectedAvatar;
+            
+            // Automatically assign first sign up achievement badge
+            userProfile.badges["beginner"] = true;
+
+            saveProgressToStorage();
+            initAppDisplayState();
         }
 
-        function renderPracticeZone() {
-            let listHTML = '';
-            TOPICS.forEach(t => {
-                const isUnlocked = progressData.completedLessons.includes(t.id);
-                listHTML += `
-                    <div onclick="${isUnlocked ? `switchView('quiz', {type: 'topic', topicId: ${t.id}})` : `alert('Please unlock this topic from the Learn screen first!')`}" class="p-4 bg-white border border-slate-200 rounded-xl flex items-center justify-between cursor-pointer ${!isUnlocked ? 'opacity-50' : ''}">
-                        <div><span class="text-[10px] text-slate-400 font-bold block">TOPIC ${t.id}</span><span class="font-fun font-bold text-slate-700 text-sm">${t.title}</span></div>
-                        <i class="fas ${isUnlocked ? 'fa-play text-emerald-500' : 'fa-lock text-slate-400'} text-xs"></i>
+        // -------------------------------------------------------------
+        // CORE BOTTOM TAB NAVIGATION CONTROLLER
+        // -------------------------------------------------------------
+        function switchTab(tabKey) {
+            playSoundTone('click');
+            activeTab = tabKey;
+
+            // Hide subviews entirely to avoid cross clutter
+            document.getElementById("subview-lesson-study").classList.add("hidden");
+            document.getElementById("subview-quiz-workflow").classList.add("hidden");
+            document.getElementById("subview-quiz-results").classList.add("hidden");
+
+            // Hide all generic views
+            document.querySelectorAll(".tab-screen").forEach(el => el.classList.add("hidden"));
+            // Style item resets
+            document.querySelectorAll(".nav-item").forEach(el => {
+                el.classList.remove("text-indigo-500");
+                el.classList.add("text-slate-400");
+            });
+
+            // Active mapping target trigger
+            document.getElementById(`screen-${tabKey}`).classList.remove("hidden");
+            document.getElementById(`nav-${tabKey}`).classList.remove("text-slate-400");
+            document.getElementById(`nav-${tabKey}`).classList.add("text-indigo-500");
+
+            // Sub-controller hooks
+            if (tabKey === 'learn') renderTopicsLibrary();
+            if (tabKey === 'practice') renderPracticeZoneMenu();
+            if (tabKey === 'progress') renderProgressDashboard();
+            if (tabKey === 'profile') renderProfileConfigPage();
+            
+            // Re-anchor scrolling positioning top bound
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // -------------------------------------------------------------
+        // VIEW RENDERER FOR TAB 2: LEARN TOPICS
+        // -------------------------------------------------------------
+        function renderTopicsLibrary() {
+            const container = document.getElementById("topicsContainer");
+            container.innerHTML = "";
+
+            TOPICS_METADATA.forEach(topic => {
+                const state = userProfile.topicProgress[topic.id] || { studied: false, quizScore: null, status: "Not Started", percent: 0 };
+                
+                let accentColor = "from-blue-400 to-cyan-500";
+                if(topic.id === 2) accentColor = "from-purple-400 to-indigo-500";
+                if(topic.id === 3) accentColor = "from-emerald-400 to-teal-500";
+                if(topic.id === 4) accentColor = "from-amber-400 to-orange-500";
+                if(topic.id === 5) accentColor = "from-rose-400 to-pink-500";
+
+                let statusBadgeMarkup = `<span class="text-[11px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded-md">Not Started</span>`;
+                if (state.studied && state.quizScore === null) {
+                    statusBadgeMarkup = `<span class="text-[11px] font-bold bg-blue-50 text-blue-600 px-2 py-0.5 rounded-md">Learning</span>`;
+                } else if (state.quizScore !== null) {
+                    statusBadgeMarkup = `<span class="text-[11px] font-bold bg-green-50 text-green-600 px-2 py-0.5 rounded-md"><i class="fas fa-check mr-0.5"></i> Completed</span>`;
+                }
+
+                const cardHtml = `
+                    <div class="bg-white rounded-3xl p-5 border border-slate-100 shadow-2xs space-y-3 relative overflow-hidden">
+                        <div class="flex items-start justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-2xl bg-gradient-to-br ${accentColor} text-white flex items-center justify-center font-bold text-lg shadow-sm">
+                                    ${topic.id}
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-base leading-tight">${topic.title}</h4>
+                                    <p class="text-xs text-slate-400 mt-0.5">${topic.desc}</p>
+                                </div>
+                            </div>
+                            ${statusBadgeMarkup}
+                        </div>
+
+                        <!-- PROGRESS SUB STRIP -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-[10px] font-bold text-slate-400">
+                                <span>TOPIC COMPLETION</span>
+                                <span>${state.percent || 0}%</span>
+                            </div>
+                            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                <div class="bg-gradient-to-r ${accentColor} h-full" style="width: ${state.percent || 0}%"></div>
+                            </div>
+                        </div>
+
+                        <div class="pt-1">
+                            <button onclick="launchLessonView(${topic.id})" class="bouncy w-full bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-bold py-2.5 rounded-xl border border-slate-200 transition">
+                                ${state.studied ? 'Review Lesson' : 'Learn Now <i class="fas fa-chevron-right ml-1"></i>'}
+                            </button>
+                        </div>
                     </div>
                 `;
-            });
-            return `
-                <div class="space-y-4">
-                    <div onclick="switchView('quiz', {type: 'mixed'})" class="p-4 bg-gradient-to-r from-orange-400 to-amber-500 rounded-2xl text-white cursor-pointer"><h3 class="font-fun font-bold">Mixed Grammar Quiz</h3><p class="text-xs opacity-90">10 Random combined questions</p></div>
-                    <div onclick="switchView('quiz', {type: 'quick'})" class="p-4 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-2xl text-white cursor-pointer"><h3 class="font-fun font-bold">Quick Quiz</h3><p class="text-xs opacity-90">5 Swift Blitz questions</p></div>
-                    <div class="space-y-2"><h3 class="font-fun font-bold text-slate-700">Practice by Topic</h3>${listHTML}</div>
-                </div>
-            `;
-        }
-
-        function renderQuizScreen(type, topicId) {
-            let questions = [];
-            let title = "Mixed Quiz";
-            if(type === 'topic') {
-                const t = TOPICS.find(topic => topic.id == topicId);
-                title = `${t.title} Quiz`;
-                questions = generateQuestionsForTopic(t.id, t.title);
-            } else {
-                TOPICS.slice(0, 4).forEach(t => { questions = questions.concat(generateQuestionsForTopic(t.id, t.title).slice(0, 3)); });
-                questions = questions.sort(() => 0.5 - Math.random()).slice(0, type === 'quick' ? 5 : 10);
-            }
-
-            activeQuiz = { type, topicId, title, questions, currentIndex: 0, correctCount: 0, wrongCount: 0, hasAnswered: false };
-            setTimeout(() => loadQuestion(), 50);
-
-            return `
-                <div class="space-y-4">
-                    <div class="flex justify-between items-center"><h3 class="font-fun font-bold text-slate-700">${title}</h3><span id="qCount" class="text-xs font-bold text-slate-400"></span></div>
-                    <div class="bg-slate-50 p-5 rounded-2xl text-center border border-slate-200 min-h-[100px] flex items-center justify-center"><p id="qText" class="font-fun font-bold text-slate-800"></p></div>
-                    <div id="qOptions" class="space-y-2"></div>
-                    <div id="qFeedback" class="p-4 rounded-xl hidden text-xs font-semibold"></div>
-                    <button id="qNext" onclick="nextQuestion()" class="w-full py-4 bg-indigo-600 text-white font-fun font-bold rounded-2xl hidden">Next Question</button>
-                </div>
-            `;
-        }
-
-        function loadQuestion() {
-            const q = activeQuiz.questions[activeQuiz.currentIndex];
-            activeQuiz.hasAnswered = false;
-            document.getElementById('qCount').innerText = `Question ${activeQuiz.currentIndex + 1} of ${activeQuiz.questions.length}`;
-            document.getElementById('qText').innerText = q.text;
-            document.getElementById('qNext').classList.add('hidden');
-            document.getElementById('qFeedback').classList.add('hidden');
-
-            const optDiv = document.getElementById('qOptions');
-            optDiv.innerHTML = '';
-            q.options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = "w-full p-3.5 bg-white border-2 border-slate-200 text-slate-700 font-bold rounded-xl text-left text-sm shadow-sm";
-                btn.innerText = opt;
-                btn.onclick = () => checkAnswer(btn, opt);
-                optDiv.appendChild(btn);
+                container.insertAdjacentHTML("beforeend", cardHtml);
             });
         }
 
-        function checkAnswer(btn, chosen) {
-            if (activeQuiz.hasAnswered) return;
-            activeQuiz.hasAnswered = true;
-            const q = activeQuiz.questions[activeQuiz.currentIndex];
-            const feed = document.getElementById('qFeedback');
-            feed.classList.remove('hidden');
-            document.getElementById('qNext').classList.remove('hidden');
-            progressData.totalAnswers++;
+        // -------------------------------------------------------------
+        // DYNAMIC SUB-VIEW WORKFLOW: STUDY LESSON SCREEN
+        // -------------------------------------------------------------
+        function launchLessonView(topicId) {
+            playSoundTone('click');
+            activeLessonTopicId = topicId;
+            const topic = TOPICS_METADATA.find(t => t.id === topicId);
+            if (!topic) return;
 
-            if(chosen === q.correct) {
-                playSound('correct');
-                activeQuiz.correctCount++;
-                progressData.correctAnswers++;
-                btn.className = "w-full p-3.5 bg-emerald-500 text-white font-bold rounded-xl text-left text-sm";
-                feed.className = "p-4 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-xl text-xs font-semibold";
-                feed.innerText = `Correct! Well done! \n${q.explanation}`;
-            } else {
-                playSound('wrong');
-                activeQuiz.wrongCount++;
-                btn.className = "w-full p-3.5 bg-rose-500 text-white font-bold rounded-xl text-left text-sm";
-                feed.className = "p-4 bg-rose-50 text-rose-800 border border-rose-200 rounded-xl text-xs font-semibold";
-                feed.innerText = `Not quite. The correct answer is: ${q.correct}. \n${q.explanation}`;
-            }
-            saveData();
+            // Shift app display modes
+            document.querySelectorAll(".tab-screen").forEach(el => el.classList.add("hidden"));
+            document.getElementById("subview-lesson-study").classList.remove("hidden");
+
+            // Bind values
+            document.getElementById("lessonViewHeaderNum").innerText = `Topic ${topic.id}`;
+            document.getElementById("lessonViewTitle").innerText = topic.title;
+            document.getElementById("lessonViewDefinition").innerText = topic.definition;
+            document.getElementById("lessonViewNote").innerText = topic.note;
+
+            // Generate example cards list
+            const examplesWrap = document.getElementById("lessonViewExamplesContainer");
+            examplesWrap.innerHTML = "";
+            topic.examples.forEach(ex => {
+                const row = `
+                    <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-100 flex items-center">
+                        <span class="text-xs font-bold text-indigo-600 w-28 shrink-0 border-r border-slate-200 mr-2.5 block">${ex.category}:</span>
+                        <span class="text-xs text-slate-600 font-medium italic">${ex.items}</span>
+                    </div>
+                `;
+                examplesWrap.insertAdjacentHTML("beforeend", row);
+            });
+
+            // Initialize Mini Activity parameters state
+            miniActivityAnswersCollected = [];
+            document.getElementById("miniActivityStatusBadge").innerHTML = `<i class="fas fa-lock"></i> Pending Activity`;
+            document.getElementById("miniActivityStatusBadge").className = "text-[11px] font-bold text-orange-500";
+            document.getElementById("miniActivityQuestionText").innerText = topic.miniActivity.instruction;
+            document.getElementById("miniActivityFeedbackBox").classList.add("hidden");
+
+            const choicesWrap = document.getElementById("miniActivityChoicesWrap");
+            choicesWrap.innerHTML = "";
+            
+            topic.miniActivity.options.forEach((opt, index) => {
+                const optBtn = document.createElement("button");
+                optBtn.innerText = opt.text;
+                optBtn.id = `mini-act-btn-${index}`;
+                optBtn.className = "px-3 py-2 bg-white border-2 border-slate-200 rounded-xl font-bold text-xs hover:bg-indigo-50 text-slate-700 transition";
+                optBtn.onclick = () => handleMiniActivitySelection(index, optBtn, topic.miniActivity);
+                choicesWrap.appendChild(optBtn);
+            });
+
+            // Manage bottom button availability block
+            const startPracticeBtn = document.getElementById("lessonStartPracticeBtn");
+            startPracticeBtn.disabled = true;
+            startPracticeBtn.className = "w-full bg-slate-300 text-slate-500 font-bold py-4 rounded-2xl text-center text-base cursor-not-allowed shadow-inner transition-all";
+            startPracticeBtn.innerText = "Complete Mini Activity to Start Practice";
         }
 
-        function nextQuestion() {
-            activeQuiz.currentIndex++;
-            if(activeQuiz.currentIndex >= activeQuiz.questions.length) {
-                progressData.totalQuizzes++;
-                const finalPercent = Math.round((activeQuiz.correctCount / activeQuiz.questions.length) * 100);
-                if(activeQuiz.type === 'topic') {
-                    progressData.scores[activeQuiz.topicId] = Math.max(progressData.scores[activeQuiz.topicId] || 0, finalPercent);
+        function handleMiniActivitySelection(index, btnElement, configObj) {
+            playSoundTone('click');
+            const targetOpt = configObj.options[index];
+
+            if (configObj.targetCount === 1) {
+                // Single Choice Mode strategy
+                document.querySelectorAll("[id^='mini-act-btn-']").forEach(b => {
+                    b.className = "px-3 py-2 bg-white border-2 border-slate-200 rounded-xl font-bold text-xs text-slate-700";
+                });
+                
+                const feedbackBox = document.getElementById("miniActivityFeedbackBox");
+                feedbackBox.classList.remove("hidden");
+                
+                if (targetOpt.isCorrect) {
+                    playSoundTone('correct');
+                    btnElement.className = "px-3 py-2 bg-green-500 border-2 border-green-500 text-white font-bold rounded-xl text-xs";
+                    feedbackBox.className = "text-xs font-bold p-2.5 rounded-xl text-center bg-green-50 text-green-700 border border-green-200";
+                    feedbackBox.innerText = "Superb! Correct choice answered.";
+                    unlockLessonPracticeAction();
+                } else {
+                    playSoundTone('wrong');
+                    btnElement.className = "px-3 py-2 bg-rose-100 border-2 border-rose-300 text-rose-700 font-bold rounded-xl text-xs";
+                    feedbackBox.className = "text-xs font-bold p-2.5 rounded-xl text-center bg-orange-50 text-orange-700 border border-orange-200";
+                    feedbackBox.innerText = "Try again! Look closely at the hints above.";
                 }
-                let stars = finalPercent >= 80 ? 20 : 10;
-                progressData.stars += stars;
-                saveData();
-                switchView('results', { title: activeQuiz.title, score: finalPercent, correct: activeQuiz.correctCount, wrong: activeQuiz.wrongCount, stars });
             } else {
-                loadQuestion();
+                // Multi-selection strategy mechanism
+                if (miniActivityAnswersCollected.includes(index)) return; // already solved correctly
+                
+                if (targetOpt.isCorrect) {
+                    playSoundTone('correct');
+                    miniActivityAnswersCollected.push(index);
+                    btnElement.className = "px-3 py-2 bg-green-500 border-2 border-green-500 text-white font-bold rounded-xl text-xs cursor-default";
+                    
+                    if (miniActivityAnswersCollected.length === configObj.targetCount) {
+                        const feedbackBox = document.getElementById("miniActivityFeedbackBox");
+                        feedbackBox.classList.remove("hidden");
+                        feedbackBox.className = "text-xs font-bold p-2.5 rounded-xl text-center bg-green-50 text-green-700 border border-green-200";
+                        feedbackBox.innerText = "Wonderful! You found all the correct answers!";
+                        unlockLessonPracticeAction();
+                    }
+                } else {
+                    playSoundTone('wrong');
+                    btnElement.className = "px-3 py-2 bg-rose-100 border-2 border-rose-300 text-rose-700 font-bold rounded-xl text-xs";
+                    setTimeout(() => {
+                        btnElement.className = "px-3 py-2 bg-white border-2 border-slate-200 rounded-xl font-bold text-xs text-slate-700";
+                    }, 1200);
+                }
             }
         }
 
-        function renderResultsScreen(d) {
-            return `
-                <div class="text-center space-y-5 pt-6">
-                    <div class="bg-indigo-600 p-6 rounded-3xl text-white">
-                        <h2 class="text-3xl font-fun font-bold">${d.score}%</h2>
-                        <p class="text-sm opacity-90">${d.title} Completed!</p>
-                    </div>
-                    <div class="grid grid-cols-3 gap-2 text-xs font-bold">
-                        <div class="p-3 bg-emerald-50 border rounded-xl text-emerald-700">Correct: ${d.correct}</div>
-                        <div class="p-3 bg-rose-50 border rounded-xl text-rose-700">Wrong: ${d.wrong}</div>
-                        <div class="p-3 bg-amber-50 border rounded-xl text-amber-700">+${d.stars} ⭐</div>
-                    </div>
-                    <button onclick="switchView('practice')" class="w-full py-3 bg-indigo-600 text-white font-fun font-bold rounded-xl shadow-md">Back to Practice Zone</button>
-                </div>
-            `;
+        function unlockLessonPracticeAction() {
+            // Update tracking records configuration states
+            if(!userProfile.topicProgress[activeLessonTopicId].studied) {
+                userProfile.topicProgress[activeLessonTopicId].studied = true;
+                userProfile.topicProgress[activeLessonTopicId].status = "Learning";
+                if(userProfile.topicProgress[activeLessonTopicId].percent < 40) {
+                    userProfile.topicProgress[activeLessonTopicId].percent = 40;
+                }
+                
+                // Badges hook evaluation
+                if(!userProfile.badges["first_lesson"]) {
+                    userProfile.badges["first_lesson"] = true;
+                }
+                saveProgressToStorage();
+            }
+
+            document.getElementById("miniActivityStatusBadge").innerHTML = `<i class="fas fa-check-circle"></i> Activity Passed!`;
+            document.getElementById("miniActivityStatusBadge").className = "text-[11px] font-bold text-green-600";
+
+            const startPracticeBtn = document.getElementById("lessonStartPracticeBtn");
+            startPracticeBtn.disabled = false;
+            startPracticeBtn.className = "bouncy w-full bg-gradient-to-r from-emerald-400 to-green-500 hover:from-emerald-500 hover:to-green-600 text-white font-bold py-4 rounded-2xl text-center text-base shadow-md cursor-pointer transition-all animate-bounce";
+            startPracticeBtn.innerHTML = `Start Practice <i class="fas fa-pencil-alt ml-1"></i>`;
+            startPracticeBtn.onclick = () => {
+                exitLessonView();
+                launchPracticeSetForTopic(activeLessonTopicId);
+            };
         }
 
-        function renderProgressPage() {
-            const accuracy = progressData.totalAnswers > 0 ? Math.round((progressData.correctAnswers / progressData.totalAnswers) * 100) : 0;
-            return `
-                <div class="space-y-4">
-                    <h2 class="text-xl font-fun font-bold text-slate-800">My Progress</h2>
-                    <div class="grid grid-cols-2 gap-3 text-center">
-                        <div class="p-4 bg-white border rounded-2xl shadow-sm"><span class="text-xs text-slate-400 block font-bold">QUIZZES DONE</span><span class="text-2xl font-fun font-bold text-slate-800">${progressData.totalQuizzes}</span></div>
-                        <div class="p-4 bg-white border rounded-2xl shadow-sm"><span class="text-xs text-slate-400 block font-bold">ACCURACY</span><span class="text-2xl font-fun font-bold text-indigo-600">${accuracy}%</span></div>
+        function exitLessonView() {
+            playSoundTone('click');
+            switchTab("learn");
+        }
+
+        // -------------------------------------------------------------
+        // TAB 3 PRACTICE ZONE CONTROLLER
+        // -------------------------------------------------------------
+        function renderPracticeZoneMenu() {
+            const btnWrap = document.getElementById("practiceTopicButtonsContainer");
+            btnWrap.innerHTML = "";
+
+            TOPICS_METADATA.forEach(topic => {
+                const state = userProfile.topicProgress[topic.id] || { studied: false, quizScore: null, status: "Not Started", percent: 0 };
+                const isLocked = !state.studied;
+
+                const btn = document.createElement("button");
+                btn.className = `w-full text-left p-3 rounded-xl border flex items-center justify-between font-bold text-xs transition bouncy ${
+                    isLocked 
+                    ? 'bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed' 
+                    : 'bg-white border-indigo-100 text-indigo-700 hover:bg-indigo-50 shadow-2xs'
+                }`;
+                
+                btn.innerHTML = `
+                    <div class="flex items-center space-x-2">
+                        <span class="w-5 h-5 rounded-full ${isLocked ? 'bg-slate-200 text-slate-400' : 'bg-indigo-100 text-indigo-600'} flex items-center justify-center text-[10px]">${topic.id}</span>
+                        <span>${topic.title} Practice</span>
                     </div>
-                </div>
-            `;
+                    <div>
+                        ${isLocked 
+                            ? '<i class="fas fa-lock text-slate-400 text-xs"></i> <span class="text-[9px] font-normal block text-right">Learn topic first</span>' 
+                            : `<span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">${state.quizScore !== null ? 'Score: '+state.quizScore+'%' : 'Ready'}</span>`
+                        }
+                    </div>
+                `;
+
+                if(!isLocked) {
+                    btn.onclick = () => launchPracticeSetForTopic(topic.id);
+                } else {
+                    btn.onclick = () => {
+                        playSoundTone('wrong');
+                        alert(`Please complete the short study lesson for "${topic.title}" before practicing!`);
+                    };
+                }
+                btnWrap.appendChild(btn);
+            });
         }
 
-        function renderProfilePage() {
-            return `
-                <div class="text-center space-y-4 pt-6">
-                    <img src="${userProfile.avatar}" class="w-24 h-24 rounded-full mx-auto border-4 border-slate-200">
-                    <h3 class="text-xl font-fun font-bold text-slate-800">${userProfile.name}</h3>
-                    <div class="bg-amber-100 text-amber-900 p-3 rounded-xl font-bold text-sm">⭐ ${progressData.stars} Total Stars Collected</div>
-                    <button onclick="openResetModal()" class="w-full py-3 bg-rose-100 text-rose-600 font-fun font-bold text-xs rounded-xl">Reset Progress Data</button>
-                </div>
-            `;
+        // -------------------------------------------------------------
+        // QUIZ PLAYBACK WORKFLOW AND ENGINE
+        // -------------------------------------------------------------
+        function launchPracticeSetForTopic(topicId) {
+            playSoundTone('click');
+            const topic = TOPICS_METADATA.find(t => t.id === topicId);
+            const sourcePool = QUIZ_QUESTIONS_BANK[topicId] || [];
+            if (sourcePool.length === 0) return;
+
+            // Prepare 20 fixed localized question lists copies
+            activeQuizContext = {
+                type: "topic",
+                topicId: topicId,
+                title: `${topic.title} Practice`,
+                questions: JSON.parse(JSON.stringify(sourcePool)), // Deep copy 20 questions
+                currentIndex: 0,
+                correctCount: 0,
+                wrongCount: 0
+            };
+
+            initiateActiveQuizLoopView();
         }
 
-        function openResetModal() { document.getElementById('resetModal').classList.remove('hidden'); }
-        function closeResetModal() { document.getElementById('resetModal').classList.add('hidden'); }
-        function confirmResetProgress() {
-            localStorage.clear();
-            userProfile = null;
-            progressData = { completedLessons: [], scores: {}, totalQuizzes: 0, totalAnswers: 0, correctAnswers: 0, stars: 0, streak: 1 };
+        function launchMixedQuiz(quizType, nameTitle) {
+            playSoundTone('click');
+            // Aggregates arrays
+            let unifiedPool = [];
+            Object.values(QUIZ_QUESTIONS_BANK).forEach(arr => {
+                unifiedPool = unifiedPool.concat(arr);
+            });
+
+            // Shuffle array utility
+            unifiedPool.sort(() => 0.5 - Math.random());
+
+            let sliceCount = 10;
+            if (quizType === 'quick') sliceCount = 5;
+            if (quizType === 'challenge') sliceCount = 20;
+
+            activeQuizContext = {
+                type: quizType,
+                topicId: null,
+                title: nameTitle,
+                questions: unifiedPool.slice(0, sliceCount),
+                currentIndex: 0,
+                correctCount: 0,
+                wrongCount: 0
+            };
+
+            initiateActiveQuizLoopView();
+        }
+
+        function initiateActiveQuizLoopView() {
+            // Hide everything else
+            document.querySelectorAll(".tab-screen").forEach(el => el.classList.add("hidden"));
+            document.getElementById("subview-lesson-study").classList.add("hidden");
+            document.getElementById("subview-quiz-results").classList.add("hidden");
+            document.getElementById("subview-quiz-workflow").classList.remove("hidden");
+
+            // Meta tags setting
+            document.getElementById("quizCurrentCategoryLabel").innerText = activeQuizContext.type === 'topic' ? "Topic Practice" : "Global Quiz Zone";
+            document.getElementById("quizCurrentTopicTitle").innerText = activeQuizContext.title;
+
+            renderActiveQuestionStep();
+        }
+
+        function renderActiveQuestionStep() {
+            const ctx = activeQuizContext;
+            const qObj = ctx.questions[ctx.currentIndex];
+            
+            // Re-hide previous answer strip blocks
+            document.getElementById("quizInstantFeedbackWrap").classList.add("hidden");
+
+            // Update questions counters
+            document.getElementById("quizQuestionCounterText").innerText = `Question ${ctx.currentIndex + 1} of ${ctx.questions.length}`;
+            
+            // Progress percentage tracking update
+            let computedPct = ((ctx.currentIndex) / ctx.questions.length) * 100;
+            document.getElementById("quizGlobalProgressBarInner").style.width = `${computedPct}%`;
+
+            // Insert Text contents
+            document.getElementById("quizQuestionBodyText").innerText = qObj.q;
+
+            // Generate option layout matrix rows safely
+            const optionsWrap = document.getElementById("quizOptionsGrid");
+            optionsWrap.innerHTML = "";
+
+            const labelsMapping = [
+                { key: "A", val: qObj.a },
+                { key: "B", val: qObj.b },
+                { key: "C", val: qObj.c },
+                { key: "D", val: qObj.d }
+            ];
+
+            labelsMapping.forEach(item => {
+                if(!item.val) return; // robustness check if missing an choice D inside custom fields
+                
+                const btn = document.createElement("button");
+                btn.id = `quiz-opt-btn-${item.key}`;
+                btn.className = "bouncy w-full bg-white border-2 border-slate-200 hover:border-indigo-300 text-slate-700 font-bold p-3.5 rounded-2xl text-left text-sm transition-all flex items-center space-x-3 shadow-2xs";
+                btn.innerHTML = `
+                    <span class="w-7 h-7 rounded-xl bg-slate-100 font-bold text-xs text-slate-500 flex items-center justify-center border border-slate-200 shrink-0 uppercase">${item.key}</span>
+                    <span class="font-bold text-slate-700 leading-snug">${item.val}</span>
+                `;
+                btn.onclick = () => evaluateQuizAnswerSelection(item.key, qObj);
+                optionsWrap.appendChild(btn);
+            });
+        }
+
+        function evaluateQuizAnswerSelection(selectedKey, qObj) {
+            const ctx = activeQuizContext;
+            
+            // Freeze all active clicking listeners inside option items instantly
+            document.querySelectorAll("[id^='quiz-opt-btn-']").forEach(b => {
+                b.onclick = null; 
+                b.classList.remove("bouncy");
+            });
+
+            const isCorrect = (selectedKey === qObj.ans);
+            const feedbackWrap = document.getElementById("quizInstantFeedbackWrap");
+            const feedbackIcon = document.getElementById("quizFeedbackIconIndicator");
+            const feedbackHeading = document.getElementById("quizFeedbackHeading");
+            const feedbackExplanation = document.getElementById("quizFeedbackExplanation");
+
+            // Master counter increments
+            userProfile.answeredCount = (userProfile.answeredCount || 0) + 1;
+
+            if (isCorrect) {
+                playSoundTone('correct');
+                ctx.correctCount++;
+                document.getElementById(`quiz-opt-btn-${selectedKey}`).className = "w-full bg-green-500 border-2 border-green-500 text-white font-bold p-3.5 rounded-2xl text-left text-sm flex items-center space-x-3 shadow-md";
+                
+                feedbackIcon.className = "w-7 h-7 rounded-full bg-green-600 text-white flex items-center justify-center text-sm shrink-0 font-bold";
+                feedbackIcon.innerHTML = "✓";
+                feedbackHeading.innerText = "Correct! Well done!";
+                feedbackHeading.className = "font-bold text-base text-green-700";
+            } else {
+                playSoundTone('wrong');
+                ctx.wrongCount++;
+                document.getElementById(`quiz-opt-btn-${selectedKey}`).className = "w-full bg-rose-100 border-2 border-rose-300 text-rose-700 font-bold p-3.5 rounded-2xl text-left text-sm flex items-center space-x-3";
+                // Colorize true selection gently to highlight educational correction without harshness
+                document.getElementById(`quiz-opt-btn-${qObj.ans}`).className = "w-full bg-green-50 border-2 border-green-300 text-green-700 font-bold p-3.5 rounded-2xl text-left text-sm flex items-center space-x-3 opacity-90";
+
+                feedbackIcon.className = "w-7 h-7 rounded-full bg-amber-500 text-white flex items-center justify-center text-sm shrink-0 font-bold";
+                feedbackIcon.innerHTML = "i";
+                feedbackHeading.innerText = `Not quite. The correct answer is Option ${qObj.ans}.`;
+                feedbackHeading.className = "font-bold text-sm text-slate-700";
+            }
+
+            // Expose explanation markup string references
+            feedbackExplanation.innerText = qObj.exp;
+            feedbackWrap.classList.remove("hidden");
+            
+            // Gentle scrolling scroll focus alignment anchor adjustments
+            feedbackWrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function progressToNextQuestion() {
+            playSoundTone('click');
+            const ctx = activeQuizContext;
+            ctx.currentIndex++;
+
+            if(ctx.currentIndex < ctx.questions.length) {
+                renderActiveQuestionStep();
+            } else {
+                // Terminate workflow view to render results screen template
+                compileQuizFinalResults();
+            }
+        }
+
+        // -------------------------------------------------------------
+        // COMPILE AND PRESENT QUIZ RESULTS VIEW
+        // -------------------------------------------------------------
+        function compileQuizFinalResults() {
+            playSoundTone('victory');
+            const ctx = activeQuizContext;
+            
+            document.getElementById("subview-quiz-workflow").classList.add("hidden");
+            document.getElementById("subview-quiz-results").classList.remove("hidden");
+
+            // Calculate ratios
+            const totalQ = ctx.questions.length;
+            const scorePct = Math.round((ctx.correctCount / totalQ) * 100);
+
+            // Synchronize user profile structures statistics data elements
+            let starsEarnedReward = 0;
+            if (scorePct >= 90) starsEarnedReward = 5;
+            else if (scorePct >= 70) starsEarnedReward = 3;
+            else if (scorePct >= 50) starsEarnedReward = 1;
+
+            userProfile.stars = (userProfile.stars || 0) + starsEarnedReward;
+            
+            if (scorePct > (userProfile.bestAccuracy || 0)) {
+                userProfile.bestAccuracy = scorePct;
+            }
+
+            // If it is a topic specific practice session, map back lock percentages bounds values
+            if (ctx.type === 'topic' && ctx.topicId) {
+                userProfile.topicProgress[ctx.topicId].quizScore = scorePct;
+                userProfile.topicProgress[ctx.topicId].status = "Completed";
+                userProfile.topicProgress[ctx.topicId].percent = 100;
+            }
+
+            // Badge unlocking trigger pipelines logic evaluation blocks
+            userProfile.badges["first_quiz"] = true;
+            if(scorePct === 100) userProfile.badges["perfect_score"] = true;
+            
+            let completedTopicsTally = 0;
+            Object.values(userProfile.topicProgress).forEach(item => {
+                if(item.quizScore !== null) completedTopicsTally++;
+            });
+
+            if (completedTopicsTally >= 1) userProfile.badges["explorer"] = true;
+            if (completedTopicsTally === 5) userProfile.badges["champion"] = true;
+
+            // Commit stack updates
+            saveProgressToStorage();
+
+            // Render view items UI injection
+            document.getElementById("resultsTopicSubhead").innerText = `Topic: ${ctx.title}`;
+            document.getElementById("resultsStudentName").innerText = userProfile.name;
+            document.getElementById("resultsAvatarThumb").innerHTML = userProfile.avatar || "🐱";
+            document.getElementById("resultsPercentageValue").innerText = `${scorePct}%`;
+            document.getElementById("resultsRawScoreText").innerText = `${ctx.correctCount} / ${totalQ} Correct`;
+            document.getElementById("resultsCountCorrect").innerText = ctx.correctCount;
+            document.getElementById("resultsCountWrong").innerText = ctx.wrongCount;
+
+            // Motivational assessment message filter tags
+            let msgStr = "Keep trying! Learning takes practice.";
+            if (scorePct >= 90) msgStr = "Excellent work! You are a Grammar Star! 🌟";
+            else if (scorePct >= 70) msgStr = "Great job! Keep practising to become even better! 👍";
+            else if (scorePct >= 50) msgStr = "Good effort! Review the lesson and try again. 📖";
+
+            document.getElementById("resultsMotivationalMessage").innerText = msgStr;
+        }
+
+        function retryCurrentQuiz() {
+            if (activeQuizContext.type === 'topic') {
+                launchPracticeSetForTopic(activeQuizContext.topicId);
+            } else {
+                launchMixedQuiz(activeQuizContext.type, activeQuizContext.title);
+            }
+        }
+
+        function resultsReviewLessonRedirect() {
+            if (activeQuizContext.topicId) {
+                launchLessonView(activeQuizContext.topicId);
+            } else {
+                // If it is generic mix mode, bounce back to generic lesson directory tab default
+                switchTab('learn');
+            }
+        }
+
+        // -------------------------------------------------------------
+        // TAB 4 PROGRESS JOURNEY ENGINE DOM OVERRIDES
+        // -------------------------------------------------------------
+        const BADGES_DICTIONARY_REFERENCE = [
+            { key: "beginner", title: "Grammar Beginner", icon: "fa-baby", desc: "Created profile!", color: "bg-blue-500" },
+            { key: "first_lesson", title: "First Lesson", icon: "fa-book-open", desc: "Studied 1 topic", color: "bg-teal-500" },
+            { key: "first_quiz", title: "First Quiz Done", icon: "fa-pencil-alt", desc: "Took first quiz", color: "bg-purple-500" },
+            { key: "explorer", title: "Grammar Explorer", icon: "fa-compass", desc: "Completed 1 quiz", color: "bg-amber-500" },
+            { key: "champion", title: "Grammar Champion", icon: "fa-trophy", desc: "Passed all topics", color: "bg-emerald-500" },
+            { key: "perfect_score", title: "Perfect Score", icon: "fa-crown", desc: "Got 100% score", color: "bg-rose-500" },
+            { key: "streak_3", title: "3-Day Streak", icon: "fa-bolt", desc: "Active learner bonus", color: "bg-orange-500" },
+            { key: "streak_7", title: "7-Day Streak", icon: "fa-fire", desc: "Unstoppable dedication", color: "bg-indigo-500" }
+        ];
+
+        function renderProgressDashboard() {
+            // Count completed
+            let completedCount = 0;
+            Object.values(userProfile.topicProgress).forEach(item => {
+                if(item.quizScore !== null) completedCount++;
+            });
+
+            // Populate text descriptors points metrics
+            document.getElementById("progStatTopics").innerText = `${completedCount} / 5`;
+            document.getElementById("progStatStars").innerText = userProfile.stars || 0;
+            document.getElementById("progStatQs").innerText = userProfile.answeredCount || 0;
+            document.getElementById("progStatAccuracy").innerText = `${userProfile.bestAccuracy || 0}%`;
+
+            // Auto trigger unlock mock conditions for streaks badges display values safety check items
+            if ((userProfile.streak || 1) >= 3) userProfile.badges["streak_3"] = true;
+            if ((userProfile.streak || 1) >= 7) userProfile.badges["streak_7"] = true;
+
+            // Render detailed Progress bars list
+            const barContainer = document.getElementById("progressBarsList");
+            barContainer.innerHTML = "";
+            TOPICS_METADATA.forEach(topic => {
+                const state = userProfile.topicProgress[topic.id] || { percent: 0 };
+                const markupRow = `
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-xs font-bold text-slate-700">
+                            <span>Topic ${topic.id}: ${topic.title}</span>
+                            <span class="text-indigo-600">${state.percent || 0}%</span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                            <div class="bg-indigo-500 h-full transition-all" style="width: ${state.percent || 0}%"></div>
+                        </div>
+                    </div>
+                `;
+                barContainer.insertAdjacentHTML("beforeend", markupRow);
+            });
+
+            // Render badges grid element
+            const badgeGrid = document.getElementById("badgesGrid");
+            badgeGrid.innerHTML = "";
+
+            BADGES_DICTIONARY_REFERENCE.forEach(badge => {
+                const isOwned = !(!userProfile.badges || !userProfile.badges[badge.key]);
+                const cell = `
+                    <div class="flex flex-col items-center p-1.5 ${isOwned ? 'opacity-100' : 'opacity-25'}">
+                        <div class="w-12 h-12 rounded-2xl ${isOwned ? badge.color : 'bg-slate-200'} text-white flex items-center justify-center text-xl shadow-xs mb-1">
+                            <i class="fas ${badge.icon}"></i>
+                        </div>
+                        <span class="text-[9px] font-bold text-slate-700 block leading-tight truncate max-w-full">${badge.title}</span>
+                    </div>
+                `;
+                badgeGrid.insertAdjacentHTML("beforeend", cell);
+            });
+        }
+
+        // -------------------------------------------------------------
+        // TAB 5 PROFILE MANAGEMENT SCREEN PROCEDURES
+        // -------------------------------------------------------------
+        function renderProfileConfigPage() {
+            document.getElementById("profileViewAvatar").innerHTML = userProfile.avatar || "🐱";
+            document.getElementById("profileEditNameInput").value = userProfile.name || "";
+        }
+
+        function updateProfileAvatar(id, characterEmoji) {
+            playSoundTone('click');
+            userProfile.avatar = characterEmoji;
+            document.getElementById("profileViewAvatar").innerHTML = characterEmoji;
+        }
+
+        // Save customized updates inside settings dashboard fields block
+        function saveProfileEdits() {
+            const val = document.getElementById("profileEditNameInput").value.trim();
+            if(!val) {
+                playSoundTone('wrong');
+                alert("Name cannot be left empty!");
+                return;
+            }
+            playSoundTone('victory');
+            userProfile.name = val;
+            saveProgressToStorage();
+            alert("Profile settings saved perfectly!");
+            switchTab('home');
+        }
+
+        // -------------------------------------------------------------
+        // STATE DESTRUCTION MODAL CONFIGURATIONS
+        // -------------------------------------------------------------
+        function openResetModal() {
+            playSoundTone('wrong');
+            document.getElementById("globalConfirmationModal").classList.remove("hidden");
+        }
+
+        function closeResetModal() {
+            playSoundTone('click');
+            document.getElementById("globalConfirmationModal").classList.add("hidden");
+        }
+
+        function triggerAbsoluteReset() {
+            // Drop cache states indices entirely
+            localStorage.removeItem("grammar_hub_1_profile_v2");
+            
+            // Re-instantiate generic empty blueprints fields
+            userProfile = {
+                name: "",
+                avatar: "🐱",
+                stars: 0,
+                streak: 1,
+                answeredCount: 0,
+                bestAccuracy: 0,
+                badges: {},
+                topicProgress: {
+                    1: { studied: false, quizScore: null, status: "Not Started", percent: 0 },
+                    2: { studied: false, quizScore: null, status: "Not Started", percent: 0 },
+                    3: { studied: false, quizScore: null, status: "Not Started", percent: 0 },
+                    4: { studied: false, quizScore: null, status: "Not Started", percent: 0 },
+                    5: { studied: false, quizScore: null, status: "Not Started", percent: 0 }
+                }
+            };
+            
             closeResetModal();
-            switchView('setup');
+            initAppDisplayState();
         }
     </script>
 </body>
